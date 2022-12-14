@@ -1,7 +1,8 @@
 
+
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __DEBUG_H
-#define __DEBUG_H
+#ifndef __CLOCK_MASTER_H
+#define __CLOCK_MASTER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,16 +13,9 @@ extern "C" {
 #include "core.h"
 
 
-
- void debug_init();
-
-
-
-
- void debug_print(uint8_t* buffer);
-
+void clock_master_set(clock_param_t clock_param_t);
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __DEBUG_H */
+#endif /* __CLOCK_MASTER_H */

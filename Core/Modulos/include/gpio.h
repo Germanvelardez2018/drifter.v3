@@ -1,7 +1,7 @@
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __DEBUG_H
-#define __DEBUG_H
+#ifndef __GPIO_H
+#define __GPIO_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -11,17 +11,10 @@ extern "C" {
 
 #include "core.h"
 
-
-
- void debug_init();
-
-
-
-
- void debug_print(uint8_t* buffer);
+ void MX_GPIO_Init(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __DEBUG_H */
+#endif /* __GPIO_H */
