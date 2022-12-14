@@ -36,7 +36,11 @@ BUILD_DIR = build
 ######################################
 # C sources
 C_SOURCES =  \
+Core/Modules/drivers/adc.c \
+Core/Modules/drivers/wdt.c \
+Core/Modules/drivers/i2c.c \
 Core/Modulos/drivers/uart.c \
+Core/Modulos/drivers/spi.c \
 Core/Modulos/debug.c \
 Core/Modulos/rtc.c \
 Core/Src/main.c \
