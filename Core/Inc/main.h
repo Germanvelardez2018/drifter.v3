@@ -61,6 +61,7 @@ void Error_Handler(void);
 #define LED_PIN_GPIO_Port GPIOB
 #define IRQ_SIM_Pin GPIO_PIN_15
 #define IRQ_SIM_GPIO_Port GPIOA
+#define IRQ_SIM_EXTI_IRQn EXTI15_10_IRQn
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
