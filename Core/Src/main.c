@@ -19,38 +19,19 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "debug.h"
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 
-/* USER CODE END Includes */
-
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 
 I2C_HandleTypeDef hi2c2;
 
 IWDG_HandleTypeDef hiwdg;
 
+
 SPI_HandleTypeDef hspi1;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim3;
 
-extern UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 
@@ -61,7 +42,6 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_TIM1_Init(void);
-
 static void MX_ADC1_Init(void);
 static void MX_I2C2_Init(void);
 static void MX_IWDG_Init(void);
@@ -82,43 +62,29 @@ static void MX_TIM3_Init(void);
   */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
-
-  /* MCU Configuration--------------------------------------------------------*/
-
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
-  /* Configure the system clock */
+  
   SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
+  
   MX_GPIO_Init();
-  MX_SPI1_Init();
-  MX_TIM1_Init();
-  debug_init();
-  MX_ADC1_Init();
-  MX_I2C2_Init();
-  MX_IWDG_Init();
-  MX_TIM3_Init();
+ // MX_SPI1_Init();
+  //MX_TIM1_Init();
+  //MX_USART2_UART_Init();
+  //MX_ADC1_Init();
+  //MX_I2C2_Init();
+ // MX_IWDG_Init();
+ // MX_TIM3_Init();
   //MX_USART1_UART_Init();
+  //MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 
 
 
-  HAL_GPIO_TogglePin(LED_PIN_GPIO_Port,LED_PIN_Pin);
 
-
+  debug_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -126,8 +92,11 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    debug_print("test modulo debug \r\n");
-    delay(500);
+    delay(1500);
+    debug_print("hello world\r\n");
+    HAL_GPIO_TogglePin(LED_PIN_GPIO_Port,LED_PIN_Pin);
+
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -161,7 +130,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV4;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV8;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
@@ -169,7 +138,8 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC|RCC_PERIPHCLK_ADC;
+  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
   PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV2;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
@@ -285,6 +255,7 @@ static void MX_IWDG_Init(void)
   /* USER CODE END IWDG_Init 2 */
 
 }
+
 
 /**
   * @brief SPI1 Initialization Function
