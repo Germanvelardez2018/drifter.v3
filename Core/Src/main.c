@@ -94,29 +94,53 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_SPI1_Init();
-  MX_TIM1_Init();
-  MX_TIM2_Init();
+  //MX_SPI1_Init();
+  //MX_TIM1_Init();
+  //MX_TIM2_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-
+  uint8_t counter = 0;
 
   uint8_t buffer[]="hello world \r\n";
   #define BUFFER              buffer
   #define LEN_BUFFER          strlen(BUFFER)
 
 
+  HAL_GPIO_TogglePin(LED_PIN_GPIO_Port,LED_PIN_Pin);
+
+
   /* USER CODE END 2 */
+
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-    HAL_GPIO_TogglePin(LED_PIN_GPIO_Port,LED_PIN_Pin);
     HAL_Delay(2000);
     HAL_UART_Transmit(&huart2,BUFFER,LEN_BUFFER,1000);
+
+
+
+
+    if(counter == 5){
+      // mando a dormir
+
+    HAL_UART_Transmit(&huart2,"sleep mode: on\r\n",strlen("sleep mode: on\r\n"),1000);
+
+
+    HAL_UART_DeInit(&huart2) ;
+
+    HAL_SuspendTick();
+    HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+    HAL_UART_Init(&huart2) ;
+    HAL_UART_Transmit(&huart2,"--sleep--\r\n",strlen("--sleep--\r\n"),1000);
+
+    }
+    
+    counter ++;
+    
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -148,7 +172,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV8;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV2;//RCC_SYSCLK_DIV8;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
@@ -303,7 +327,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 19200;
+  huart2.Init.BaudRate = 115200;//19200;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
