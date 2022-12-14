@@ -54,10 +54,6 @@
 
 
 
-void gpio_init_uart(){
-    
-}
-
 
 
 
