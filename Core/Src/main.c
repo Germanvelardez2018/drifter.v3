@@ -100,6 +100,13 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
+
+
+  uint8_t buffer[]="hello world \r\n";
+  #define BUFFER              buffer
+  #define LEN_BUFFER          strlen(BUFFER)
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -109,6 +116,7 @@ int main(void)
     /* USER CODE END WHILE */
     HAL_GPIO_TogglePin(LED_PIN_GPIO_Port,LED_PIN_Pin);
     HAL_Delay(2000);
+    HAL_UART_Transmit(&huart2,BUFFER,LEN_BUFFER,1000);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -295,7 +303,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 34800;
+  huart2.Init.BaudRate = 19200;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
