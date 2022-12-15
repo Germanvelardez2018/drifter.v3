@@ -27,6 +27,14 @@ extern TIM_HandleTypeDef htim3;
 
 
 
+static void init_sim(){
+  HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,1);
+  HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,1);
+  HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,1);
+
+}
+
+
 static void init_peripherals(){
 
 
@@ -43,16 +51,19 @@ int main(void)
 {
 
   HAL_Init();
-
-  
   clock_master_set(CLOCK_8MHZ);
+
   init_peripherals();
+
+  init_sim();
  
 
+  debug_print("run:8mhz\r\n");
+
+  while(1);
+
   
 
-
-  debug_print("run:8mhz\r\n");
 
   uint8_t counter = 0;
 
@@ -91,7 +102,6 @@ int main(void)
 
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* tim){
-HAL_GPIO_WritePin(LED_PIN_GPIO_Port,LED_PIN_Pin,1);
 
 }
 

@@ -57,8 +57,17 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LED_PIN_Pin GPIO_PIN_2
-#define LED_PIN_GPIO_Port GPIOB
+
+#define SIM7000G_BAT_ENA_Pin GPIO_PIN_4
+#define SIM7000G_BAT_ENA_GPIO_Port GPIOA
+#define LED_Pin GPIO_PIN_2
+#define LED_GPIO_Port GPIOB
+#define SIM7000G_PWRKEY_Pin GPIO_PIN_12
+#define SIM7000G_PWRKEY_GPIO_Port GPIOA
+
+
+
+
 #define IRQ_SIM_Pin GPIO_PIN_15
 #define IRQ_SIM_GPIO_Port GPIOA
 #define IRQ_SIM_EXTI_IRQn EXTI15_10_IRQn
