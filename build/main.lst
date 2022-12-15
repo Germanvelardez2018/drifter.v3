@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccuJ2uqL.s 			page 1
+ARM GAS  /tmp/ccXXUvrM.s 			page 1
 
 
    1              		.cpu cortex-m3
@@ -23,7 +23,7 @@ ARM GAS  /tmp/ccuJ2uqL.s 			page 1
   20              		.thumb_func
   21              		.fpu softvfp
   23              	init_peripherals:
-  24              	.LFB69:
+  24              	.LFB70:
   25              		.file 1 "Core/Src/main.c"
    1:Core/Src/main.c **** /* USER CODE BEGIN Header */
    2:Core/Src/main.c **** /**
@@ -54,20 +54,39 @@ ARM GAS  /tmp/ccuJ2uqL.s 			page 1
   27:Core/Src/main.c **** extern TIM_HandleTypeDef htim3;
   28:Core/Src/main.c **** 
   29:Core/Src/main.c **** 
-  30:Core/Src/main.c **** 
-  31:Core/Src/main.c **** static void init_sim(){
-  32:Core/Src/main.c ****   HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,1);
-  33:Core/Src/main.c ****   HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,1);
-ARM GAS  /tmp/ccuJ2uqL.s 			page 2
+  30:Core/Src/main.c **** #define CMD_OPEN_APN_TUENTI                          "AT+CNACT=1,\"internet.movil\"\r\n"
+  31:Core/Src/main.c **** #define CMD_OPEN_APN_PERSONAL                        "AT+CNACT=1,\"datos.personal.com\"\r\n"
+  32:Core/Src/main.c **** #define CMD_GET_APN                                  "AT+CNACT?\r\n"       
+  33:Core/Src/main.c **** #define  CMD_AT                                        "AT\r\n"
+ARM GAS  /tmp/ccXXUvrM.s 			page 2
 
 
-  34:Core/Src/main.c ****   HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,1);
-  35:Core/Src/main.c **** 
-  36:Core/Src/main.c **** }
-  37:Core/Src/main.c **** 
+  34:Core/Src/main.c **** #define  CMD_OK                                       "OK\r\n"
+  35:Core/Src/main.c **** #define  CMD_VERSION                                   "ATI\r\n"
+  36:Core/Src/main.c **** #define  CMD_ECHO_ON                                   "ATE1\r\n"
+  37:Core/Src/main.c **** #define  CMD_ECHO_OFF                                  "ATE0\r\n"
   38:Core/Src/main.c **** 
-  39:Core/Src/main.c **** static void init_peripherals(){
-  26              		.loc 1 39 31 view -0
+  39:Core/Src/main.c **** 
+  40:Core/Src/main.c **** static void init_pins_sim(){
+  41:Core/Src/main.c ****   HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,1);
+  42:Core/Src/main.c ****   HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,1);
+  43:Core/Src/main.c ****   HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,1);
+  44:Core/Src/main.c **** 
+  45:Core/Src/main.c **** }
+  46:Core/Src/main.c **** 
+  47:Core/Src/main.c **** 
+  48:Core/Src/main.c **** 
+  49:Core/Src/main.c **** static void deinit_pins_sim(){
+  50:Core/Src/main.c ****   HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,0);
+  51:Core/Src/main.c ****   HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,0);
+  52:Core/Src/main.c ****   HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,0);
+  53:Core/Src/main.c **** 
+  54:Core/Src/main.c **** }
+  55:Core/Src/main.c **** 
+  56:Core/Src/main.c **** 
+  57:Core/Src/main.c **** 
+  58:Core/Src/main.c **** static void init_peripherals(){
+  26              		.loc 1 58 31 view -0
   27              		.cfi_startproc
   28              		@ args = 0, pretend = 0, frame = 0
   29              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -76,31 +95,34 @@ ARM GAS  /tmp/ccuJ2uqL.s 			page 1
   32              		.cfi_def_cfa_offset 8
   33              		.cfi_offset 3, -8
   34              		.cfi_offset 14, -4
-  40:Core/Src/main.c **** 
-  41:Core/Src/main.c **** 
-  42:Core/Src/main.c ****   MX_GPIO_Init();
-  35              		.loc 1 42 3 view .LVU1
+  59:Core/Src/main.c **** 
+  60:Core/Src/main.c **** 
+  61:Core/Src/main.c ****   MX_GPIO_Init();
+  35              		.loc 1 61 3 view .LVU1
   36 0002 FFF7FEFF 		bl	MX_GPIO_Init
   37              	.LVL0:
-  43:Core/Src/main.c ****   debug_init();
-  38              		.loc 1 43 3 view .LVU2
+  62:Core/Src/main.c ****   debug_init();
+  38              		.loc 1 62 3 view .LVU2
   39 0006 FFF7FEFF 		bl	debug_init
   40              	.LVL1:
-  44:Core/Src/main.c **** }
-  41              		.loc 1 44 1 is_stmt 0 view .LVU3
+  63:Core/Src/main.c **** }
+  41              		.loc 1 63 1 is_stmt 0 view .LVU3
   42 000a 08BD     		pop	{r3, pc}
   43              		.cfi_endproc
-  44              	.LFE69:
-  46              		.section	.text.init_sim,"ax",%progbits
+  44              	.LFE70:
+  46              		.section	.text.init_pins_sim,"ax",%progbits
   47              		.align	1
   48              		.syntax unified
   49              		.thumb
   50              		.thumb_func
   51              		.fpu softvfp
-  53              	init_sim:
+  53              	init_pins_sim:
   54              	.LFB68:
-  31:Core/Src/main.c ****   HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,1);
-  55              		.loc 1 31 23 is_stmt 1 view -0
+ARM GAS  /tmp/ccXXUvrM.s 			page 3
+
+
+  40:Core/Src/main.c ****   HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,1);
+  55              		.loc 1 40 28 is_stmt 1 view -0
   56              		.cfi_startproc
   57              		@ args = 0, pretend = 0, frame = 0
   58              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -109,33 +131,30 @@ ARM GAS  /tmp/ccuJ2uqL.s 			page 1
   61              		.cfi_def_cfa_offset 8
   62              		.cfi_offset 4, -8
   63              		.cfi_offset 14, -4
-  32:Core/Src/main.c ****   HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,1);
-  64              		.loc 1 32 3 view .LVU5
+  41:Core/Src/main.c ****   HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,1);
+  64              		.loc 1 41 3 view .LVU5
   65 0002 094C     		ldr	r4, .L5
   66 0004 0122     		movs	r2, #1
   67 0006 1021     		movs	r1, #16
   68 0008 2046     		mov	r0, r4
   69 000a FFF7FEFF 		bl	HAL_GPIO_WritePin
   70              	.LVL2:
-  33:Core/Src/main.c ****   HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,1);
-ARM GAS  /tmp/ccuJ2uqL.s 			page 3
-
-
-  71              		.loc 1 33 3 view .LVU6
+  42:Core/Src/main.c ****   HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,1);
+  71              		.loc 1 42 3 view .LVU6
   72 000e 0122     		movs	r2, #1
   73 0010 4FF48051 		mov	r1, #4096
   74 0014 2046     		mov	r0, r4
   75 0016 FFF7FEFF 		bl	HAL_GPIO_WritePin
   76              	.LVL3:
-  34:Core/Src/main.c **** 
-  77              		.loc 1 34 3 view .LVU7
+  43:Core/Src/main.c **** 
+  77              		.loc 1 43 3 view .LVU7
   78 001a 0122     		movs	r2, #1
   79 001c 0421     		movs	r1, #4
   80 001e 0348     		ldr	r0, .L5+4
   81 0020 FFF7FEFF 		bl	HAL_GPIO_WritePin
   82              	.LVL4:
-  36:Core/Src/main.c **** 
-  83              		.loc 1 36 1 is_stmt 0 view .LVU8
+  45:Core/Src/main.c **** 
+  83              		.loc 1 45 1 is_stmt 0 view .LVU8
   84 0024 10BD     		pop	{r4, pc}
   85              	.L6:
   86 0026 00BF     		.align	2
@@ -144,237 +163,360 @@ ARM GAS  /tmp/ccuJ2uqL.s 			page 1
   89 002c 000C0140 		.word	1073810432
   90              		.cfi_endproc
   91              	.LFE68:
-  93              		.section	.rodata.main.str1.4,"aMS",%progbits,1
-  94              		.align	2
-  95              	.LC0:
-  96 0000 496E6963 		.ascii	"Inicio programa\015\012\000"
-  96      696F2070 
-  96      726F6772 
-  96      616D610D 
-  96      0A00
-  97 0012 0000     		.align	2
-  98              	.LC1:
-  99 0014 4F4B0D0A 		.ascii	"OK\015\012\000"
-  99      00
- 100 0019 000000   		.align	2
- 101              	.LC2:
- 102 001c 41540D0A 		.ascii	"AT\015\012\000"
- 102      00
- 103              		.section	.text.main,"ax",%progbits
- 104              		.align	1
- 105              		.global	main
- 106              		.syntax unified
- 107              		.thumb
- 108              		.thumb_func
- 109              		.fpu softvfp
- 111              	main:
- 112              	.LFB70:
-  45:Core/Src/main.c **** 
-  46:Core/Src/main.c **** 
-  47:Core/Src/main.c **** /**
-  48:Core/Src/main.c ****   * @brief  The application entry point.
-  49:Core/Src/main.c ****   * @retval int
-  50:Core/Src/main.c ****   */
-  51:Core/Src/main.c **** int main(void)
-  52:Core/Src/main.c **** {
- 113              		.loc 1 52 1 is_stmt 1 view -0
-ARM GAS  /tmp/ccuJ2uqL.s 			page 4
+  93              		.section	.text.deinit_pins_sim,"ax",%progbits
+  94              		.align	1
+  95              		.syntax unified
+  96              		.thumb
+  97              		.thumb_func
+  98              		.fpu softvfp
+ 100              	deinit_pins_sim:
+ 101              	.LFB69:
+  49:Core/Src/main.c ****   HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,0);
+ 102              		.loc 1 49 30 is_stmt 1 view -0
+ 103              		.cfi_startproc
+ 104              		@ args = 0, pretend = 0, frame = 0
+ 105              		@ frame_needed = 0, uses_anonymous_args = 0
+ 106 0000 10B5     		push	{r4, lr}
+ 107              	.LCFI2:
+ARM GAS  /tmp/ccXXUvrM.s 			page 4
 
 
- 114              		.cfi_startproc
- 115              		@ Volatile: function does not return.
- 116              		@ args = 0, pretend = 0, frame = 0
- 117              		@ frame_needed = 0, uses_anonymous_args = 0
- 118 0000 08B5     		push	{r3, lr}
- 119              	.LCFI2:
- 120              		.cfi_def_cfa_offset 8
- 121              		.cfi_offset 3, -8
- 122              		.cfi_offset 14, -4
-  53:Core/Src/main.c **** 
-  54:Core/Src/main.c ****   HAL_Init();
- 123              		.loc 1 54 3 view .LVU10
- 124 0002 FFF7FEFF 		bl	HAL_Init
- 125              	.LVL5:
-  55:Core/Src/main.c ****   clock_master_set(CLOCK_8MHZ);
- 126              		.loc 1 55 3 view .LVU11
- 127 0006 0020     		movs	r0, #0
- 128 0008 FFF7FEFF 		bl	clock_master_set
- 129              	.LVL6:
-  56:Core/Src/main.c **** 
-  57:Core/Src/main.c ****   init_peripherals();
- 130              		.loc 1 57 3 view .LVU12
- 131 000c FFF7FEFF 		bl	init_peripherals
- 132              	.LVL7:
-  58:Core/Src/main.c **** 
-  59:Core/Src/main.c ****  
-  60:Core/Src/main.c **** 
-  61:Core/Src/main.c ****   debug_print("Inicio programa\r\n");
- 133              		.loc 1 61 3 view .LVU13
- 134 0010 0A48     		ldr	r0, .L10
- 135 0012 FFF7FEFF 		bl	debug_print
- 136              	.LVL8:
-  62:Core/Src/main.c ****   init_sim();
- 137              		.loc 1 62 3 view .LVU14
- 138 0016 FFF7FEFF 		bl	init_sim
- 139              	.LVL9:
-  63:Core/Src/main.c ****     delay(15000);
- 140              		.loc 1 63 5 view .LVU15
- 141 001a 43F69820 		movw	r0, #15000
- 142 001e FFF7FEFF 		bl	HAL_Delay
- 143              	.LVL10:
+ 108              		.cfi_def_cfa_offset 8
+ 109              		.cfi_offset 4, -8
+ 110              		.cfi_offset 14, -4
+  50:Core/Src/main.c ****   HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,0);
+ 111              		.loc 1 50 3 view .LVU10
+ 112 0002 094C     		ldr	r4, .L9
+ 113 0004 0022     		movs	r2, #0
+ 114 0006 1021     		movs	r1, #16
+ 115 0008 2046     		mov	r0, r4
+ 116 000a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 117              	.LVL5:
+  51:Core/Src/main.c ****   HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,0);
+ 118              		.loc 1 51 3 view .LVU11
+ 119 000e 0022     		movs	r2, #0
+ 120 0010 4FF48051 		mov	r1, #4096
+ 121 0014 2046     		mov	r0, r4
+ 122 0016 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 123              	.LVL6:
+  52:Core/Src/main.c **** 
+ 124              		.loc 1 52 3 view .LVU12
+ 125 001a 0022     		movs	r2, #0
+ 126 001c 0421     		movs	r1, #4
+ 127 001e 0348     		ldr	r0, .L9+4
+ 128 0020 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 129              	.LVL7:
+  54:Core/Src/main.c **** 
+ 130              		.loc 1 54 1 is_stmt 0 view .LVU13
+ 131 0024 10BD     		pop	{r4, pc}
+ 132              	.L10:
+ 133 0026 00BF     		.align	2
+ 134              	.L9:
+ 135 0028 00080140 		.word	1073809408
+ 136 002c 000C0140 		.word	1073810432
+ 137              		.cfi_endproc
+ 138              	.LFE69:
+ 140              		.section	.rodata.main.str1.4,"aMS",%progbits,1
+ 141              		.align	2
+ 142              	.LC0:
+ 143 0000 496E6963 		.ascii	"Inicio programa\015\012\000"
+ 143      696F2070 
+ 143      726F6772 
+ 143      616D610D 
+ 143      0A00
+ 144 0012 0000     		.align	2
+ 145              	.LC1:
+ 146 0014 656E7669 		.ascii	"envio comandos\015\012\000"
+ 146      6F20636F 
+ 146      6D616E64 
+ 146      6F730D0A 
+ 146      00
+ 147 0025 000000   		.align	2
+ 148              	.LC2:
+ 149 0028 74657374 		.ascii	"test sim sleep:on\015\012\000"
+ 149      2073696D 
+ 149      20736C65 
+ 149      65703A6F 
+ 149      6E0D0A00 
+ARM GAS  /tmp/ccXXUvrM.s 			page 5
+
+
+ 150              		.align	2
+ 151              	.LC3:
+ 152 003c 74657374 		.ascii	"test sim sleep:off\015\012\000"
+ 152      2073696D 
+ 152      20736C65 
+ 152      65703A6F 
+ 152      66660D0A 
+ 153 0051 000000   		.align	2
+ 154              	.LC4:
+ 155 0054 61706167 		.ascii	"apagamos modulos sim\015\012\000"
+ 155      616D6F73 
+ 155      206D6F64 
+ 155      756C6F73 
+ 155      2073696D 
+ 156              		.section	.text.main,"ax",%progbits
+ 157              		.align	1
+ 158              		.global	main
+ 159              		.syntax unified
+ 160              		.thumb
+ 161              		.thumb_func
+ 162              		.fpu softvfp
+ 164              	main:
+ 165              	.LFB71:
   64:Core/Src/main.c **** 
-  65:Core/Src/main.c ****   sim_init();
- 144              		.loc 1 65 3 view .LVU16
- 145 0022 FFF7FEFF 		bl	sim_init
- 146              	.LVL11:
- 147              	.L8:
-  66:Core/Src/main.c **** 
-  67:Core/Src/main.c **** 
-  68:Core/Src/main.c **** 
-  69:Core/Src/main.c **** 
-  70:Core/Src/main.c **** 
-  71:Core/Src/main.c **** 
-  72:Core/Src/main.c **** #define  CMD_AT                                        "AT\r\n"
-  73:Core/Src/main.c **** #define  CMD_OK                                       "OK\r\n"
-  74:Core/Src/main.c **** #define  CMD_VERSION                                   "ATI\r\n"
+  65:Core/Src/main.c **** 
+  66:Core/Src/main.c **** /**
+  67:Core/Src/main.c ****   * @brief  The application entry point.
+  68:Core/Src/main.c ****   * @retval int
+  69:Core/Src/main.c ****   */
+  70:Core/Src/main.c **** int main(void)
+  71:Core/Src/main.c **** {
+ 166              		.loc 1 71 1 is_stmt 1 view -0
+ 167              		.cfi_startproc
+ 168              		@ Volatile: function does not return.
+ 169              		@ args = 0, pretend = 0, frame = 0
+ 170              		@ frame_needed = 0, uses_anonymous_args = 0
+ 171 0000 08B5     		push	{r3, lr}
+ 172              	.LCFI3:
+ 173              		.cfi_def_cfa_offset 8
+ 174              		.cfi_offset 3, -8
+ 175              		.cfi_offset 14, -4
+  72:Core/Src/main.c **** 
+  73:Core/Src/main.c ****   HAL_Init();
+ 176              		.loc 1 73 3 view .LVU15
+ 177 0002 FFF7FEFF 		bl	HAL_Init
+ 178              	.LVL8:
+  74:Core/Src/main.c ****   clock_master_set(CLOCK_8MHZ);
+ 179              		.loc 1 74 3 view .LVU16
+ 180 0006 0020     		movs	r0, #0
+ 181 0008 FFF7FEFF 		bl	clock_master_set
+ 182              	.LVL9:
   75:Core/Src/main.c **** 
-ARM GAS  /tmp/ccuJ2uqL.s 			page 5
+  76:Core/Src/main.c ****   init_peripherals();
+ 183              		.loc 1 76 3 view .LVU17
+ 184 000c FFF7FEFF 		bl	init_peripherals
+ 185              	.LVL10:
+  77:Core/Src/main.c **** 
+ARM GAS  /tmp/ccXXUvrM.s 			page 6
 
 
-  76:Core/Src/main.c ****   while(1){
- 148              		.loc 1 76 3 discriminator 1 view .LVU17
- 149              	.LBB4:
-  77:Core/Src/main.c ****   send_command(CMD_AT,CMD_OK,1);
- 150              		.loc 1 77 3 discriminator 1 view .LVU18
- 151 0026 0122     		movs	r2, #1
- 152 0028 0549     		ldr	r1, .L10+4
- 153 002a 0648     		ldr	r0, .L10+8
- 154 002c FFF7FEFF 		bl	send_command
- 155              	.LVL12:
-  78:Core/Src/main.c ****   delay(2000);
- 156              		.loc 1 78 3 discriminator 1 view .LVU19
- 157 0030 4FF4FA60 		mov	r0, #2000
- 158 0034 FFF7FEFF 		bl	HAL_Delay
- 159              	.LVL13:
- 160              	.LBE4:
-  76:Core/Src/main.c ****   send_command(CMD_AT,CMD_OK,1);
- 161              		.loc 1 76 8 discriminator 1 view .LVU20
- 162 0038 F5E7     		b	.L8
- 163              	.L11:
- 164 003a 00BF     		.align	2
- 165              	.L10:
- 166 003c 00000000 		.word	.LC0
- 167 0040 14000000 		.word	.LC1
- 168 0044 1C000000 		.word	.LC2
- 169              		.cfi_endproc
- 170              	.LFE70:
- 172              		.section	.text.HAL_TIM_PeriodElapsedCallback,"ax",%progbits
- 173              		.align	1
- 174              		.global	HAL_TIM_PeriodElapsedCallback
- 175              		.syntax unified
- 176              		.thumb
- 177              		.thumb_func
- 178              		.fpu softvfp
- 180              	HAL_TIM_PeriodElapsedCallback:
- 181              	.LVL14:
- 182              	.LFB71:
+  78:Core/Src/main.c ****  
   79:Core/Src/main.c **** 
-  80:Core/Src/main.c ****   }
-  81:Core/Src/main.c **** 
-  82:Core/Src/main.c ****  
+  80:Core/Src/main.c ****   debug_print("Inicio programa\r\n");
+ 186              		.loc 1 80 3 view .LVU18
+ 187 0010 1648     		ldr	r0, .L14
+ 188 0012 FFF7FEFF 		bl	debug_print
+ 189              	.LVL11:
+  81:Core/Src/main.c ****   init_pins_sim();
+ 190              		.loc 1 81 3 view .LVU19
+ 191 0016 FFF7FEFF 		bl	init_pins_sim
+ 192              	.LVL12:
+  82:Core/Src/main.c ****   sim_init();
+ 193              		.loc 1 82 3 view .LVU20
+ 194 001a FFF7FEFF 		bl	sim_init
+ 195              	.LVL13:
   83:Core/Src/main.c ****   
   84:Core/Src/main.c **** 
-  85:Core/Src/main.c **** 
-  86:Core/Src/main.c ****   uint8_t counter = 0;
+  85:Core/Src/main.c ****   debug_print("envio comandos\r\n");  
+ 196              		.loc 1 85 3 view .LVU21
+ 197 001e 1448     		ldr	r0, .L14+4
+ 198 0020 FFF7FEFF 		bl	debug_print
+ 199              	.LVL14:
+  86:Core/Src/main.c **** 
   87:Core/Src/main.c **** 
-  88:Core/Src/main.c ****   /* Infinite loop */
-  89:Core/Src/main.c ****   /* USER CODE BEGIN WHILE */
-  90:Core/Src/main.c ****   while (1)
-  91:Core/Src/main.c ****   {
+  88:Core/Src/main.c ****  sim_version();
+ 200              		.loc 1 88 2 view .LVU22
+ 201 0024 FFF7FEFF 		bl	sim_version
+ 202              	.LVL15:
+  89:Core/Src/main.c **** 
+  90:Core/Src/main.c ****  sim_echo_off();
+ 203              		.loc 1 90 2 view .LVU23
+ 204 0028 FFF7FEFF 		bl	sim_echo_off
+ 205              	.LVL16:
+  91:Core/Src/main.c ****  sim_4g_connect();
+ 206              		.loc 1 91 2 view .LVU24
+ 207 002c FFF7FEFF 		bl	sim_4g_connect
+ 208              	.LVL17:
   92:Core/Src/main.c **** 
-  93:Core/Src/main.c **** 
-  94:Core/Src/main.c ****     init_sim();
+  93:Core/Src/main.c ****  sim_mqtt_connect();
+ 209              		.loc 1 93 2 view .LVU25
+ 210 0030 FFF7FEFF 		bl	sim_mqtt_connect
+ 211              	.LVL18:
+ 212              	.L12:
+  94:Core/Src/main.c **** 
   95:Core/Src/main.c **** 
-  96:Core/Src/main.c ****     counter ++;
-  97:Core/Src/main.c ****     delay(10000);
-  98:Core/Src/main.c **** 
-ARM GAS  /tmp/ccuJ2uqL.s 			page 6
+  96:Core/Src/main.c **** 
+  97:Core/Src/main.c **** 
+  98:Core/Src/main.c ****   while(1){
+ 213              		.loc 1 98 3 discriminator 1 view .LVU26
+  99:Core/Src/main.c **** debug_print("test sim sleep:on\r\n");
+ 214              		.loc 1 99 1 discriminator 1 view .LVU27
+ 215 0034 0F48     		ldr	r0, .L14+8
+ 216 0036 FFF7FEFF 		bl	debug_print
+ 217              	.LVL19:
+ 100:Core/Src/main.c **** sim_sleep();
+ 218              		.loc 1 100 1 discriminator 1 view .LVU28
+ 219 003a FFF7FEFF 		bl	sim_sleep
+ARM GAS  /tmp/ccXXUvrM.s 			page 7
 
 
-  99:Core/Src/main.c ****     if(counter == 5){
- 100:Core/Src/main.c ****     debug_print("run:0,5mhz\r\n");
- 101:Core/Src/main.c ****     debug_deinit();
- 102:Core/Src/main.c ****     MX_GPIO_Deinit();
- 103:Core/Src/main.c ****     MX_TIM3_Init();
- 104:Core/Src/main.c ****     HAL_DeInit();
- 105:Core/Src/main.c ****     HAL_TIM_Base_Start_IT(&htim3);
- 106:Core/Src/main.c ****     clock_master_set(CLOCK_1MHZ);
- 107:Core/Src/main.c ****     HAL_SuspendTick();
- 108:Core/Src/main.c ****     HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);    
- 109:Core/Src/main.c ****     HAL_Init();
- 110:Core/Src/main.c ****     HAL_ResumeTick();
- 111:Core/Src/main.c ****     HAL_TIM_Base_Stop_IT(&htim3);
- 112:Core/Src/main.c ****     clock_master_set(CLOCK_8MHZ); 
- 113:Core/Src/main.c ****     init_peripherals();
- 114:Core/Src/main.c ****      debug_print("sleep:off,  \r\n");
- 115:Core/Src/main.c ****      counter = 0;
- 116:Core/Src/main.c ****     }
- 117:Core/Src/main.c ****    
+ 220              	.LVL20:
+ 101:Core/Src/main.c **** delay(12000);
+ 221              		.loc 1 101 1 discriminator 1 view .LVU29
+ 222 003e 42F6E060 		movw	r0, #12000
+ 223 0042 FFF7FEFF 		bl	HAL_Delay
+ 224              	.LVL21:
+ 102:Core/Src/main.c **** debug_print("test sim sleep:off\r\n");
+ 225              		.loc 1 102 1 discriminator 1 view .LVU30
+ 226 0046 0C48     		ldr	r0, .L14+12
+ 227 0048 FFF7FEFF 		bl	debug_print
+ 228              	.LVL22:
+ 103:Core/Src/main.c **** 
+ 104:Core/Src/main.c **** sim_resumen();
+ 229              		.loc 1 104 1 discriminator 1 view .LVU31
+ 230 004c FFF7FEFF 		bl	sim_resumen
+ 231              	.LVL23:
+ 105:Core/Src/main.c **** delay(12000);
+ 232              		.loc 1 105 1 discriminator 1 view .LVU32
+ 233 0050 42F6E060 		movw	r0, #12000
+ 234 0054 FFF7FEFF 		bl	HAL_Delay
+ 235              	.LVL24:
+ 106:Core/Src/main.c **** debug_print("apagamos modulos sim\r\n");
+ 236              		.loc 1 106 1 discriminator 1 view .LVU33
+ 237 0058 0848     		ldr	r0, .L14+16
+ 238 005a FFF7FEFF 		bl	debug_print
+ 239              	.LVL25:
+ 107:Core/Src/main.c **** deinit_pins_sim();
+ 240              		.loc 1 107 1 discriminator 1 view .LVU34
+ 241 005e FFF7FEFF 		bl	deinit_pins_sim
+ 242              	.LVL26:
+ 108:Core/Src/main.c **** delay(12000);
+ 243              		.loc 1 108 1 discriminator 1 view .LVU35
+ 244 0062 42F6E060 		movw	r0, #12000
+ 245 0066 FFF7FEFF 		bl	HAL_Delay
+ 246              	.LVL27:
+  98:Core/Src/main.c **** debug_print("test sim sleep:on\r\n");
+ 247              		.loc 1 98 8 discriminator 1 view .LVU36
+ 248 006a E3E7     		b	.L12
+ 249              	.L15:
+ 250              		.align	2
+ 251              	.L14:
+ 252 006c 00000000 		.word	.LC0
+ 253 0070 14000000 		.word	.LC1
+ 254 0074 28000000 		.word	.LC2
+ 255 0078 3C000000 		.word	.LC3
+ 256 007c 54000000 		.word	.LC4
+ 257              		.cfi_endproc
+ 258              	.LFE71:
+ 260              		.section	.text.HAL_TIM_PeriodElapsedCallback,"ax",%progbits
+ 261              		.align	1
+ 262              		.global	HAL_TIM_PeriodElapsedCallback
+ 263              		.syntax unified
+ 264              		.thumb
+ 265              		.thumb_func
+ 266              		.fpu softvfp
+ 268              	HAL_TIM_PeriodElapsedCallback:
+ 269              	.LVL28:
+ARM GAS  /tmp/ccXXUvrM.s 			page 8
+
+
+ 270              	.LFB72:
+ 109:Core/Src/main.c **** 
+ 110:Core/Src/main.c **** 
+ 111:Core/Src/main.c **** 
+ 112:Core/Src/main.c ****   }
+ 113:Core/Src/main.c ****  
+ 114:Core/Src/main.c ****   
+ 115:Core/Src/main.c **** 
+ 116:Core/Src/main.c **** 
+ 117:Core/Src/main.c ****   uint8_t counter = 0;
  118:Core/Src/main.c **** 
- 119:Core/Src/main.c **** 
- 120:Core/Src/main.c ****     /* USER CODE BEGIN 3 */
- 121:Core/Src/main.c ****   }
- 122:Core/Src/main.c ****   /* USER CODE END 3 */
- 123:Core/Src/main.c **** }
+ 119:Core/Src/main.c ****   /* Infinite loop */
+ 120:Core/Src/main.c ****   /* USER CODE BEGIN WHILE */
+ 121:Core/Src/main.c ****   while (1)
+ 122:Core/Src/main.c ****   {
+ 123:Core/Src/main.c **** 
  124:Core/Src/main.c **** 
- 125:Core/Src/main.c **** 
- 126:Core/Src/main.c **** void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* tim){
- 183              		.loc 1 126 59 view -0
- 184              		.cfi_startproc
- 185              		@ args = 0, pretend = 0, frame = 0
- 186              		@ frame_needed = 0, uses_anonymous_args = 0
- 187              		@ link register save eliminated.
- 127:Core/Src/main.c **** 
- 128:Core/Src/main.c **** }
- 188              		.loc 1 128 1 view .LVU22
- 189 0000 7047     		bx	lr
- 190              		.cfi_endproc
- 191              	.LFE71:
- 193              		.section	.text.Error_Handler,"ax",%progbits
- 194              		.align	1
- 195              		.global	Error_Handler
- 196              		.syntax unified
- 197              		.thumb
- 198              		.thumb_func
- 199              		.fpu softvfp
- 201              	Error_Handler:
- 202              	.LFB72:
+ 125:Core/Src/main.c ****     init_sim();
+ 126:Core/Src/main.c **** 
+ 127:Core/Src/main.c ****     counter ++;
+ 128:Core/Src/main.c ****     delay(10000);
  129:Core/Src/main.c **** 
- 130:Core/Src/main.c **** 
- 131:Core/Src/main.c **** 
- 132:Core/Src/main.c **** 
- 133:Core/Src/main.c **** /**
- 134:Core/Src/main.c ****   * @brief  This function is executed in case of error occurrence.
- 135:Core/Src/main.c ****   * @retval None
- 136:Core/Src/main.c ****   */
- 137:Core/Src/main.c **** void Error_Handler(void)
-ARM GAS  /tmp/ccuJ2uqL.s 			page 7
+ 130:Core/Src/main.c ****     if(counter == 5){
+ 131:Core/Src/main.c ****     debug_print("run:0,5mhz\r\n");
+ 132:Core/Src/main.c ****     debug_deinit();
+ 133:Core/Src/main.c ****     MX_GPIO_Deinit();
+ 134:Core/Src/main.c ****     MX_TIM3_Init();
+ 135:Core/Src/main.c ****     HAL_DeInit();
+ 136:Core/Src/main.c ****     HAL_TIM_Base_Start_IT(&htim3);
+ 137:Core/Src/main.c ****     clock_master_set(CLOCK_1MHZ);
+ 138:Core/Src/main.c ****     HAL_SuspendTick();
+ 139:Core/Src/main.c ****     HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);    
+ 140:Core/Src/main.c ****     HAL_Init();
+ 141:Core/Src/main.c ****     HAL_ResumeTick();
+ 142:Core/Src/main.c ****     HAL_TIM_Base_Stop_IT(&htim3);
+ 143:Core/Src/main.c ****     clock_master_set(CLOCK_8MHZ); 
+ 144:Core/Src/main.c ****     init_peripherals();
+ 145:Core/Src/main.c ****      debug_print("sleep:off,  \r\n");
+ 146:Core/Src/main.c ****      counter = 0;
+ 147:Core/Src/main.c ****     }
+ 148:Core/Src/main.c ****    
+ 149:Core/Src/main.c **** 
+ 150:Core/Src/main.c **** 
+ 151:Core/Src/main.c ****     /* USER CODE BEGIN 3 */
+ 152:Core/Src/main.c ****   }
+ 153:Core/Src/main.c ****   /* USER CODE END 3 */
+ 154:Core/Src/main.c **** }
+ 155:Core/Src/main.c **** 
+ 156:Core/Src/main.c **** 
+ 157:Core/Src/main.c **** void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* tim){
+ 271              		.loc 1 157 59 view -0
+ 272              		.cfi_startproc
+ 273              		@ args = 0, pretend = 0, frame = 0
+ 274              		@ frame_needed = 0, uses_anonymous_args = 0
+ 275              		@ link register save eliminated.
+ 158:Core/Src/main.c **** 
+ 159:Core/Src/main.c **** }
+ARM GAS  /tmp/ccXXUvrM.s 			page 9
 
 
- 138:Core/Src/main.c **** {
- 203              		.loc 1 138 1 view -0
- 204              		.cfi_startproc
- 205              		@ Volatile: function does not return.
- 206              		@ args = 0, pretend = 0, frame = 0
- 207              		@ frame_needed = 0, uses_anonymous_args = 0
- 208              		@ link register save eliminated.
- 139:Core/Src/main.c ****   /* USER CODE BEGIN Error_Handler_Debug */
- 140:Core/Src/main.c ****   /* User can add his own implementation to report the HAL error return state */
- 141:Core/Src/main.c ****   __disable_irq();
- 209              		.loc 1 141 3 view .LVU24
- 210              	.LBB5:
- 211              	.LBI5:
- 212              		.file 2 "Drivers/CMSIS/Include/cmsis_gcc.h"
+ 276              		.loc 1 159 1 view .LVU38
+ 277 0000 7047     		bx	lr
+ 278              		.cfi_endproc
+ 279              	.LFE72:
+ 281              		.section	.text.Error_Handler,"ax",%progbits
+ 282              		.align	1
+ 283              		.global	Error_Handler
+ 284              		.syntax unified
+ 285              		.thumb
+ 286              		.thumb_func
+ 287              		.fpu softvfp
+ 289              	Error_Handler:
+ 290              	.LFB73:
+ 160:Core/Src/main.c **** 
+ 161:Core/Src/main.c **** 
+ 162:Core/Src/main.c **** 
+ 163:Core/Src/main.c **** 
+ 164:Core/Src/main.c **** /**
+ 165:Core/Src/main.c ****   * @brief  This function is executed in case of error occurrence.
+ 166:Core/Src/main.c ****   * @retval None
+ 167:Core/Src/main.c ****   */
+ 168:Core/Src/main.c **** void Error_Handler(void)
+ 169:Core/Src/main.c **** {
+ 291              		.loc 1 169 1 view -0
+ 292              		.cfi_startproc
+ 293              		@ Volatile: function does not return.
+ 294              		@ args = 0, pretend = 0, frame = 0
+ 295              		@ frame_needed = 0, uses_anonymous_args = 0
+ 296              		@ link register save eliminated.
+ 170:Core/Src/main.c ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 171:Core/Src/main.c ****   /* User can add his own implementation to report the HAL error return state */
+ 172:Core/Src/main.c ****   __disable_irq();
+ 297              		.loc 1 172 3 view .LVU40
+ 298              	.LBB4:
+ 299              	.LBI4:
+ 300              		.file 2 "Drivers/CMSIS/Include/cmsis_gcc.h"
    1:Drivers/CMSIS/Include/cmsis_gcc.h **** /**************************************************************************//**
    2:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @file     cmsis_gcc.h
    3:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
@@ -396,6 +538,9 @@ ARM GAS  /tmp/ccuJ2uqL.s 			page 1
   19:Drivers/CMSIS/Include/cmsis_gcc.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
   20:Drivers/CMSIS/Include/cmsis_gcc.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   21:Drivers/CMSIS/Include/cmsis_gcc.h ****  * See the License for the specific language governing permissions and
+ARM GAS  /tmp/ccXXUvrM.s 			page 10
+
+
   22:Drivers/CMSIS/Include/cmsis_gcc.h ****  * limitations under the License.
   23:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
   24:Drivers/CMSIS/Include/cmsis_gcc.h **** 
@@ -418,9 +563,6 @@ ARM GAS  /tmp/ccuJ2uqL.s 			page 1
   41:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ASM                                  __asm
   42:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
   43:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __INLINE
-ARM GAS  /tmp/ccuJ2uqL.s 			page 8
-
-
   44:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __INLINE                               inline
   45:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
   46:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_INLINE
@@ -456,6 +598,9 @@ ARM GAS  /tmp/ccuJ2uqL.s 			page 1
   76:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32(x)                  (((struct T_UINT32 *)(x))->v)
   77:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
   78:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_WRITE
+ARM GAS  /tmp/ccXXUvrM.s 			page 11
+
+
   79:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
   80:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
   81:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
@@ -478,9 +623,6 @@ ARM GAS  /tmp/ccuJ2uqL.s 			page 1
   98:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_WRITE { uint32_t v; };
   99:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
  100:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_WRITE(addr, val)    (void)((((struct T_UINT32_WRITE *)(void *)(addr))-
-ARM GAS  /tmp/ccuJ2uqL.s 			page 9
-
-
  101:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
  102:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_READ
  103:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
@@ -516,70 +658,73 @@ ARM GAS  /tmp/ccuJ2uqL.s 			page 1
  133:Drivers/CMSIS/Include/cmsis_gcc.h **** 
  134:Drivers/CMSIS/Include/cmsis_gcc.h **** 
  135:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ARM GAS  /tmp/ccXXUvrM.s 			page 12
+
+
  136:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Disable IRQ Interrupts
  137:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Disables IRQ interrupts by setting the I-bit in the CPSR.
  138:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
  139:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
  140:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __disable_irq(void)
- 213              		.loc 2 140 27 view .LVU25
- 214              	.LBB6:
+ 301              		.loc 2 140 27 view .LVU41
+ 302              	.LBB5:
  141:Drivers/CMSIS/Include/cmsis_gcc.h **** {
  142:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsid i" : : : "memory");
- 215              		.loc 2 142 3 view .LVU26
- 216              		.syntax unified
- 217              	@ 142 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
- 218 0000 72B6     		cpsid i
- 219              	@ 0 "" 2
- 220              		.thumb
- 221              		.syntax unified
- 222              	.L14:
- 223              	.LBE6:
- 224              	.LBE5:
- 142:Core/Src/main.c ****   while (1)
- 225              		.loc 1 142 3 discriminator 1 view .LVU27
- 143:Core/Src/main.c ****   {
-ARM GAS  /tmp/ccuJ2uqL.s 			page 10
-
-
- 144:Core/Src/main.c ****   }
- 226              		.loc 1 144 3 discriminator 1 view .LVU28
- 142:Core/Src/main.c ****   while (1)
- 227              		.loc 1 142 9 discriminator 1 view .LVU29
- 228 0002 FEE7     		b	.L14
- 229              		.cfi_endproc
- 230              	.LFE72:
- 232              		.text
- 233              	.Letext0:
- 234              		.file 3 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
- 235              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
- 236              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
- 237              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
- 238              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h"
- 239              		.file 8 "Core/Modulos/include/core.h"
- 240              		.file 9 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
- 241              		.file 10 "Core/Modulos/include/clock_master.h"
- 242              		.file 11 "Core/Modulos/include/debug.h"
- 243              		.file 12 "Core/Inc/sim.h"
- 244              		.file 13 "Core/Modulos/include/gpio.h"
- 245              		.file 14 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
-ARM GAS  /tmp/ccuJ2uqL.s 			page 11
+ 303              		.loc 2 142 3 view .LVU42
+ 304              		.syntax unified
+ 305              	@ 142 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 306 0000 72B6     		cpsid i
+ 307              	@ 0 "" 2
+ 308              		.thumb
+ 309              		.syntax unified
+ 310              	.L18:
+ 311              	.LBE5:
+ 312              	.LBE4:
+ 173:Core/Src/main.c ****   while (1)
+ 313              		.loc 1 173 3 discriminator 1 view .LVU43
+ 174:Core/Src/main.c ****   {
+ 175:Core/Src/main.c ****   }
+ 314              		.loc 1 175 3 discriminator 1 view .LVU44
+ 173:Core/Src/main.c ****   while (1)
+ 315              		.loc 1 173 9 discriminator 1 view .LVU45
+ 316 0002 FEE7     		b	.L18
+ 317              		.cfi_endproc
+ 318              	.LFE73:
+ 320              		.text
+ 321              	.Letext0:
+ 322              		.file 3 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
+ 323              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 324              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 325              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 326              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h"
+ 327              		.file 8 "Core/Modulos/include/core.h"
+ 328              		.file 9 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 329              		.file 10 "Core/Modulos/include/clock_master.h"
+ 330              		.file 11 "Core/Modulos/include/debug.h"
+ 331              		.file 12 "Core/Inc/sim.h"
+ 332              		.file 13 "Core/Modulos/include/gpio.h"
+ 333              		.file 14 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ARM GAS  /tmp/ccXXUvrM.s 			page 13
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 main.c
-     /tmp/ccuJ2uqL.s:16     .text.init_peripherals:0000000000000000 $t
-     /tmp/ccuJ2uqL.s:23     .text.init_peripherals:0000000000000000 init_peripherals
-     /tmp/ccuJ2uqL.s:47     .text.init_sim:0000000000000000 $t
-     /tmp/ccuJ2uqL.s:53     .text.init_sim:0000000000000000 init_sim
-     /tmp/ccuJ2uqL.s:88     .text.init_sim:0000000000000028 $d
-     /tmp/ccuJ2uqL.s:94     .rodata.main.str1.4:0000000000000000 $d
-     /tmp/ccuJ2uqL.s:104    .text.main:0000000000000000 $t
-     /tmp/ccuJ2uqL.s:111    .text.main:0000000000000000 main
-     /tmp/ccuJ2uqL.s:166    .text.main:000000000000003c $d
-     /tmp/ccuJ2uqL.s:173    .text.HAL_TIM_PeriodElapsedCallback:0000000000000000 $t
-     /tmp/ccuJ2uqL.s:180    .text.HAL_TIM_PeriodElapsedCallback:0000000000000000 HAL_TIM_PeriodElapsedCallback
-     /tmp/ccuJ2uqL.s:194    .text.Error_Handler:0000000000000000 $t
-     /tmp/ccuJ2uqL.s:201    .text.Error_Handler:0000000000000000 Error_Handler
+     /tmp/ccXXUvrM.s:16     .text.init_peripherals:0000000000000000 $t
+     /tmp/ccXXUvrM.s:23     .text.init_peripherals:0000000000000000 init_peripherals
+     /tmp/ccXXUvrM.s:47     .text.init_pins_sim:0000000000000000 $t
+     /tmp/ccXXUvrM.s:53     .text.init_pins_sim:0000000000000000 init_pins_sim
+     /tmp/ccXXUvrM.s:88     .text.init_pins_sim:0000000000000028 $d
+     /tmp/ccXXUvrM.s:94     .text.deinit_pins_sim:0000000000000000 $t
+     /tmp/ccXXUvrM.s:100    .text.deinit_pins_sim:0000000000000000 deinit_pins_sim
+     /tmp/ccXXUvrM.s:135    .text.deinit_pins_sim:0000000000000028 $d
+     /tmp/ccXXUvrM.s:141    .rodata.main.str1.4:0000000000000000 $d
+     /tmp/ccXXUvrM.s:157    .text.main:0000000000000000 $t
+     /tmp/ccXXUvrM.s:164    .text.main:0000000000000000 main
+     /tmp/ccXXUvrM.s:252    .text.main:000000000000006c $d
+     /tmp/ccXXUvrM.s:261    .text.HAL_TIM_PeriodElapsedCallback:0000000000000000 $t
+     /tmp/ccXXUvrM.s:268    .text.HAL_TIM_PeriodElapsedCallback:0000000000000000 HAL_TIM_PeriodElapsedCallback
+     /tmp/ccXXUvrM.s:282    .text.Error_Handler:0000000000000000 $t
+     /tmp/ccXXUvrM.s:289    .text.Error_Handler:0000000000000000 Error_Handler
 
 UNDEFINED SYMBOLS
 MX_GPIO_Init
@@ -588,6 +733,11 @@ HAL_GPIO_WritePin
 HAL_Init
 clock_master_set
 debug_print
-HAL_Delay
 sim_init
-send_command
+sim_version
+sim_echo_off
+sim_4g_connect
+sim_mqtt_connect
+sim_sleep
+HAL_Delay
+sim_resumen

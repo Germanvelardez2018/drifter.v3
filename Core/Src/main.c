@@ -27,13 +27,32 @@
 extern TIM_HandleTypeDef htim3;
 
 
+#define CMD_OPEN_APN_TUENTI                          "AT+CNACT=1,\"internet.movil\"\r\n"
+#define CMD_OPEN_APN_PERSONAL                        "AT+CNACT=1,\"datos.personal.com\"\r\n"
+#define CMD_GET_APN                                  "AT+CNACT?\r\n"       
+#define  CMD_AT                                        "AT\r\n"
+#define  CMD_OK                                       "OK\r\n"
+#define  CMD_VERSION                                   "ATI\r\n"
+#define  CMD_ECHO_ON                                   "ATE1\r\n"
+#define  CMD_ECHO_OFF                                  "ATE0\r\n"
 
-static void init_sim(){
+
+static void init_pins_sim(){
   HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,1);
   HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,1);
   HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,1);
 
 }
+
+
+
+static void deinit_pins_sim(){
+  HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,0);
+  HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,0);
+  HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,0);
+
+}
+
 
 
 static void init_peripherals(){
@@ -59,26 +78,38 @@ int main(void)
  
 
   debug_print("Inicio programa\r\n");
-  init_sim();
-    delay(15000);
-
+  init_pins_sim();
   sim_init();
+  
+
+  debug_print("envio comandos\r\n");  
+
+
+ sim_version();
+
+ sim_echo_off();
+ sim_4g_connect();
+
+ sim_mqtt_connect();
 
 
 
-
-
-
-#define  CMD_AT                                        "AT\r\n"
-#define  CMD_OK                                       "OK\r\n"
-#define  CMD_VERSION                                   "ATI\r\n"
 
   while(1){
-  send_command(CMD_AT,CMD_OK,1);
-  delay(2000);
+debug_print("test sim sleep:on\r\n");
+sim_sleep();
+delay(12000);
+debug_print("test sim sleep:off\r\n");
+
+sim_resumen();
+delay(12000);
+debug_print("apagamos modulos sim\r\n");
+deinit_pins_sim();
+delay(12000);
+
+
 
   }
-
  
   
 
