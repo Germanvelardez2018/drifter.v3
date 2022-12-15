@@ -22,6 +22,7 @@
 #include "gpio.h"
 #include "clock_master.h"
 #include "time.h"
+#include "sim.h"
 
 extern TIM_HandleTypeDef htim3;
 
@@ -55,13 +56,30 @@ int main(void)
 
   init_peripherals();
 
-  init_sim();
  
 
-  debug_print("run:8mhz\r\n");
+  debug_print("Inicio programa\r\n");
+  init_sim();
+    delay(15000);
 
-  while(1);
+  sim_init();
 
+
+
+
+
+
+#define  CMD_AT                                        "AT\r\n"
+#define  CMD_OK                                       "OK\r\n"
+#define  CMD_VERSION                                   "ATI\r\n"
+
+  while(1){
+  send_command(CMD_AT,CMD_OK,1);
+  delay(2000);
+
+  }
+
+ 
   
 
 
@@ -71,8 +89,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+
+    init_sim();
+
     counter ++;
-    delay(1000);
+    delay(10000);
 
     if(counter == 5){
     debug_print("run:0,5mhz\r\n");

@@ -44,6 +44,7 @@ Core/Modules/drivers/wdt.c \
 Core/Modules/drivers/i2c.c \
 Core/Modulos/drivers/uart.c \
 Core/Modulos/drivers/spi.c \
+Core/Modules/sim.c \
 Core/Modulos/debug.c \
 Core/Modulos/rtc.c \
 Core/Src/main.c \
