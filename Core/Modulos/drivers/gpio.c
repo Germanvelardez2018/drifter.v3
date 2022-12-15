@@ -56,6 +56,14 @@
 
 
 
+void MX_GPIO_Deinit(){
+
+  __HAL_RCC_GPIOA_CLK_DISABLE();
+  __HAL_RCC_GPIOB_CLK_DISABLE();
+  
+}
+
+
 
 
 /**

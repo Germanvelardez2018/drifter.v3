@@ -57,6 +57,7 @@ extern "C" {
 
  //! Usado en clock master
 typedef enum{
+    CLOCK_05MHZ = RCC_SYSCLK_DIV512,
     CLOCK_1MHZ = RCC_SYSCLK_DIV8 ,
     CLOCK_2MHZ = RCC_SYSCLK_DIV4, 
     CLOCK_4MHZ = RCC_SYSCLK_DIV2,

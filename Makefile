@@ -36,6 +36,7 @@ BUILD_DIR = build
 ######################################
 # C sources
 C_SOURCES =  \
+Core/Modules/drivers/timer.c \
 Core/Modules/drivers/clock_master.c \
 Core/Modules/drivers/gpio.c \
 Core/Modules/drivers/adc.c \

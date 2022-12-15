@@ -16,6 +16,12 @@ inline void debug_init(){
 }
 
 
+inline void debug_deinit(){
+    HAL_UART_DeInit(DEBUG_UART);
+}
+
+
+
 
 
 inline void debug_print(uint8_t* buffer){

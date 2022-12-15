@@ -12,10 +12,14 @@ extern "C" {
 #include "core.h"
 
 
-
+/* Inicializo el periferico que soporta el debug: UART2 por default
+*/
  void debug_init();
 
 
+/* Desinicializo el periferico que soporta el debug: UART2 por default
+*/
+void  debug_deinit();
 
 
  void debug_print(uint8_t* buffer);

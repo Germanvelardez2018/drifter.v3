@@ -21,9 +21,18 @@
 #include "debug.h"
 #include "gpio.h"
 #include "clock_master.h"
+#include "time.h"
+
+extern TIM_HandleTypeDef htim3;
 
 
 
+static void init_peripherals(){
+
+
+  MX_GPIO_Init();
+  debug_init();
+}
 
 
 /**
@@ -36,13 +45,12 @@ int main(void)
   HAL_Init();
 
   
-clock_master_set(CLOCK_8MHZ);
+  clock_master_set(CLOCK_8MHZ);
+  init_peripherals();
+ 
+
   
-  MX_GPIO_Init();
 
-
-  debug_init();
-  /* USER CODE END 2 */
 
   debug_print("run:8mhz\r\n");
 
@@ -55,27 +63,25 @@ clock_master_set(CLOCK_8MHZ);
     counter ++;
     delay(1000);
 
-    if(counter == 10){
-    debug_print("run:1mhz\r\n");
-     
-     clock_master_set(CLOCK_1MHZ);
-     delay(10000);
-     clock_master_set(CLOCK_8MHZ);
-     debug_print("sleep:on\r\n");
-
-
-     HAL_SuspendTick();
-
-
-      HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
-      HAL_ResumeTick();
-      clock_master_set(CLOCK_8MHZ);
-
-      debug_print("sleep:off\r\n");
-      counter = 0;
+    if(counter == 5){
+    debug_print("run:0,5mhz\r\n");
+    debug_deinit();
+    MX_GPIO_Deinit();
+    MX_TIM3_Init();
+    HAL_DeInit();
+    HAL_TIM_Base_Start_IT(&htim3);
+    clock_master_set(CLOCK_1MHZ);
+    HAL_SuspendTick();
+    HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);    
+    HAL_Init();
+    HAL_ResumeTick();
+    HAL_TIM_Base_Stop_IT(&htim3);
+    clock_master_set(CLOCK_8MHZ); 
+    init_peripherals();
+     debug_print("sleep:off,  \r\n");
+     counter = 0;
     }
-   // debug_print("test\r\n");
-   // HAL_GPIO_TogglePin(LED_PIN_GPIO_Port,LED_PIN_Pin);
+   
 
 
     /* USER CODE BEGIN 3 */
@@ -83,6 +89,11 @@ clock_master_set(CLOCK_8MHZ);
   /* USER CODE END 3 */
 }
 
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* tim){
+HAL_GPIO_WritePin(LED_PIN_GPIO_Port,LED_PIN_Pin,1);
+
+}
 
 
 
