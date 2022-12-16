@@ -7,6 +7,10 @@
 
 
 
+#define EXAMPLO_GPS_FORMAT                              ("1,1,20221216181549.000,-34.576180,-58.516807,16.000,0.00,0.0,1,,2.8,3.0,0.9,,10,4,,,40,,␍␊")
+
+
+
 #define CMD_OPEN_APN_TUENTI                          "AT+CNACT=1,\"internet.movil\"\r\n"
 #define CMD_OPEN_APN_PERSONAL                        "AT+CNACT=1,\"datos.personal.com\"\r\n"
 #define CMD_GET_APN                                  "AT+CNACT?\r\n"       

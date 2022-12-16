@@ -23,6 +23,7 @@
 #include "clock_master.h"
 #include "time.h"
 #include "sim.h"
+#include "mpu6050.h"
 
 extern TIM_HandleTypeDef htim3;
 
@@ -45,10 +46,31 @@ int main(void)
 
   HAL_Init();
   clock_master_set(CLOCK_8MHZ);
-  
+  MX_GPIO_Init();
+  debug_init();
+  debug_print("test sensor \r\n");
 
-       MX_GPIO_Init();
-      debug_init();
+  mpu6050_init();
+
+
+
+  while(1){
+    mpu6050_get_measure(buffer,100);
+    debug_print(buffer);
+    delay(5000);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 
       sim_init();
       debug_print("Inicio programr\n");
