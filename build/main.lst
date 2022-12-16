@@ -1,4 +1,4 @@
-ARM GAS  /tmp/cc5gzV6I.s 			page 1
+ARM GAS  /tmp/cclLFc8Y.s 			page 1
 
 
    1              		.cpu cortex-m3
@@ -32,14 +32,14 @@ ARM GAS  /tmp/cc5gzV6I.s 			page 1
   21      2E2E0D0A 
   22 0029 000000   		.align	2
   23              	.LC2:
-  24 002c 61706167 		.ascii	"apagando  GPS y modulo...\015\012\000"
-  24      616E646F 
-  24      20204750 
-  24      53207920 
-  24      6D6F6475 
-  25              		.align	2
+  24 002c 0D0A6170 		.ascii	"\015\012apagando  GPS y modulo...\015\012\000"
+  24      6167616E 
+  24      646F2020 
+  24      47505320 
+  24      79206D6F 
+  25 004a 0000     		.align	2
   26              	.LC3:
-  27 0048 496E6963 		.ascii	"Inicio modulo sim nuevamente\015\012\000"
+  27 004c 496E6963 		.ascii	"Inicio modulo sim nuevamente\015\012\000"
   27      696F206D 
   27      6F64756C 
   27      6F207369 
@@ -58,7 +58,7 @@ ARM GAS  /tmp/cc5gzV6I.s 			page 1
    1:Core/Src/main.c **** /* USER CODE BEGIN Header */
    2:Core/Src/main.c **** /**
    3:Core/Src/main.c ****   ******************************************************************************
-ARM GAS  /tmp/cc5gzV6I.s 			page 2
+ARM GAS  /tmp/cclLFc8Y.s 			page 2
 
 
    4:Core/Src/main.c ****   * @file           : main.c
@@ -106,10 +106,10 @@ ARM GAS  /tmp/cc5gzV6I.s 			page 1
   41              		.cfi_startproc
   42              		@ args = 0, pretend = 0, frame = 0
   43              		@ frame_needed = 0, uses_anonymous_args = 0
-  44 0000 08B5     		push	{r3, lr}
+  44 0000 10B5     		push	{r4, lr}
   45              	.LCFI0:
   46              		.cfi_def_cfa_offset 8
-  47              		.cfi_offset 3, -8
+  47              		.cfi_offset 4, -8
   48              		.cfi_offset 14, -4
   45:Core/Src/main.c **** 
   46:Core/Src/main.c ****   HAL_Init();
@@ -118,7 +118,7 @@ ARM GAS  /tmp/cc5gzV6I.s 			page 1
   51              	.LVL0:
   47:Core/Src/main.c ****   clock_master_set(CLOCK_8MHZ);
   52              		.loc 1 47 3 view .LVU2
-ARM GAS  /tmp/cc5gzV6I.s 			page 3
+ARM GAS  /tmp/cclLFc8Y.s 			page 3
 
 
   53 0006 0020     		movs	r0, #0
@@ -141,7 +141,7 @@ ARM GAS  /tmp/cc5gzV6I.s 			page 1
   64              	.LVL4:
   54:Core/Src/main.c ****       debug_print("Inicio programr\n");
   65              		.loc 1 54 7 view .LVU6
-  66 0018 1848     		ldr	r0, .L4
+  66 0018 1A48     		ldr	r0, .L4
   67 001a FFF7FEFF 		bl	debug_print
   68              	.LVL5:
   55:Core/Src/main.c ****       delay(20000);
@@ -178,7 +178,7 @@ ARM GAS  /tmp/cc5gzV6I.s 			page 1
   72:Core/Src/main.c ****       // levanto el sim
   73:Core/Src/main.c ****       sim_init();
   74:Core/Src/main.c ****       debug_print("Inicio modulo sim nuevamente\r\n");
-ARM GAS  /tmp/cc5gzV6I.s 			page 4
+ARM GAS  /tmp/cclLFc8Y.s 			page 4
 
 
   75:Core/Src/main.c ****      
@@ -191,7 +191,7 @@ ARM GAS  /tmp/cc5gzV6I.s 			page 1
   82:Core/Src/main.c **** 
   83:Core/Src/main.c ****     debug_print("encendiendo GPS...\r\n");
   83              		.loc 1 83 5 view .LVU13
-  84 002e 1448     		ldr	r0, .L4+4
+  84 002e 1648     		ldr	r0, .L4+4
   85 0030 FFF7FEFF 		bl	debug_print
   86              	.LVL9:
   84:Core/Src/main.c ****     sim_resumen();
@@ -209,115 +209,121 @@ ARM GAS  /tmp/cc5gzV6I.s 			page 1
   96              	.LVL12:
   87:Core/Src/main.c ****     sim_gps_get_info(buffer,100);
   97              		.loc 1 87 5 view .LVU17
-  98 0044 6421     		movs	r1, #100
-  99 0046 0F48     		ldr	r0, .L4+8
- 100 0048 FFF7FEFF 		bl	sim_gps_get_info
- 101              	.LVL13:
+  98 0044 114C     		ldr	r4, .L4+8
+  99 0046 6421     		movs	r1, #100
+ 100 0048 2046     		mov	r0, r4
+ 101 004a FFF7FEFF 		bl	sim_gps_get_info
+ 102              	.LVL13:
   88:Core/Src/main.c ****     debug_print(sim_get_gps_data());
- 102              		.loc 1 88 5 view .LVU18
- 103 004c FFF7FEFF 		bl	sim_get_gps_data
- 104              	.LVL14:
- 105 0050 FFF7FEFF 		bl	debug_print
- 106              	.LVL15:
-  89:Core/Src/main.c **** 
+ 103              		.loc 1 88 5 view .LVU18
+ 104 004e FFF7FEFF 		bl	sim_get_gps_data
+ 105              	.LVL14:
+ 106 0052 FFF7FEFF 		bl	debug_print
+ 107              	.LVL15:
+  89:Core/Src/main.c ****     debug_print(buffer);
+ 108              		.loc 1 89 5 view .LVU19
+ 109 0056 2046     		mov	r0, r4
+ 110 0058 FFF7FEFF 		bl	debug_print
+ 111              	.LVL16:
   90:Core/Src/main.c **** 
-  91:Core/Src/main.c ****     debug_print("apagando  GPS y modulo...\r\n");
- 107              		.loc 1 91 5 view .LVU19
- 108 0054 0C48     		ldr	r0, .L4+12
- 109 0056 FFF7FEFF 		bl	debug_print
- 110              	.LVL16:
-  92:Core/Src/main.c ****     //sim_gps_off();   //69mA
-  93:Core/Src/main.c ****     //sim_sleep();
-  94:Core/Src/main.c ****       
-  95:Core/Src/main.c **** 
-  96:Core/Src/main.c ****     sim_deinit();
- 111              		.loc 1 96 5 view .LVU20
- 112 005a FFF7FEFF 		bl	sim_deinit
- 113              	.LVL17:
-  97:Core/Src/main.c ****       
-  98:Core/Src/main.c ****     delay(25000);
- 114              		.loc 1 98 5 view .LVU21
- 115 005e 46F2A810 		movw	r0, #25000
-ARM GAS  /tmp/cc5gzV6I.s 			page 5
+  91:Core/Src/main.c **** 
+  92:Core/Src/main.c ****     debug_print("\r\napagando  GPS y modulo...\r\n");
+ 112              		.loc 1 92 5 view .LVU20
+ 113 005c 0C48     		ldr	r0, .L4+12
+ 114 005e FFF7FEFF 		bl	debug_print
+ 115              	.LVL17:
+  93:Core/Src/main.c ****     //sim_gps_off();   //69mA
+  94:Core/Src/main.c ****     //sim_sleep();
+  95:Core/Src/main.c ****       
+  96:Core/Src/main.c **** 
+  97:Core/Src/main.c ****     sim_deinit();
+ 116              		.loc 1 97 5 view .LVU21
+ARM GAS  /tmp/cclLFc8Y.s 			page 5
 
 
- 116 0062 FFF7FEFF 		bl	HAL_Delay
- 117              	.LVL18:
-  99:Core/Src/main.c ****    
- 100:Core/Src/main.c **** 
- 101:Core/Src/main.c ****   init = 1;
- 118              		.loc 1 101 3 view .LVU22
+ 117 0062 FFF7FEFF 		bl	sim_deinit
+ 118              	.LVL18:
+  98:Core/Src/main.c ****       
+  99:Core/Src/main.c ****     delay(25000);
+ 119              		.loc 1 99 5 view .LVU22
+ 120 0066 46F2A810 		movw	r0, #25000
+ 121 006a FFF7FEFF 		bl	HAL_Delay
+ 122              	.LVL19:
+ 100:Core/Src/main.c ****    
+ 101:Core/Src/main.c **** 
+ 102:Core/Src/main.c ****   init = 1;
+ 123              		.loc 1 102 3 view .LVU23
   69:Core/Src/main.c **** 
- 119              		.loc 1 69 6 view .LVU23
+ 124              		.loc 1 69 6 view .LVU24
   69:Core/Src/main.c **** 
- 120              		.loc 1 69 1 view .LVU24
+ 125              		.loc 1 69 1 view .LVU25
   71:Core/Src/main.c ****       // levanto el sim
- 121              		.loc 1 71 5 view .LVU25
+ 126              		.loc 1 71 5 view .LVU26
   73:Core/Src/main.c ****       debug_print("Inicio modulo sim nuevamente\r\n");
- 122              		.loc 1 73 7 view .LVU26
- 123 0066 FFF7FEFF 		bl	sim_init
- 124              	.LVL19:
+ 127              		.loc 1 73 7 view .LVU27
+ 128 006e FFF7FEFF 		bl	sim_init
+ 129              	.LVL20:
   74:Core/Src/main.c ****      
- 125              		.loc 1 74 7 view .LVU27
- 126 006a 0848     		ldr	r0, .L4+16
- 127 006c FFF7FEFF 		bl	debug_print
- 128              	.LVL20:
+ 130              		.loc 1 74 7 view .LVU28
+ 131 0072 0848     		ldr	r0, .L4+16
+ 132 0074 FFF7FEFF 		bl	debug_print
+ 133              	.LVL21:
   79:Core/Src/main.c ****       sim_version();
- 129              		.loc 1 79 7 view .LVU28
- 130 0070 FFF7FEFF 		bl	sim_echo_off
- 131              	.LVL21:
+ 134              		.loc 1 79 7 view .LVU29
+ 135 0078 FFF7FEFF 		bl	sim_echo_off
+ 136              	.LVL22:
   80:Core/Src/main.c ****     }
- 132              		.loc 1 80 7 view .LVU29
- 133 0074 FFF7FEFF 		bl	sim_version
- 134              	.LVL22:
- 135 0078 D9E7     		b	.L2
- 136              	.L5:
- 137 007a 00BF     		.align	2
- 138              	.L4:
- 139 007c 00000000 		.word	.LC0
- 140 0080 14000000 		.word	.LC1
- 141 0084 00000000 		.word	.LANCHOR0
- 142 0088 2C000000 		.word	.LC2
- 143 008c 48000000 		.word	.LC3
- 144              		.cfi_endproc
- 145              	.LFE68:
- 147              		.section	.text.Error_Handler,"ax",%progbits
- 148              		.align	1
- 149              		.global	Error_Handler
- 150              		.syntax unified
- 151              		.thumb
- 152              		.thumb_func
- 153              		.fpu softvfp
- 155              	Error_Handler:
- 156              	.LFB69:
- 102:Core/Src/main.c **** 
- 103:Core/Src/main.c **** }
- 104:Core/Src/main.c ****  
- 105:Core/Src/main.c **** }
- 106:Core/Src/main.c **** 
+ 137              		.loc 1 80 7 view .LVU30
+ 138 007c FFF7FEFF 		bl	sim_version
+ 139              	.LVL23:
+ 140 0080 D5E7     		b	.L2
+ 141              	.L5:
+ 142 0082 00BF     		.align	2
+ 143              	.L4:
+ 144 0084 00000000 		.word	.LC0
+ 145 0088 14000000 		.word	.LC1
+ 146 008c 00000000 		.word	.LANCHOR0
+ 147 0090 2C000000 		.word	.LC2
+ 148 0094 4C000000 		.word	.LC3
+ 149              		.cfi_endproc
+ 150              	.LFE68:
+ 152              		.section	.text.Error_Handler,"ax",%progbits
+ 153              		.align	1
+ 154              		.global	Error_Handler
+ 155              		.syntax unified
+ 156              		.thumb
+ 157              		.thumb_func
+ 158              		.fpu softvfp
+ 160              	Error_Handler:
+ 161              	.LFB69:
+ 103:Core/Src/main.c **** 
+ 104:Core/Src/main.c **** }
+ARM GAS  /tmp/cclLFc8Y.s 			page 6
+
+
+ 105:Core/Src/main.c ****  
+ 106:Core/Src/main.c **** }
  107:Core/Src/main.c **** 
- 108:Core/Src/main.c **** /**
- 109:Core/Src/main.c ****   * @brief  This function is executed in case of error occurrence.
-ARM GAS  /tmp/cc5gzV6I.s 			page 6
-
-
- 110:Core/Src/main.c ****   * @retval None
- 111:Core/Src/main.c ****   */
- 112:Core/Src/main.c **** void Error_Handler(void)
- 113:Core/Src/main.c **** {
- 157              		.loc 1 113 1 view -0
- 158              		.cfi_startproc
- 159              		@ Volatile: function does not return.
- 160              		@ args = 0, pretend = 0, frame = 0
- 161              		@ frame_needed = 0, uses_anonymous_args = 0
- 162              		@ link register save eliminated.
- 114:Core/Src/main.c ****   /* USER CODE BEGIN Error_Handler_Debug */
- 115:Core/Src/main.c ****   /* User can add his own implementation to report the HAL error return state */
- 116:Core/Src/main.c ****   __disable_irq();
- 163              		.loc 1 116 3 view .LVU31
- 164              	.LBB4:
- 165              	.LBI4:
- 166              		.file 2 "Drivers/CMSIS/Include/cmsis_gcc.h"
+ 108:Core/Src/main.c **** 
+ 109:Core/Src/main.c **** /**
+ 110:Core/Src/main.c ****   * @brief  This function is executed in case of error occurrence.
+ 111:Core/Src/main.c ****   * @retval None
+ 112:Core/Src/main.c ****   */
+ 113:Core/Src/main.c **** void Error_Handler(void)
+ 114:Core/Src/main.c **** {
+ 162              		.loc 1 114 1 view -0
+ 163              		.cfi_startproc
+ 164              		@ Volatile: function does not return.
+ 165              		@ args = 0, pretend = 0, frame = 0
+ 166              		@ frame_needed = 0, uses_anonymous_args = 0
+ 167              		@ link register save eliminated.
+ 115:Core/Src/main.c ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 116:Core/Src/main.c ****   /* User can add his own implementation to report the HAL error return state */
+ 117:Core/Src/main.c ****   __disable_irq();
+ 168              		.loc 1 117 3 view .LVU32
+ 169              	.LBB4:
+ 170              	.LBI4:
+ 171              		.file 2 "Drivers/CMSIS/Include/cmsis_gcc.h"
    1:Drivers/CMSIS/Include/cmsis_gcc.h **** /**************************************************************************//**
    2:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @file     cmsis_gcc.h
    3:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
@@ -352,15 +358,15 @@ ARM GAS  /tmp/cc5gzV6I.s 			page 1
   32:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wunused-parameter"
   33:Drivers/CMSIS/Include/cmsis_gcc.h **** 
   34:Drivers/CMSIS/Include/cmsis_gcc.h **** /* Fallback for __has_builtin */
+ARM GAS  /tmp/cclLFc8Y.s 			page 7
+
+
   35:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __has_builtin
   36:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __has_builtin(x) (0)
   37:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
   38:Drivers/CMSIS/Include/cmsis_gcc.h **** 
   39:Drivers/CMSIS/Include/cmsis_gcc.h **** /* CMSIS compiler specific defines */
   40:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ASM
-ARM GAS  /tmp/cc5gzV6I.s 			page 7
-
-
   41:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ASM                                  __asm
   42:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
   43:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __INLINE
@@ -412,15 +418,15 @@ ARM GAS  /tmp/cc5gzV6I.s 			page 1
   89:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
   90:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_READ { uint16_t v; };
   91:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ARM GAS  /tmp/cclLFc8Y.s 			page 8
+
+
   92:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_READ(addr)          (((const struct T_UINT16_READ *)(const void *)(add
   93:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
   94:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
   95:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
   96:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
   97:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
-ARM GAS  /tmp/cc5gzV6I.s 			page 8
-
-
   98:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_WRITE { uint32_t v; };
   99:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
  100:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_WRITE(addr, val)    (void)((((struct T_UINT32_WRITE *)(void *)(addr))-
@@ -464,65 +470,65 @@ ARM GAS  /tmp/cc5gzV6I.s 			page 1
  138:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
  139:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
  140:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __disable_irq(void)
- 167              		.loc 2 140 27 view .LVU32
- 168              	.LBB5:
+ 172              		.loc 2 140 27 view .LVU33
+ 173              	.LBB5:
  141:Drivers/CMSIS/Include/cmsis_gcc.h **** {
  142:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsid i" : : : "memory");
- 169              		.loc 2 142 3 view .LVU33
- 170              		.syntax unified
- 171              	@ 142 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
- 172 0000 72B6     		cpsid i
- 173              	@ 0 "" 2
- 174              		.thumb
+ 174              		.loc 2 142 3 view .LVU34
  175              		.syntax unified
- 176              	.L7:
- 177              	.LBE5:
- 178              	.LBE4:
-ARM GAS  /tmp/cc5gzV6I.s 			page 9
+ 176              	@ 142 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 177 0000 72B6     		cpsid i
+ARM GAS  /tmp/cclLFc8Y.s 			page 9
 
 
- 117:Core/Src/main.c ****   while (1)
- 179              		.loc 1 117 3 discriminator 1 view .LVU34
- 118:Core/Src/main.c ****   {
- 119:Core/Src/main.c ****   }
- 180              		.loc 1 119 3 discriminator 1 view .LVU35
- 117:Core/Src/main.c ****   while (1)
- 181              		.loc 1 117 9 discriminator 1 view .LVU36
- 182 0002 FEE7     		b	.L7
- 183              		.cfi_endproc
- 184              	.LFE69:
- 186              		.global	buffer
- 187              		.section	.bss.buffer,"aw",%nobits
- 188              		.align	2
- 189              		.set	.LANCHOR0,. + 0
- 192              	buffer:
- 193 0000 00000000 		.space	100
- 193      00000000 
- 193      00000000 
- 193      00000000 
- 193      00000000 
- 194              		.text
- 195              	.Letext0:
- 196              		.file 3 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
- 197              		.file 4 "Core/Modulos/include/clock_master.h"
- 198              		.file 5 "Core/Modulos/include/gpio.h"
- 199              		.file 6 "Core/Modulos/include/debug.h"
- 200              		.file 7 "Core/Modulos/include/sim.h"
- 201              		.file 8 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
- 202              		.file 9 "Core/Modulos/include/core.h"
-ARM GAS  /tmp/cc5gzV6I.s 			page 10
+ 178              	@ 0 "" 2
+ 179              		.thumb
+ 180              		.syntax unified
+ 181              	.L7:
+ 182              	.LBE5:
+ 183              	.LBE4:
+ 118:Core/Src/main.c ****   while (1)
+ 184              		.loc 1 118 3 discriminator 1 view .LVU35
+ 119:Core/Src/main.c ****   {
+ 120:Core/Src/main.c ****   }
+ 185              		.loc 1 120 3 discriminator 1 view .LVU36
+ 118:Core/Src/main.c ****   while (1)
+ 186              		.loc 1 118 9 discriminator 1 view .LVU37
+ 187 0002 FEE7     		b	.L7
+ 188              		.cfi_endproc
+ 189              	.LFE69:
+ 191              		.global	buffer
+ 192              		.section	.bss.buffer,"aw",%nobits
+ 193              		.align	2
+ 194              		.set	.LANCHOR0,. + 0
+ 197              	buffer:
+ 198 0000 00000000 		.space	100
+ 198      00000000 
+ 198      00000000 
+ 198      00000000 
+ 198      00000000 
+ 199              		.text
+ 200              	.Letext0:
+ 201              		.file 3 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 202              		.file 4 "Core/Modulos/include/clock_master.h"
+ 203              		.file 5 "Core/Modulos/include/gpio.h"
+ 204              		.file 6 "Core/Modulos/include/debug.h"
+ 205              		.file 7 "Core/Modulos/include/sim.h"
+ 206              		.file 8 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
+ 207              		.file 9 "Core/Modulos/include/core.h"
+ARM GAS  /tmp/cclLFc8Y.s 			page 10
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 main.c
-     /tmp/cc5gzV6I.s:16     .rodata.main.str1.4:0000000000000000 $d
-     /tmp/cc5gzV6I.s:29     .text.main:0000000000000000 $t
-     /tmp/cc5gzV6I.s:37     .text.main:0000000000000000 main
-     /tmp/cc5gzV6I.s:139    .text.main:000000000000007c $d
-     /tmp/cc5gzV6I.s:148    .text.Error_Handler:0000000000000000 $t
-     /tmp/cc5gzV6I.s:155    .text.Error_Handler:0000000000000000 Error_Handler
-     /tmp/cc5gzV6I.s:192    .bss.buffer:0000000000000000 buffer
-     /tmp/cc5gzV6I.s:188    .bss.buffer:0000000000000000 $d
+     /tmp/cclLFc8Y.s:16     .rodata.main.str1.4:0000000000000000 $d
+     /tmp/cclLFc8Y.s:29     .text.main:0000000000000000 $t
+     /tmp/cclLFc8Y.s:37     .text.main:0000000000000000 main
+     /tmp/cclLFc8Y.s:144    .text.main:0000000000000084 $d
+     /tmp/cclLFc8Y.s:153    .text.Error_Handler:0000000000000000 $t
+     /tmp/cclLFc8Y.s:160    .text.Error_Handler:0000000000000000 Error_Handler
+     /tmp/cclLFc8Y.s:197    .bss.buffer:0000000000000000 buffer
+     /tmp/cclLFc8Y.s:193    .bss.buffer:0000000000000000 $d
 
 UNDEFINED SYMBOLS
 HAL_Init

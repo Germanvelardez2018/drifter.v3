@@ -85,10 +85,11 @@ while(1){
     sim_gps_on();   // 80mA
     delay(TIME_GPS_ON);
     sim_gps_get_info(buffer,100);
-    debug_print(sim_get_gps_data());
+   // debug_print(sim_get_gps_data());
+    debug_print(buffer);
 
 
-    debug_print("apagando  GPS y modulo...\r\n");
+    debug_print("\r\napagando  GPS y modulo...\r\n");
     //sim_gps_off();   //69mA
     //sim_sleep();
       

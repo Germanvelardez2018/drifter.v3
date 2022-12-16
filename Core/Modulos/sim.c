@@ -85,8 +85,9 @@ PRIVATE uint8_t _SIM_BUFFER_[SIM_BUFFER_SIZE]={0};
                                                     buffer[len-1]=0;}\
 
 
-#define GPS_PARSE(buffer)                          {\
-                                                   strncpy(buffer,(SIM_BUFFER+OFFSET_GPS),strlen((SIM_BUFFER+OFFSET_GPS)-OFFSET_GPS_END)); }\                                                      
+#define GPS_PARSE(buffer,len)                          {\
+                                                   strncpy(buffer,(SIM_BUFFER+OFFSET_GPS),strlen((SIM_BUFFER+OFFSET_GPS)-OFFSET_GPS_END)); \
+                                                    buffer[len-1]=0;}\                                                      
 
 
 
@@ -210,7 +211,7 @@ inline void sim_gps_off(){
 inline void sim_gps_get_info(uint8_t* gps_buffer,size_t len){
    // debug_print('into gps_get info');
    send_command(CMD_GETGPSINFO,CMD_OK,SIM_DEFAULT_TIMEOUT,1);
- //   GPS_PARSE_SIMPLE(gps_buffer,len);
+   GPS_PARSE(gps_buffer,len);
   //
        
     
