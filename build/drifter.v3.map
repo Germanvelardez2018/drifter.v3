@@ -252,6 +252,67 @@ Discarded input sections
  .debug_frame   0x0000000000000000       0x48 build/spi.o
  .ARM.attributes
                 0x0000000000000000       0x2d build/spi.o
+ .text          0x0000000000000000        0x0 build/memory.o
+ .data          0x0000000000000000        0x0 build/memory.o
+ .bss           0x0000000000000000        0x0 build/memory.o
+ .text.mem_s_init
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_deinit
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_get_fsm_state
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_set_fsm_state
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_get_counter
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_set_counter
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_get_interval
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_set_interval
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_get_max_amount_data
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_set_max_amount_data
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_get_x_offset
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_get_y_offset
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_get_z_offset
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_set_x_offset
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_set_y_offset
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_set_z_offset
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_get_max_accelerometer_offset
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_set_max_accelerometer_offset
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_load_data
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_s_download_data
+                0x0000000000000000        0x4 build/memory.o
+ .text.write_data
+                0x0000000000000000        0x4 build/memory.o
+ .text.read_data
+                0x0000000000000000        0x4 build/memory.o
+ .text.mem_full_clear
+                0x0000000000000000        0x2 build/memory.o
+ .debug_info    0x0000000000000000      0x52d build/memory.o
+ .debug_abbrev  0x0000000000000000       0xde build/memory.o
+ .debug_loc     0x0000000000000000      0x2e4 build/memory.o
+ .debug_aranges
+                0x0000000000000000       0xd0 build/memory.o
+ .debug_ranges  0x0000000000000000       0xc0 build/memory.o
+ .debug_line    0x0000000000000000      0x2b1 build/memory.o
+ .debug_str     0x0000000000000000      0x36d build/memory.o
+ .comment       0x0000000000000000       0x34 build/memory.o
+ .debug_frame   0x0000000000000000      0x180 build/memory.o
+ .ARM.attributes
+                0x0000000000000000       0x2d build/memory.o
  .text          0x0000000000000000        0x0 build/mpu6050.o
  .data          0x0000000000000000        0x0 build/mpu6050.o
  .bss           0x0000000000000000        0x0 build/mpu6050.o
@@ -1896,6 +1957,7 @@ LOAD build/wdt.o
 LOAD build/i2c.o
 LOAD build/uart.o
 LOAD build/spi.o
+LOAD build/memory.o
 LOAD build/mpu6050.o
 LOAD build/sim.o
 LOAD build/debug.o
@@ -4844,6 +4906,27 @@ malloc                                            /usr/lib/gcc/arm-none-eabi/10.
                                                   /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc_nano.a(lib_a-mprec.o)
                                                   /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc_nano.a(lib_a-dtoa.o)
                                                   /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc_nano.a(lib_a-__atexit.o)
+mem_full_clear                                    build/memory.o
+mem_s_deinit                                      build/memory.o
+mem_s_download_data                               build/memory.o
+mem_s_get_counter                                 build/memory.o
+mem_s_get_fsm_state                               build/memory.o
+mem_s_get_interval                                build/memory.o
+mem_s_get_max_accelerometer_offset                build/memory.o
+mem_s_get_max_amount_data                         build/memory.o
+mem_s_get_x_offset                                build/memory.o
+mem_s_get_y_offset                                build/memory.o
+mem_s_get_z_offset                                build/memory.o
+mem_s_init                                        build/memory.o
+mem_s_load_data                                   build/memory.o
+mem_s_set_counter                                 build/memory.o
+mem_s_set_fsm_state                               build/memory.o
+mem_s_set_interval                                build/memory.o
+mem_s_set_max_accelerometer_offset                build/memory.o
+mem_s_set_max_amount_data                         build/memory.o
+mem_s_set_x_offset                                build/memory.o
+mem_s_set_y_offset                                build/memory.o
+mem_s_set_z_offset                                build/memory.o
 memchr                                            /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc_nano.a(lib_a-memchr-stub.o)
                                                   /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc_nano.a(lib_a-fvwrite.o)
                                                   /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc_nano.a(lib_a-nano-vfprintf.o)
@@ -4877,6 +4960,7 @@ pFlash                                            build/stm32f1xx_hal_flash.o
                                                   build/stm32f1xx_hal_flash_ex.o
 raise                                             /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc_nano.a(lib_a-signal.o)
                                                   /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc_nano.a(lib_a-abort.o)
+read_data                                         build/memory.o
 send_command                                      build/sim.o
 setlocale                                         /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc_nano.a(lib_a-locale.o)
 signal                                            /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc_nano.a(lib_a-signal.o)
@@ -4912,3 +4996,4 @@ uwTickPrio                                        build/stm32f1xx_hal.o
                                                   build/stm32f1xx_hal_rcc.o
 vfiprintf                                         /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc_nano.a(lib_a-nano-vfprintf.o)
 vfprintf                                          /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc_nano.a(lib_a-nano-vfprintf.o)
+write_data                                        build/memory.o

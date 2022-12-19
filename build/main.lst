@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccybLBJn.s 			page 1
+ARM GAS  /tmp/cc3CkurI.s 			page 1
 
 
    1              		.cpu cortex-m3
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccybLBJn.s 			page 1
   23:Core/Src/main.c **** #include "clock_master.h"
   24:Core/Src/main.c **** #include "time.h"
   25:Core/Src/main.c **** #include "sim.h"
-ARM GAS  /tmp/ccybLBJn.s 			page 2
+ARM GAS  /tmp/cc3CkurI.s 			page 2
 
 
   26:Core/Src/main.c **** #include "mpu6050.h"
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccybLBJn.s 			page 1
   53:Core/Src/main.c ****   mpu6050_init();
   58              		.loc 1 53 3 view .LVU6
   59 001a FFF7FEFF 		bl	mpu6050_init
-ARM GAS  /tmp/ccybLBJn.s 			page 3
+ARM GAS  /tmp/cc3CkurI.s 			page 3
 
 
   60              	.LVL5:
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccybLBJn.s 			page 1
   72:Core/Src/main.c **** 
   73:Core/Src/main.c **** 
   74:Core/Src/main.c **** 
-ARM GAS  /tmp/ccybLBJn.s 			page 4
+ARM GAS  /tmp/cc3CkurI.s 			page 4
 
 
   75:Core/Src/main.c ****       sim_init();
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccybLBJn.s 			page 1
  129:Core/Src/main.c **** 
  130:Core/Src/main.c **** 
  131:Core/Src/main.c **** /**
-ARM GAS  /tmp/ccybLBJn.s 			page 5
+ARM GAS  /tmp/cc3CkurI.s 			page 5
 
 
  132:Core/Src/main.c ****   * @brief  This function is executed in case of error occurrence.
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccybLBJn.s 			page 1
   37:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
   38:Drivers/CMSIS/Include/cmsis_gcc.h **** 
   39:Drivers/CMSIS/Include/cmsis_gcc.h **** /* CMSIS compiler specific defines */
-ARM GAS  /tmp/ccybLBJn.s 			page 6
+ARM GAS  /tmp/cc3CkurI.s 			page 6
 
 
   40:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ASM
@@ -358,7 +358,7 @@ ARM GAS  /tmp/ccybLBJn.s 			page 1
   94:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
   95:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
   96:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
-ARM GAS  /tmp/ccybLBJn.s 			page 7
+ARM GAS  /tmp/cc3CkurI.s 			page 7
 
 
   97:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
@@ -418,7 +418,7 @@ ARM GAS  /tmp/ccybLBJn.s 			page 1
  115              		.syntax unified
  116              	.L7:
  117              	.LBE5:
-ARM GAS  /tmp/ccybLBJn.s 			page 8
+ARM GAS  /tmp/cc3CkurI.s 			page 8
 
 
  118              	.LBE4:
@@ -452,19 +452,19 @@ ARM GAS  /tmp/ccybLBJn.s 			page 1
  141              		.file 8 "Core/Modulos/include/mpu6050.h"
  142              		.file 9 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
  143              		.file 10 "Core/Modulos/include/core.h"
-ARM GAS  /tmp/ccybLBJn.s 			page 9
+ARM GAS  /tmp/cc3CkurI.s 			page 9
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 main.c
-     /tmp/ccybLBJn.s:16     .rodata.main.str1.4:0000000000000000 $d
-     /tmp/ccybLBJn.s:20     .text.main:0000000000000000 $t
-     /tmp/ccybLBJn.s:28     .text.main:0000000000000000 main
-     /tmp/ccybLBJn.s:82     .text.main:0000000000000038 $d
-     /tmp/ccybLBJn.s:88     .text.Error_Handler:0000000000000000 $t
-     /tmp/ccybLBJn.s:95     .text.Error_Handler:0000000000000000 Error_Handler
-     /tmp/ccybLBJn.s:132    .bss.buffer:0000000000000000 buffer
-     /tmp/ccybLBJn.s:128    .bss.buffer:0000000000000000 $d
+     /tmp/cc3CkurI.s:16     .rodata.main.str1.4:0000000000000000 $d
+     /tmp/cc3CkurI.s:20     .text.main:0000000000000000 $t
+     /tmp/cc3CkurI.s:28     .text.main:0000000000000000 main
+     /tmp/cc3CkurI.s:82     .text.main:0000000000000038 $d
+     /tmp/cc3CkurI.s:88     .text.Error_Handler:0000000000000000 $t
+     /tmp/cc3CkurI.s:95     .text.Error_Handler:0000000000000000 Error_Handler
+     /tmp/cc3CkurI.s:132    .bss.buffer:0000000000000000 buffer
+     /tmp/cc3CkurI.s:128    .bss.buffer:0000000000000000 $d
 
 UNDEFINED SYMBOLS
 HAL_Init
