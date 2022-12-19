@@ -66,12 +66,6 @@ PRIVATE inline void i2c_read_mem( uint8_t address_reg,uint8_t* buffer,uint32_t l
 
 
 
-
-
-
-
-
-
 /**
  * @brief Comprueba si el dispositivo esta ready
  * 
@@ -86,16 +80,14 @@ PRIVATE uint8_t mpu6050_rdy(){
 }
 
 
-
-
-
 PRIVATE void mpu6050_set_scala()
 {
     uint8_t config_scala = 0;
     BIT_SET(config_scala,3);
+    SCALA_DIV = 16384.0;
+    
     i2c_write_mem( ACCEL_CONFIG,&config_scala,1) ;
 }
-
 
 
 PRIVATE void  mpu6050_get_acceleration( int16_t* x, int16_t* y, int16_t* z){
@@ -160,9 +152,11 @@ PRIVATE void mpu6050_calibration(int16_t x_e, int16_t y_e, int16_t z_e){
 
 
 PRIVATE void mpu6050_get_offset(){
+  
    // mem_s_get_x_offset( &offset_x); // guardo en memoria flash
    // mem_s_get_y_offset( &offset_y); // guardo en memoria flash
    // mem_s_get_z_offset( &offset_z); // guardo en memoria flash
+
 }
 
 
@@ -252,7 +246,7 @@ void mpu6050_init(){
     // Calibramos
 
     mpu6050_calibrate_and_save_offset();
-    //mpu6050_get_offset();
+    mpu6050_get_offset();
     mpu6050_sleep();
 
 }
