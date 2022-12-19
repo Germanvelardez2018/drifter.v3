@@ -21,12 +21,12 @@
 
 
 
-PRIVATE status_t inline mem_resume(){
+PRIVATE  inline uint8_t mem_resume(){
     at45db_resumen();
 }
 
 
-PRIVATE status_t inline mem_sleep(){
+PRIVATE  inline uint8_t mem_sleep(){
     at45db_sleep();
 }
 

@@ -307,7 +307,7 @@ Discarded input sections
  .debug_aranges
                 0x0000000000000000       0xd0 build/memory.o
  .debug_ranges  0x0000000000000000       0xc0 build/memory.o
- .debug_line    0x0000000000000000      0x2b1 build/memory.o
+ .debug_line    0x0000000000000000      0x2b7 build/memory.o
  .debug_str     0x0000000000000000      0x36d build/memory.o
  .comment       0x0000000000000000       0x34 build/memory.o
  .debug_frame   0x0000000000000000      0x180 build/memory.o

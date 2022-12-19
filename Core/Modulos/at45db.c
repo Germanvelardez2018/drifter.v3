@@ -1,40 +1,12 @@
-/**
- * @file at45db.h
- * @author German Velardez (gvelardez@inti.gob.ar)
- * @brief  Mapa de memoria
- * @version 0.1
- * @date 2022-08-24
+/***
  * 
- * @copyright Copyright (c) 2022
  * 
- *
- */
-
-
-/* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __AT45DB_H
-#define __AT45DB_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/* Includes ------------------------------------------------------------------*/
-
-#include "core.h"
+*/
 
 
 
+#include "at45db.h"
 
-
-
-typedef enum{
-    SIZE_PAGE_256 = 0,
-    SIZE_PAGE_264 = 1
-} size_page_t;
-
-
-/*-----------------------------------------------------------------------------*/
 
 
 
@@ -43,13 +15,17 @@ typedef enum{
  * 
  * 
 */
-void at45db_init();
+void at45db_init(){
+    return 0;
+}
 
 /***
  * 
  * 
 */
-void at45db_deinit();
+void at45db_deinit(){
+    return 0;
+}
 
 
 
@@ -57,7 +33,9 @@ void at45db_deinit();
  * @brief 
  * 
  */
-uint8_t at45db_download_measure(uint8_t* buffer, uint8_t len);
+uint8_t at45db_download_measure(uint8_t* buffer, uint8_t len){
+    return 0;
+}
 
 
 /**
@@ -67,7 +45,9 @@ uint8_t at45db_download_measure(uint8_t* buffer, uint8_t len);
  * @param len 
  * @return ** uint8_t 
  */
-uint8_t at45db_save_measure(uint8_t* buffer);
+uint8_t at45db_save_measure(uint8_t* buffer){
+    return 0;
+}
 
 
 /**
@@ -75,7 +55,9 @@ uint8_t at45db_save_measure(uint8_t* buffer);
  * 
  * @return ** uint8_t 
  */
- uint8_t get_status(void);
+ uint8_t get_status(void){
+    return 0;
+ }
 
 
 /**
@@ -83,7 +65,9 @@ uint8_t at45db_save_measure(uint8_t* buffer);
  * 
  * @return ** uint8_t 
  */
- uint8_t is_ready(void);
+ uint8_t is_ready(void){
+    return 0;
+ }
 
 
 /**
@@ -92,7 +76,9 @@ uint8_t at45db_save_measure(uint8_t* buffer);
  * @param size 265 bytes or 256 bytes
  * @return ** uint8_t 
  */
- uint8_t at45db_set_size_page( size_page_t size);
+ uint8_t at45db_set_size_page( size_page_t size){
+    return 0;
+ }
 
 
 /**
@@ -103,7 +89,9 @@ uint8_t at45db_save_measure(uint8_t* buffer);
  * @param pos   Initial position into the buffer1
  * @return ** uint8_t 
  */
- uint8_t at45db_write_buffer1(uint8_t* data,uint8_t len, uint8_t pos);
+ uint8_t at45db_write_buffer1(uint8_t* data,uint8_t len, uint8_t pos){
+    return 0;
+ }
 
 
 /**
@@ -114,7 +102,9 @@ uint8_t at45db_save_measure(uint8_t* buffer);
  * @param pos Initial position into the buffer1
  * @return ** uint8_t 
  */
-uint8_t at45db_read_buffer1(uint8_t* data,uint8_t len, uint8_t pos);
+uint8_t at45db_read_buffer1(uint8_t* data,uint8_t len, uint8_t pos){
+    return 0;
+}
 
 
 
@@ -127,7 +117,9 @@ uint8_t at45db_read_buffer1(uint8_t* data,uint8_t len, uint8_t pos);
  * @param pos   Initial position into the buffer1
  * @return ** uint8_t 
  */
- uint8_t at45db_write_buffer2(uint8_t* data,uint8_t len, uint8_t pos);
+ uint8_t at45db_write_buffer2(uint8_t* data,uint8_t len, uint8_t pos){
+    return 0;
+ }
 
 
 /**
@@ -138,7 +130,9 @@ uint8_t at45db_read_buffer1(uint8_t* data,uint8_t len, uint8_t pos);
  * @param pos Initial position into the buffer1
  * @return ** uint8_t 
  */
-uint8_t at45db_read_buffer2(uint8_t* data,uint8_t len, uint8_t pos);
+uint8_t at45db_read_buffer2(uint8_t* data,uint8_t len, uint8_t pos){
+    return 0;
+}
 
 /**
  * @brief 
@@ -149,7 +143,9 @@ uint8_t at45db_read_buffer2(uint8_t* data,uint8_t len, uint8_t pos);
  * @param pos   Initial position in the page
  * @return ** uint8_t 
  */
-uint8_t at45db_write_page(uint8_t* data, uint8_t len, uint32_t pag,uint8_t pos);
+uint8_t at45db_write_page(uint8_t* data, uint8_t len, uint32_t pag,uint8_t pos){
+    return 0;
+}
 
 
 /**
@@ -161,7 +157,9 @@ uint8_t at45db_write_page(uint8_t* data, uint8_t len, uint32_t pag,uint8_t pos);
  * @param pos   Initial position in the page
  * @return ** uint8_t  
  */
-uint8_t at45db_read_page(uint8_t* data, uint8_t len, uint32_t pag,uint8_t pos);
+uint8_t at45db_read_page(uint8_t* data, uint8_t len, uint32_t pag,uint8_t pos){
+    return 0;
+}
 
 
 /**
@@ -169,7 +167,9 @@ uint8_t at45db_read_page(uint8_t* data, uint8_t len, uint32_t pag,uint8_t pos);
  * 
  * @return ** void 
  */
-void at45db_resumen();
+void at45db_resumen(){
+    return 0;
+}
 
 
 /**
@@ -177,16 +177,6 @@ void at45db_resumen();
  * 
  * @return ** void 
  */
-void at45db_sleep();
-
-
-
-
-
-
-
-#ifdef __cplusplus
+void at45db_sleep(){
+    return 0;
 }
-#endif
-
-#endif /* __AT45DB_H */
