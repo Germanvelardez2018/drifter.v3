@@ -24,7 +24,7 @@ extern "C" {
   * @param None
   * @retval None
   */
-static void MX_SPI1_Init(void);
+ void MX_SPI1_Init(void);
 
 #ifdef __cplusplus
 }

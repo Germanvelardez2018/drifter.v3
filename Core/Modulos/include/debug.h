@@ -22,7 +22,12 @@ extern "C" {
 void  debug_deinit();
 
 
- void debug_print(uint8_t* buffer);
+void debug_print(uint8_t* buffer);
+
+
+
+void debug_print_raw(uint8_t* buffer,size_t len);
+
 
 #ifdef __cplusplus
 }

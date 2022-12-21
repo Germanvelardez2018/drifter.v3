@@ -27,3 +27,9 @@ inline void debug_deinit(){
 inline void debug_print(uint8_t* buffer){
     HAL_UART_Transmit(DEBUG_UART,buffer,strlen((char*)buffer),DEBUG_TIMEOUT);
 }
+
+
+
+inline void debug_print_raw(uint8_t* buffer,size_t len){
+    HAL_UART_Transmit(DEBUG_UART,buffer,len,DEBUG_TIMEOUT);
+}

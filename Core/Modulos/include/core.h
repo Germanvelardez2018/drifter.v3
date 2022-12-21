@@ -24,6 +24,8 @@ extern "C" {
 #include <string.h>
 
 
+#include "debug.h"
+
 
 /*-----------------------------------------------------------------------------*/
 
@@ -65,6 +67,17 @@ typedef enum{
 
 } clock_param_t;
 
+
+typedef enum {
+    LEVEL_LOW =0,
+    LEVEL_HIGH
+} level_t;
+
+
+typedef enum {
+    LOW_LEVEL    = 0,
+   NORMAL_LEVEL  = 1
+} battery_state_t;
 
 
 

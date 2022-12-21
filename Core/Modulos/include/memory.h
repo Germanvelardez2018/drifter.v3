@@ -28,89 +28,95 @@ extern "C" {
 
 
 
-uint8_t mem_s_init();
+void mem_s_init();
 
 
 
-uint8_t mem_s_deinit();
+void mem_s_deinit();
 
 
 
-uint8_t mem_s_get_fsm_state(uint8_t* fsm_state);
-uint8_t mem_s_set_fsm_state(uint8_t* fsm_state);
+void mem_s_get_fsm_state(uint8_t* fsm_state);
+void mem_s_set_fsm_state(uint8_t* fsm_state);
 
 
 
-uint8_t mem_s_get_counter(uint8_t* counter);
-uint8_t mem_s_set_counter(uint8_t* counter);
+void mem_s_get_counter(uint8_t* counter);
+void mem_s_set_counter(uint8_t* counter);
 
 
 
 // Interval
-uint8_t mem_s_get_interval(uint8_t* interval);
-uint8_t mem_s_set_interval(uint8_t* interval);
+void mem_s_get_interval(uint8_t* interval);
+void mem_s_set_interval(uint8_t* interval);
 
 
-uint8_t mem_s_get_max_amount_data(uint8_t* max_amount_data);
-uint8_t mem_s_set_max_amount_data(uint8_t* max_amount_data);
-
-
-
-
-
-
-
-
-uint8_t mem_s_get_x_offset(int16_t* x);
-
-
-uint8_t mem_s_get_y_offset(int16_t* y);
-
-
-uint8_t mem_s_get_z_offset(int16_t* z);
-
-
-
-
-uint8_t mem_s_set_x_offset(int16_t x);
-
-
-uint8_t mem_s_set_y_offset(int16_t y);
-
-
-uint8_t mem_s_set_z_offset(int16_t z);
+void mem_s_get_max_amount_data(uint8_t* max_amount_data);
+void mem_s_set_max_amount_data(uint8_t* max_amount_data);
 
 
 
 
 
 
-uint8_t mem_s_get_max_accelerometer_offset(int16_t* x,int16_t* y, int16_t* z );
-uint8_t mem_s_set_max_accelerometer_offset(int16_t* x, int16_t* y,int16_t* z);
+
+/**
+ * @brief  Seteo el offset en eje x del sensor MPU6050
+ * 
+ * @param x 
+ */
+void mem_s_get_x_offset(int16_t* x);
+
+/**
+ * @brief Seteo el offset en eje Y del sensor MPU6050
+ * 
+ * @param y 
+ */
+void mem_s_get_y_offset(int16_t* y);
+
+
+/**
+ * @brief Seteo el offset en eje Z del sensor MPU6050
+ * 
+ * @param z 
+ */
+void mem_s_get_z_offset(int16_t* z);
 
 
 
-// Los datos se guardan como lifo
-uint8_t mem_s_load_data(uint8_t* string );
+
+void mem_s_set_x_offset(int16_t x);
 
 
-// Para leer todos los datos almacenados recomienda usar dentro 
-// de un bucle while con condicion (ret = mem_s_download_data(buffer) != STATUS__ERROR)
-uint8_t mem_s_download_data(uint8_t* string);
+void mem_s_set_y_offset(int16_t y);
 
 
-
-
-
-
-uint8_t write_data(uint8_t* buffer, uint32_t page);
+void mem_s_set_z_offset(int16_t z);
 
 
 
 
 
 
-uint8_t read_data(uint8_t* buffer, uint32_t page);
+void mem_s_get_max_accelerometer_offset(int16_t* x,int16_t* y, int16_t* z );
+void mem_s_set_max_accelerometer_offset(int16_t* x, int16_t* y,int16_t* z);
+
+
+
+
+
+
+
+
+
+void mem_write_data(uint8_t* buffer, uint32_t page);
+
+
+
+
+
+
+void mem_read_data(uint8_t* buffer, uint32_t page);
 
 
 

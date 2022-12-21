@@ -44,7 +44,8 @@ Core/Modules/drivers/wdt.c \
 Core/Modules/drivers/i2c.c \
 Core/Modulos/drivers/uart.c \
 Core/Modulos/drivers/spi.c \
-Cor/Modulos/memory.c \
+Core/Modulos/at45db.c \
+Core/Modulos/memory.c \
 Core/Modulos/drivers/mpu6050.c \
 Core/Modules/sim.c \
 Core/Modulos/debug.c \

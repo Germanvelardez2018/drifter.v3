@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2022 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -24,114 +24,68 @@
 #include "time.h"
 #include "sim.h"
 #include "mpu6050.h"
+#include "memory.h"
 
 extern TIM_HandleTypeDef htim3;
 
-
-
-uint8_t buffer[100]={0};
-
-
-
-
-
-
+#define BUFFER_SIZE 250
+uint8_t buffer[BUFFER_SIZE] = {"CONTENIDO INICIAL\r\n"};
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void)
 {
 
   HAL_Init();
   clock_master_set(CLOCK_8MHZ);
   MX_GPIO_Init();
+
   debug_init();
-  debug_print("test sensor \r\n");
+  mem_s_init();
+  debug_print("\r\n\t\t Inicio programa\r\n");
+  debug_print("test memoria externa \r\n");
 
-  mpu6050_init();
+  // mpu6050_init();
+  debug_print("\r\ncontenido inicial del buffer: ");
+  debug_print(buffer);
 
+  // memset(buffer, 0, BUFFER_SIZE);
+  debug_print(" \r\nEscribir memoria externa:\r\n");
 
+  mem_write_data("!hola mundo, test de escritura \r\n", 0);
+  // debug_print('\r\nLeo buffer');
+  memset(buffer, 0, 250);
+  mem_read_data(buffer, 0);
+  debug_print("buffer:");
 
-  while(1){
-    mpu6050_get_measure(buffer,100);
-    debug_print(buffer);
-    delay(5000);
+  debug_print(buffer);
+
+ 
+
+  debug_print("\r\nentrando al while \r\n");
+  while (1)
+  {
+    
+  mem_write_data("!hola mundo, test de escritura \r\n", 0);
+  // debug_print('\r\nLeo buffer');
+  memset(buffer, 0, 250);
+  mem_read_data(buffer, 0);
+  debug_print("buffer:");
+
+  debug_print(buffer);
+    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+    delay(2500);
   }
 
 
-
-
-
-
-
-
-
-
-
-
-
-      sim_init();
-      debug_print("Inicio programr\n");
-      delay(20000);
-
-    
-   
-      sim_echo_off();
-
-
-
-      sim_version();
-
-
-
-      uint8_t init = 0;
-#define TIME_GPS_ON             (50000)
-while(1){
-
-    if(init) {
-      // levanto el sim
-      sim_init();
-      debug_print("Inicio modulo sim nuevamente\r\n");
-     
-
-      
-    // debug_print("sin 7000g config\r\n");  
-      sim_echo_off();
-      sim_version();
-    }
-
-    debug_print("encendiendo GPS...\r\n");
-    sim_resumen();
-    sim_gps_on();   // 80mA
-    delay(TIME_GPS_ON);
-    sim_gps_get_info(buffer,100);
-   // debug_print(sim_get_gps_data());
-    debug_print(buffer);
-
-
-    debug_print("\r\napagando  GPS y modulo...\r\n");
-    //sim_gps_off();   //69mA
-    //sim_sleep();
-      
-
-    sim_deinit();
-      
-    delay(25000);
-   
-
-  init = 1;
-
 }
- 
-}
-
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
@@ -143,14 +97,14 @@ void Error_Handler(void)
   /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */

@@ -66,11 +66,17 @@ void Error_Handler(void);
 #define SIM7000G_PWRKEY_GPIO_Port GPIOA
 
 
-
-
 #define IRQ_SIM_Pin GPIO_PIN_15
 #define IRQ_SIM_GPIO_Port GPIOA
 #define IRQ_SIM_EXTI_IRQn EXTI15_10_IRQn
+
+
+
+// Agregado manualmente
+#define SPI1_CS_Pin   GPIO_PIN_8
+#define SPI1_CS_Port  GPIOB
+
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
