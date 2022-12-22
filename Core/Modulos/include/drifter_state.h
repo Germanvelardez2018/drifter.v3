@@ -12,6 +12,13 @@ extern "C" {
 #include "core.h"
 
 
+/**
+ * @brief Get the device object
+ * 
+ * @return drifter_t* 
+ */
+drifter_t* get_device();
+
 /* Inicializo el periferico que soporta el debug: UART2 por default
 */
  void drifter_init();

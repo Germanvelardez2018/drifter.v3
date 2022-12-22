@@ -7,6 +7,16 @@ PRIVATE drifter_t __DEVICE__ ;
 
 
 
+
+
+drifter_t* get_device(){
+    return &__DEVICE__;
+}
+
+
+
+
+
 /* Inicializo el periferico que soporta el debug: UART2 por default
 */
  void drifter_init(){
@@ -31,6 +41,7 @@ void drifter_slepp(){
     __DEVICE__.mcu = SLEEP;
 
     //Funcionalidad
+    PWRM_SET_SLEEP_();
 }
 
 void drifter_run(){
@@ -39,6 +50,7 @@ void drifter_run(){
 
 
     //Funcionalidad
+    PWRM_SET_RUN_();
 }
 
 void drifter_gps_run(){
