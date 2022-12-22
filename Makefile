@@ -36,20 +36,22 @@ BUILD_DIR = build
 ######################################
 # C sources
 C_SOURCES =  \
-Core/Modules/drivers/timer.c \
-Core/Modules/drivers/clock_master.c \
-Core/Modules/drivers/gpio.c \
-Core/Modules/drivers/adc.c \
-Core/Modules/drivers/wdt.c \
-Core/Modules/drivers/i2c.c \
+Core/Modulos/drivers/timer.c \
+Core/Modulos/drivers/clock_master.c \
+Core/Modulos/drivers/gpio.c \
+Core/Modulos/drivers/adc.c \
+Core/Modulos/drivers/wdt.c \
+Core/Modulos/drivers/i2c.c \
 Core/Modulos/drivers/uart.c \
 Core/Modulos/drivers/spi.c \
 Core/Modulos/at45db.c \
 Core/Modulos/memory.c \
 Core/Modulos/drivers/mpu6050.c \
-Core/Modules/sim.c \
+Core/Modulos/sim.c \
 Core/Modulos/debug.c \
 Core/Modulos/rtc.c \
+Core/Modulos/pwrm.c \
+Core/Modulos/drifter_state.c \
 Core/Src/main.c \
 Core/Src/stm32f1xx_it.c \
 Core/Src/stm32f1xx_hal_msp.c \

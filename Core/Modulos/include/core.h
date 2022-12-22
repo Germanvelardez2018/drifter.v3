@@ -1,90 +1,118 @@
 /****
  *  Archivo con las definiciones nucleo de la aplicacion
- * 
- * 
-*/
-
-
-
-
+ *
+ *
+ */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __CORE_H
 #define __CORE_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-/* Includes ------------------------------------------------------------------*/
+    /* Includes ------------------------------------------------------------------*/
 
 #include "main.h"
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
 
-
 #include "debug.h"
 
-
 /*-----------------------------------------------------------------------------*/
-
 
 /* Defines ------------------------------------------------------------------*/
-#define PRIVATE                                     static
+#define PRIVATE static
 
-
-//Macros
+// Macros
 
 // BIT(x) regresa el bit x puesto a uno y los demas bits en cero, ej. BIT(3) regresa 00001000
-#define BIT(x)               (1<<(x))
+#define BIT(x) (1 << (x))
 // BIT_GET(x,b) regresa el bit b-esimo de x ej. BIT_GET(PINC,3)
-#define BIT_GET(x,b)        ((x) & BIT(b))
+#define BIT_GET(x, b) ((x)&BIT(b))
 // BIT_SET(x,b) establece en '1' el bit b de x ej. BIT_SET(PORTD,4)
-#define BIT_SET(x,b)        ((x) |= BIT(b))
+#define BIT_SET(x, b) ((x) |= BIT(b))
 // BIT_CLEAR(x,b) establece a '0' el bit b de x
-#define BIT_CLEAR(x,b)      ((x) &= ~BIT(b))
+#define BIT_CLEAR(x, b) ((x) &= ~BIT(b))
 // BIT_TOGGLE(x,b) invierte el valor del bit b de x a su complemento,
-#define BIT_TOGGLE(x,b)     ((x) ^= BIT(b))
+#define BIT_TOGGLE(x, b) ((x) ^= BIT(b))
 // BIT_WRITE(x,b,v) establece el valor 'v' de
-#define BIT_WRITE(x,b,v)    ((v)? BIT_SET(x,b) : BIT_CLEAR(x,b))
- 
+#define BIT_WRITE(x, b, v) ((v) ? BIT_SET(x, b) : BIT_CLEAR(x, b))
+
 // ES_PAR(x) regresa 0 cuando x no es par y algo diferente de 0 cuando es par
-#define ES_PAR(x) (!BIT_GET(x,0))
-// Private functions 
-#define PRIVATE    static
+#define ES_PAR(x) (!BIT_GET(x, 0))
+// Private functions
+#define PRIVATE static
 
+    //! Usado en clock master
+    typedef enum
+    {
+        CLOCK_05MHZ = RCC_SYSCLK_DIV512,
+        CLOCK_1MHZ = RCC_SYSCLK_DIV8,
+        CLOCK_2MHZ = RCC_SYSCLK_DIV4,
+        CLOCK_4MHZ = RCC_SYSCLK_DIV2,
+        CLOCK_8MHZ = RCC_SYSCLK_DIV1
 
+    } clock_param_t;
 
+    typedef enum
+    {
+        LEVEL_LOW = 0,
+        LEVEL_HIGH
+    } level_t;
 
- //! Usado en clock master
-typedef enum{
-    CLOCK_05MHZ = RCC_SYSCLK_DIV512,
-    CLOCK_1MHZ = RCC_SYSCLK_DIV8 ,
-    CLOCK_2MHZ = RCC_SYSCLK_DIV4, 
-    CLOCK_4MHZ = RCC_SYSCLK_DIV2,
-    CLOCK_8MHZ = RCC_SYSCLK_DIV1
+    typedef enum
+    {
+        LOW_LEVEL = 0,
+        NORMAL_LEVEL = 1
+    } battery_state_t;
 
-} clock_param_t;
+    typedef enum
+    {
+        SIM_OFF,
+        SIM_ON
 
+    } sim_t;
 
-typedef enum {
-    LEVEL_LOW =0,
-    LEVEL_HIGH
-} level_t;
+    typedef enum
+    {
+        CONN_4G_OFF,
+        CONN_4G_ON
+    } internet_state_t;
 
+    typedef enum
+    {
+        MQTT_DISCONNECTED,
+        MQTT_CONNECTED
+    } mqtt_state_t;
 
-typedef enum {
-    LOW_LEVEL    = 0,
-   NORMAL_LEVEL  = 1
-} battery_state_t;
+    typedef enum
+    {
+        GPS_OFF,
+        GPS_ON
+    } gps_state_t;
 
+    typedef enum
+    {
+        SLEEP,
+        RUN
+    } mcu_state_t;
 
+    typedef struct
+    {
+        mcu_state_t mcu;
+        sim_t sim_module;
+        internet_state_t conn;
+        mqtt_state_t mqtt;
+        gps_state_t gps;
+    } drifter_t;
 
-#define delay(t)                     HAL_Delay(t)
+#define delay(t) HAL_Delay(t)
 
-
-/*-----------------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------------*/
 
 #ifdef __cplusplus
 }
