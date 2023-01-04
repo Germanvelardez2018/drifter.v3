@@ -11,6 +11,9 @@ extern "C" {
 
 #include "core.h"
 
+void sim_service_init();
+uint8_t sim_get_upload_flag();
+uint8_t sim_get_datasave_flag();
 
 
 

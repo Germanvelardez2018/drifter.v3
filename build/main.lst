@@ -1,4 +1,4 @@
-ARM GAS  /tmp/cc1slYQo.s 			page 1
+ARM GAS  /tmp/ccWukOTM.s 			page 1
 
 
    1              		.cpu cortex-m3
@@ -15,67 +15,23 @@ ARM GAS  /tmp/cc1slYQo.s 			page 1
   12              		.text
   13              	.Ltext0:
   14              		.cfi_sections	.debug_frame
-  15              		.section	.rodata.main.str1.4,"aMS",%progbits,1
+  15              		.section	.rodata.app_init.str1.4,"aMS",%progbits,1
   16              		.align	2
   17              	.LC0:
-  18 0000 0D0A0909 		.ascii	"\015\012\011\011 Inicio programa\015\012\000"
-  18      20496E69 
-  18      63696F20 
-  18      70726F67 
-  18      72616D61 
-  19 0017 00       		.align	2
-  20              	.LC1:
-  21 0018 74657374 		.ascii	"test memoria externa \015\012\000"
-  21      206D656D 
-  21      6F726961 
-  21      20657874 
-  21      65726E61 
-  22              		.align	2
-  23              	.LC2:
-  24 0030 0D0A636F 		.ascii	"\015\012contenido inicial del buffer: \000"
-  24      6E74656E 
-  24      69646F20 
-  24      696E6963 
-  24      69616C20 
-  25 0051 000000   		.align	2
-  26              	.LC3:
-  27 0054 200D0A45 		.ascii	" \015\012Escribir memoria externa:\015\012\000"
-  27      73637269 
-  27      62697220 
-  27      6D656D6F 
-  27      72696120 
-  28 0073 00       		.align	2
-  29              	.LC4:
-  30 0074 21686F6C 		.ascii	"!hola mundo, test de escritura \015\012\000"
-  30      61206D75 
-  30      6E646F2C 
-  30      20746573 
-  30      74206465 
-  31 0096 0000     		.align	2
-  32              	.LC5:
-  33 0098 62756666 		.ascii	"buffer:\000"
-  33      65723A00 
-  34              		.align	2
-  35              	.LC6:
-  36 00a0 0D0A656E 		.ascii	"\015\012entrando al while \015\012\000"
-ARM GAS  /tmp/cc1slYQo.s 			page 2
-
-
-  36      7472616E 
-  36      646F2061 
-  36      6C207768 
-  36      696C6520 
-  37              		.section	.text.main,"ax",%progbits
-  38              		.align	1
-  39              		.global	main
-  40              		.arch armv7-m
-  41              		.syntax unified
-  42              		.thumb
-  43              		.thumb_func
-  44              		.fpu softvfp
-  46              	main:
-  47              	.LFB68:
-  48              		.file 1 "Core/Src/main.c"
+  18 0000 496E6974 		.ascii	"Init  drifter\000"
+  18      20206472 
+  18      69667465 
+  18      7200
+  19              		.section	.text.app_init,"ax",%progbits
+  20              		.align	1
+  21              		.arch armv7-m
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  25              		.fpu softvfp
+  27              	app_init:
+  28              	.LFB68:
+  29              		.file 1 "Core/Src/main.c"
    1:Core/Src/main.c **** /* USER CODE BEGIN Header */
    2:Core/Src/main.c **** /**
    3:Core/Src/main.c ****  ******************************************************************************
@@ -102,232 +58,178 @@ ARM GAS  /tmp/cc1slYQo.s 			page 1
   24:Core/Src/main.c **** #include "time.h"
   25:Core/Src/main.c **** #include "sim.h"
   26:Core/Src/main.c **** #include "mpu6050.h"
+ARM GAS  /tmp/ccWukOTM.s 			page 2
+
+
   27:Core/Src/main.c **** #include "memory.h"
-  28:Core/Src/main.c **** 
-  29:Core/Src/main.c **** extern TIM_HandleTypeDef htim3;
+  28:Core/Src/main.c **** #include "sim_services.h"
+  29:Core/Src/main.c **** 
   30:Core/Src/main.c **** 
-  31:Core/Src/main.c **** #define BUFFER_SIZE 250
-  32:Core/Src/main.c **** uint8_t buffer[BUFFER_SIZE] = {"CONTENIDO INICIAL\r\n"};
-  33:Core/Src/main.c **** 
-  34:Core/Src/main.c **** /**
-  35:Core/Src/main.c ****  * @brief  The application entry point.
-  36:Core/Src/main.c ****  * @retval int
-  37:Core/Src/main.c ****  */
-  38:Core/Src/main.c **** int main(void)
-  39:Core/Src/main.c **** {
-  49              		.loc 1 39 1 view -0
-  50              		.cfi_startproc
-  51              		@ Volatile: function does not return.
-ARM GAS  /tmp/cc1slYQo.s 			page 3
-
-
-  52              		@ args = 0, pretend = 0, frame = 0
-  53              		@ frame_needed = 0, uses_anonymous_args = 0
-  54 0000 08B5     		push	{r3, lr}
-  55              	.LCFI0:
-  56              		.cfi_def_cfa_offset 8
-  57              		.cfi_offset 3, -8
-  58              		.cfi_offset 14, -4
-  40:Core/Src/main.c **** 
+  31:Core/Src/main.c **** 
+  32:Core/Src/main.c **** #define INIT_MSG              "Init  drifter"
+  33:Core/Src/main.c **** #define BUFFER_SIZE 250
+  34:Core/Src/main.c **** uint8_t buffer[BUFFER_SIZE] = {"CONTENIDO INICIAL\r\n"};
+  35:Core/Src/main.c **** 
+  36:Core/Src/main.c **** 
+  37:Core/Src/main.c **** PRIVATE void app_init(){
+  30              		.loc 1 37 24 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34 0000 08B5     		push	{r3, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 8
+  37              		.cfi_offset 3, -8
+  38              		.cfi_offset 14, -4
+  38:Core/Src/main.c **** 
+  39:Core/Src/main.c ****   // Inicio todos los servicios necesarios
+  40:Core/Src/main.c ****   // Core
   41:Core/Src/main.c ****   HAL_Init();
-  59              		.loc 1 41 3 view .LVU1
-  60 0002 FFF7FEFF 		bl	HAL_Init
-  61              	.LVL0:
+  39              		.loc 1 41 3 view .LVU1
+  40 0002 FFF7FEFF 		bl	HAL_Init
+  41              	.LVL0:
   42:Core/Src/main.c ****   clock_master_set(CLOCK_8MHZ);
-  62              		.loc 1 42 3 view .LVU2
-  63 0006 0020     		movs	r0, #0
-  64 0008 FFF7FEFF 		bl	clock_master_set
-  65              	.LVL1:
+  42              		.loc 1 42 3 view .LVU2
+  43 0006 0020     		movs	r0, #0
+  44 0008 FFF7FEFF 		bl	clock_master_set
+  45              	.LVL1:
   43:Core/Src/main.c ****   MX_GPIO_Init();
-  66              		.loc 1 43 3 view .LVU3
-  67 000c FFF7FEFF 		bl	MX_GPIO_Init
-  68              	.LVL2:
-  44:Core/Src/main.c **** 
+  46              		.loc 1 43 3 view .LVU3
+  47 000c FFF7FEFF 		bl	MX_GPIO_Init
+  48              	.LVL2:
+  44:Core/Src/main.c ****   // Debug
   45:Core/Src/main.c ****   debug_init();
-  69              		.loc 1 45 3 view .LVU4
-  70 0010 FFF7FEFF 		bl	debug_init
-  71              	.LVL3:
-  46:Core/Src/main.c ****   mem_s_init();
-  72              		.loc 1 46 3 view .LVU5
-  73 0014 FFF7FEFF 		bl	mem_s_init
-  74              	.LVL4:
-  47:Core/Src/main.c ****   debug_print("\r\n\t\t Inicio programa\r\n");
-  75              		.loc 1 47 3 view .LVU6
-  76 0018 2148     		ldr	r0, .L4
-  77 001a FFF7FEFF 		bl	debug_print
-  78              	.LVL5:
-  48:Core/Src/main.c ****   debug_print("test memoria externa \r\n");
-  79              		.loc 1 48 3 view .LVU7
-  80 001e 2148     		ldr	r0, .L4+4
-  81 0020 FFF7FEFF 		bl	debug_print
-  82              	.LVL6:
-  49:Core/Src/main.c **** 
-  50:Core/Src/main.c ****   // mpu6050_init();
-  51:Core/Src/main.c ****   debug_print("\r\ncontenido inicial del buffer: ");
-  83              		.loc 1 51 3 view .LVU8
-  84 0024 2048     		ldr	r0, .L4+8
-  85 0026 FFF7FEFF 		bl	debug_print
-  86              	.LVL7:
-  52:Core/Src/main.c ****   debug_print(buffer);
-  87              		.loc 1 52 3 view .LVU9
-  88 002a 204C     		ldr	r4, .L4+12
-  89 002c 2046     		mov	r0, r4
-  90 002e FFF7FEFF 		bl	debug_print
-  91              	.LVL8:
+  49              		.loc 1 45 3 view .LVU4
+  50 0010 FFF7FEFF 		bl	debug_init
+  51              	.LVL3:
+  46:Core/Src/main.c ****   // Memoria externa
+  47:Core/Src/main.c ****   mem_s_init();
+  52              		.loc 1 47 3 view .LVU5
+  53 0014 FFF7FEFF 		bl	mem_s_init
+  54              	.LVL4:
+  48:Core/Src/main.c **** 
+  49:Core/Src/main.c ****   
+  50:Core/Src/main.c ****   // Sensores
+  51:Core/Src/main.c **** 
+  52:Core/Src/main.c ****   // modulo SIm 
   53:Core/Src/main.c **** 
-  54:Core/Src/main.c ****   // memset(buffer, 0, BUFFER_SIZE);
-  55:Core/Src/main.c ****   debug_print(" \r\nEscribir memoria externa:\r\n");
-  92              		.loc 1 55 3 view .LVU10
-ARM GAS  /tmp/cc1slYQo.s 			page 4
+  54:Core/Src/main.c ****   // Mensaje inicial
+  55:Core/Src/main.c **** 
+  56:Core/Src/main.c ****   debug_print(INIT_MSG);
+  55              		.loc 1 56 3 view .LVU6
+  56 0018 0148     		ldr	r0, .L3
+ARM GAS  /tmp/ccWukOTM.s 			page 3
 
 
-  93 0032 1F48     		ldr	r0, .L4+16
-  94 0034 FFF7FEFF 		bl	debug_print
-  95              	.LVL9:
-  56:Core/Src/main.c **** 
-  57:Core/Src/main.c ****   mem_write_data("!hola mundo, test de escritura \r\n", 0);
-  96              		.loc 1 57 3 view .LVU11
-  97 0038 0021     		movs	r1, #0
-  98 003a 1E48     		ldr	r0, .L4+20
-  99 003c FFF7FEFF 		bl	mem_write_data
- 100              	.LVL10:
-  58:Core/Src/main.c ****   // debug_print('\r\nLeo buffer');
-  59:Core/Src/main.c ****   memset(buffer, 0, 250);
- 101              		.loc 1 59 3 view .LVU12
- 102 0040 FA22     		movs	r2, #250
- 103 0042 0021     		movs	r1, #0
- 104 0044 2046     		mov	r0, r4
- 105 0046 FFF7FEFF 		bl	memset
- 106              	.LVL11:
-  60:Core/Src/main.c ****   mem_read_data(buffer, 0);
- 107              		.loc 1 60 3 view .LVU13
- 108 004a 0021     		movs	r1, #0
- 109 004c 2046     		mov	r0, r4
- 110 004e FFF7FEFF 		bl	mem_read_data
- 111              	.LVL12:
-  61:Core/Src/main.c ****   debug_print("buffer:");
- 112              		.loc 1 61 3 view .LVU14
- 113 0052 1948     		ldr	r0, .L4+24
- 114 0054 FFF7FEFF 		bl	debug_print
- 115              	.LVL13:
+  57 001a FFF7FEFF 		bl	debug_print
+  58              	.LVL5:
+  57:Core/Src/main.c **** 
+  58:Core/Src/main.c **** 
+  59:Core/Src/main.c **** }
+  59              		.loc 1 59 1 is_stmt 0 view .LVU7
+  60 001e 08BD     		pop	{r3, pc}
+  61              	.L4:
+  62              		.align	2
+  63              	.L3:
+  64 0020 00000000 		.word	.LC0
+  65              		.cfi_endproc
+  66              	.LFE68:
+  68              		.section	.text.main,"ax",%progbits
+  69              		.align	1
+  70              		.global	main
+  71              		.syntax unified
+  72              		.thumb
+  73              		.thumb_func
+  74              		.fpu softvfp
+  76              	main:
+  77              	.LFB69:
+  60:Core/Src/main.c **** 
+  61:Core/Src/main.c **** 
   62:Core/Src/main.c **** 
-  63:Core/Src/main.c ****   debug_print(buffer);
- 116              		.loc 1 63 3 view .LVU15
- 117 0058 2046     		mov	r0, r4
- 118 005a FFF7FEFF 		bl	debug_print
- 119              	.LVL14:
-  64:Core/Src/main.c **** 
-  65:Core/Src/main.c ****  
-  66:Core/Src/main.c **** 
-  67:Core/Src/main.c ****   debug_print("\r\nentrando al while \r\n");
- 120              		.loc 1 67 3 view .LVU16
- 121 005e 1748     		ldr	r0, .L4+28
- 122 0060 FFF7FEFF 		bl	debug_print
- 123              	.LVL15:
- 124              	.L2:
-  68:Core/Src/main.c ****   while (1)
- 125              		.loc 1 68 3 discriminator 1 view .LVU17
-  69:Core/Src/main.c ****   {
-  70:Core/Src/main.c ****     
-  71:Core/Src/main.c ****   mem_write_data("!hola mundo, test de escritura \r\n", 0);
- 126              		.loc 1 71 3 discriminator 1 view .LVU18
- 127 0064 0021     		movs	r1, #0
- 128 0066 1348     		ldr	r0, .L4+20
- 129 0068 FFF7FEFF 		bl	mem_write_data
- 130              	.LVL16:
-  72:Core/Src/main.c ****   // debug_print('\r\nLeo buffer');
-  73:Core/Src/main.c ****   memset(buffer, 0, 250);
- 131              		.loc 1 73 3 discriminator 1 view .LVU19
-ARM GAS  /tmp/cc1slYQo.s 			page 5
+  63:Core/Src/main.c **** /**
+  64:Core/Src/main.c ****  * @brief  The application entry point.
+  65:Core/Src/main.c ****  * @retval int
+  66:Core/Src/main.c ****  */
+  67:Core/Src/main.c **** int main(void)
+  68:Core/Src/main.c **** {
+  78              		.loc 1 68 1 is_stmt 1 view -0
+  79              		.cfi_startproc
+  80              		@ Volatile: function does not return.
+  81              		@ args = 0, pretend = 0, frame = 0
+  82              		@ frame_needed = 0, uses_anonymous_args = 0
+  83 0000 08B5     		push	{r3, lr}
+  84              	.LCFI1:
+  85              		.cfi_def_cfa_offset 8
+  86              		.cfi_offset 3, -8
+  87              		.cfi_offset 14, -4
+  69:Core/Src/main.c ****   app_init();
+  88              		.loc 1 69 3 view .LVU9
+  89 0002 FFF7FEFF 		bl	app_init
+  90              	.LVL6:
+  91              	.L6:
+  70:Core/Src/main.c ****  
+  71:Core/Src/main.c ****   
+  72:Core/Src/main.c ****   while (1)
+  92              		.loc 1 72 3 discriminator 1 view .LVU10
+  73:Core/Src/main.c ****   {
+  74:Core/Src/main.c ****     
+  75:Core/Src/main.c **** 
+  76:Core/Src/main.c ****     HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+  93              		.loc 1 76 5 discriminator 1 view .LVU11
+  94 0006 0421     		movs	r1, #4
+  95 0008 0348     		ldr	r0, .L8
+ARM GAS  /tmp/ccWukOTM.s 			page 4
 
 
- 132 006c 0F4C     		ldr	r4, .L4+12
- 133 006e FA22     		movs	r2, #250
- 134 0070 0021     		movs	r1, #0
- 135 0072 2046     		mov	r0, r4
- 136 0074 FFF7FEFF 		bl	memset
- 137              	.LVL17:
-  74:Core/Src/main.c ****   mem_read_data(buffer, 0);
- 138              		.loc 1 74 3 discriminator 1 view .LVU20
- 139 0078 0021     		movs	r1, #0
- 140 007a 2046     		mov	r0, r4
- 141 007c FFF7FEFF 		bl	mem_read_data
- 142              	.LVL18:
-  75:Core/Src/main.c ****   debug_print("buffer:");
- 143              		.loc 1 75 3 discriminator 1 view .LVU21
- 144 0080 0D48     		ldr	r0, .L4+24
- 145 0082 FFF7FEFF 		bl	debug_print
- 146              	.LVL19:
-  76:Core/Src/main.c **** 
-  77:Core/Src/main.c ****   debug_print(buffer);
- 147              		.loc 1 77 3 discriminator 1 view .LVU22
- 148 0086 2046     		mov	r0, r4
- 149 0088 FFF7FEFF 		bl	debug_print
- 150              	.LVL20:
-  78:Core/Src/main.c ****     HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
- 151              		.loc 1 78 5 discriminator 1 view .LVU23
- 152 008c 0421     		movs	r1, #4
- 153 008e 0C48     		ldr	r0, .L4+32
- 154 0090 FFF7FEFF 		bl	HAL_GPIO_TogglePin
- 155              	.LVL21:
-  79:Core/Src/main.c ****     delay(2500);
- 156              		.loc 1 79 5 discriminator 1 view .LVU24
- 157 0094 40F6C410 		movw	r0, #2500
- 158 0098 FFF7FEFF 		bl	HAL_Delay
- 159              	.LVL22:
-  68:Core/Src/main.c ****   {
- 160              		.loc 1 68 9 discriminator 1 view .LVU25
- 161 009c E2E7     		b	.L2
- 162              	.L5:
- 163 009e 00BF     		.align	2
- 164              	.L4:
- 165 00a0 00000000 		.word	.LC0
- 166 00a4 18000000 		.word	.LC1
- 167 00a8 30000000 		.word	.LC2
- 168 00ac 00000000 		.word	.LANCHOR0
- 169 00b0 54000000 		.word	.LC3
- 170 00b4 74000000 		.word	.LC4
- 171 00b8 98000000 		.word	.LC5
- 172 00bc A0000000 		.word	.LC6
- 173 00c0 000C0140 		.word	1073810432
- 174              		.cfi_endproc
- 175              	.LFE68:
- 177              		.section	.text.Error_Handler,"ax",%progbits
- 178              		.align	1
- 179              		.global	Error_Handler
- 180              		.syntax unified
- 181              		.thumb
- 182              		.thumb_func
-ARM GAS  /tmp/cc1slYQo.s 			page 6
-
-
- 183              		.fpu softvfp
- 185              	Error_Handler:
- 186              	.LFB69:
-  80:Core/Src/main.c ****   }
-  81:Core/Src/main.c **** 
+  96 000a FFF7FEFF 		bl	HAL_GPIO_TogglePin
+  97              	.LVL7:
+  77:Core/Src/main.c ****     delay(2500);
+  98              		.loc 1 77 5 discriminator 1 view .LVU12
+  99 000e 40F6C410 		movw	r0, #2500
+ 100 0012 FFF7FEFF 		bl	HAL_Delay
+ 101              	.LVL8:
+  72:Core/Src/main.c ****   {
+ 102              		.loc 1 72 9 discriminator 1 view .LVU13
+ 103 0016 F6E7     		b	.L6
+ 104              	.L9:
+ 105              		.align	2
+ 106              	.L8:
+ 107 0018 000C0140 		.word	1073810432
+ 108              		.cfi_endproc
+ 109              	.LFE69:
+ 111              		.section	.text.Error_Handler,"ax",%progbits
+ 112              		.align	1
+ 113              		.global	Error_Handler
+ 114              		.syntax unified
+ 115              		.thumb
+ 116              		.thumb_func
+ 117              		.fpu softvfp
+ 119              	Error_Handler:
+ 120              	.LFB70:
+  78:Core/Src/main.c ****   }
+  79:Core/Src/main.c **** 
+  80:Core/Src/main.c **** 
+  81:Core/Src/main.c **** }
   82:Core/Src/main.c **** 
-  83:Core/Src/main.c **** }
-  84:Core/Src/main.c **** 
-  85:Core/Src/main.c **** /**
-  86:Core/Src/main.c ****  * @brief  This function is executed in case of error occurrence.
-  87:Core/Src/main.c ****  * @retval None
-  88:Core/Src/main.c ****  */
-  89:Core/Src/main.c **** void Error_Handler(void)
-  90:Core/Src/main.c **** {
- 187              		.loc 1 90 1 view -0
- 188              		.cfi_startproc
- 189              		@ Volatile: function does not return.
- 190              		@ args = 0, pretend = 0, frame = 0
- 191              		@ frame_needed = 0, uses_anonymous_args = 0
- 192              		@ link register save eliminated.
-  91:Core/Src/main.c ****   /* USER CODE BEGIN Error_Handler_Debug */
-  92:Core/Src/main.c ****   /* User can add his own implementation to report the HAL error return state */
-  93:Core/Src/main.c ****   __disable_irq();
- 193              		.loc 1 93 3 view .LVU27
- 194              	.LBB4:
- 195              	.LBI4:
- 196              		.file 2 "Drivers/CMSIS/Include/cmsis_gcc.h"
+  83:Core/Src/main.c **** /**
+  84:Core/Src/main.c ****  * @brief  This function is executed in case of error occurrence.
+  85:Core/Src/main.c ****  * @retval None
+  86:Core/Src/main.c ****  */
+  87:Core/Src/main.c **** void Error_Handler(void)
+  88:Core/Src/main.c **** {
+ 121              		.loc 1 88 1 view -0
+ 122              		.cfi_startproc
+ 123              		@ Volatile: function does not return.
+ 124              		@ args = 0, pretend = 0, frame = 0
+ 125              		@ frame_needed = 0, uses_anonymous_args = 0
+ 126              		@ link register save eliminated.
+  89:Core/Src/main.c ****   /* USER CODE BEGIN Error_Handler_Debug */
+  90:Core/Src/main.c ****   /* User can add his own implementation to report the HAL error return state */
+  91:Core/Src/main.c ****   __disable_irq();
+ 127              		.loc 1 91 3 view .LVU15
+ 128              	.LBB4:
+ 129              	.LBI4:
+ 130              		.file 2 "Drivers/CMSIS/Include/cmsis_gcc.h"
    1:Drivers/CMSIS/Include/cmsis_gcc.h **** /**************************************************************************//**
    2:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @file     cmsis_gcc.h
    3:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
@@ -336,6 +238,9 @@ ARM GAS  /tmp/cc1slYQo.s 			page 1
    6:Drivers/CMSIS/Include/cmsis_gcc.h ****  ******************************************************************************/
    7:Drivers/CMSIS/Include/cmsis_gcc.h **** /*
    8:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
+ARM GAS  /tmp/ccWukOTM.s 			page 5
+
+
    9:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
   10:Drivers/CMSIS/Include/cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
   11:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
@@ -358,9 +263,6 @@ ARM GAS  /tmp/cc1slYQo.s 			page 1
   28:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ignore some GCC warnings */
   29:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic push
   30:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wsign-conversion"
-ARM GAS  /tmp/cc1slYQo.s 			page 7
-
-
   31:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wconversion"
   32:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wunused-parameter"
   33:Drivers/CMSIS/Include/cmsis_gcc.h **** 
@@ -396,6 +298,9 @@ ARM GAS  /tmp/cc1slYQo.s 			page 1
   63:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
   64:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_STRUCT
   65:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
+ARM GAS  /tmp/ccWukOTM.s 			page 6
+
+
   66:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
   67:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_UNION
   68:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_UNION                         union __attribute__((packed, aligned(1)))
@@ -418,9 +323,6 @@ ARM GAS  /tmp/cc1slYQo.s 			page 1
   85:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
   86:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_READ
   87:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
-ARM GAS  /tmp/cc1slYQo.s 			page 8
-
-
   88:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
   89:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
   90:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_READ { uint16_t v; };
@@ -456,6 +358,9 @@ ARM GAS  /tmp/cc1slYQo.s 			page 1
  120:Drivers/CMSIS/Include/cmsis_gcc.h ****     \defgroup CMSIS_Core_RegAccFunctions CMSIS Core Register Access Functions
  121:Drivers/CMSIS/Include/cmsis_gcc.h ****   @{
  122:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ARM GAS  /tmp/ccWukOTM.s 			page 7
+
+
  123:Drivers/CMSIS/Include/cmsis_gcc.h **** 
  124:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
  125:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Enable IRQ Interrupts
@@ -474,74 +379,75 @@ ARM GAS  /tmp/cc1slYQo.s 			page 1
  138:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
  139:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
  140:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __disable_irq(void)
- 197              		.loc 2 140 27 view .LVU28
- 198              	.LBB5:
+ 131              		.loc 2 140 27 view .LVU16
+ 132              	.LBB5:
  141:Drivers/CMSIS/Include/cmsis_gcc.h **** {
  142:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsid i" : : : "memory");
-ARM GAS  /tmp/cc1slYQo.s 			page 9
+ 133              		.loc 2 142 3 view .LVU17
+ 134              		.syntax unified
+ 135              	@ 142 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 136 0000 72B6     		cpsid i
+ 137              	@ 0 "" 2
+ 138              		.thumb
+ 139              		.syntax unified
+ 140              	.L11:
+ 141              	.LBE5:
+ 142              	.LBE4:
+  92:Core/Src/main.c ****   while (1)
+ 143              		.loc 1 92 3 discriminator 1 view .LVU18
+  93:Core/Src/main.c ****   {
+  94:Core/Src/main.c ****   }
+ 144              		.loc 1 94 3 discriminator 1 view .LVU19
+  92:Core/Src/main.c ****   while (1)
+ 145              		.loc 1 92 9 discriminator 1 view .LVU20
+ 146 0002 FEE7     		b	.L11
+ 147              		.cfi_endproc
+ 148              	.LFE70:
+ 150              		.global	buffer
+ 151              		.section	.data.buffer,"aw"
+ 152              		.align	2
+ 155              	buffer:
+ 156 0000 434F4E54 		.ascii	"CONTENIDO INICIAL\015\012\000"
+ 156      454E4944 
+ 156      4F20494E 
+ 156      49434941 
+ 156      4C0D0A00 
+ 157 0014 00000000 		.space	230
+ 157      00000000 
+ 157      00000000 
+ 157      00000000 
+ 157      00000000 
+ 158              		.text
+ARM GAS  /tmp/ccWukOTM.s 			page 8
 
 
- 199              		.loc 2 142 3 view .LVU29
- 200              		.syntax unified
- 201              	@ 142 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
- 202 0000 72B6     		cpsid i
- 203              	@ 0 "" 2
- 204              		.thumb
- 205              		.syntax unified
- 206              	.L7:
- 207              	.LBE5:
- 208              	.LBE4:
-  94:Core/Src/main.c ****   while (1)
- 209              		.loc 1 94 3 discriminator 1 view .LVU30
-  95:Core/Src/main.c ****   {
-  96:Core/Src/main.c ****   }
- 210              		.loc 1 96 3 discriminator 1 view .LVU31
-  94:Core/Src/main.c ****   while (1)
- 211              		.loc 1 94 9 discriminator 1 view .LVU32
- 212 0002 FEE7     		b	.L7
- 213              		.cfi_endproc
- 214              	.LFE69:
- 216              		.global	buffer
- 217              		.section	.data.buffer,"aw"
- 218              		.align	2
- 219              		.set	.LANCHOR0,. + 0
- 222              	buffer:
- 223 0000 434F4E54 		.ascii	"CONTENIDO INICIAL\015\012\000"
- 223      454E4944 
- 223      4F20494E 
- 223      49434941 
- 223      4C0D0A00 
- 224 0014 00000000 		.space	230
- 224      00000000 
- 224      00000000 
- 224      00000000 
- 224      00000000 
- 225              		.text
- 226              	.Letext0:
- 227              		.file 3 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
- 228              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
- 229              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
- 230              		.file 6 "Core/Modulos/include/clock_master.h"
- 231              		.file 7 "Core/Modulos/include/gpio.h"
- 232              		.file 8 "Core/Modulos/include/debug.h"
- 233              		.file 9 "Core/Modulos/include/memory.h"
- 234              		.file 10 "Core/Modulos/include/sim.h"
- 235              		.file 11 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
- 236              		.file 12 "Core/Modulos/include/core.h"
- 237              		.file 13 "<built-in>"
-ARM GAS  /tmp/cc1slYQo.s 			page 10
+ 159              	.Letext0:
+ 160              		.file 3 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
+ 161              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 162              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 163              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 164              		.file 7 "Core/Modulos/include/clock_master.h"
+ 165              		.file 8 "Core/Modulos/include/gpio.h"
+ 166              		.file 9 "Core/Modulos/include/debug.h"
+ 167              		.file 10 "Core/Modulos/include/memory.h"
+ 168              		.file 11 "Core/Modulos/include/sim.h"
+ 169              		.file 12 "Core/Modulos/include/core.h"
+ARM GAS  /tmp/ccWukOTM.s 			page 9
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 main.c
-     /tmp/cc1slYQo.s:16     .rodata.main.str1.4:0000000000000000 $d
-     /tmp/cc1slYQo.s:38     .text.main:0000000000000000 $t
-     /tmp/cc1slYQo.s:46     .text.main:0000000000000000 main
-     /tmp/cc1slYQo.s:165    .text.main:00000000000000a0 $d
-     /tmp/cc1slYQo.s:178    .text.Error_Handler:0000000000000000 $t
-     /tmp/cc1slYQo.s:185    .text.Error_Handler:0000000000000000 Error_Handler
-     /tmp/cc1slYQo.s:222    .data.buffer:0000000000000000 buffer
-     /tmp/cc1slYQo.s:218    .data.buffer:0000000000000000 $d
+     /tmp/ccWukOTM.s:16     .rodata.app_init.str1.4:0000000000000000 $d
+     /tmp/ccWukOTM.s:20     .text.app_init:0000000000000000 $t
+     /tmp/ccWukOTM.s:27     .text.app_init:0000000000000000 app_init
+     /tmp/ccWukOTM.s:64     .text.app_init:0000000000000020 $d
+     /tmp/ccWukOTM.s:69     .text.main:0000000000000000 $t
+     /tmp/ccWukOTM.s:76     .text.main:0000000000000000 main
+     /tmp/ccWukOTM.s:107    .text.main:0000000000000018 $d
+     /tmp/ccWukOTM.s:112    .text.Error_Handler:0000000000000000 $t
+     /tmp/ccWukOTM.s:119    .text.Error_Handler:0000000000000000 Error_Handler
+     /tmp/ccWukOTM.s:155    .data.buffer:0000000000000000 buffer
+     /tmp/ccWukOTM.s:152    .data.buffer:0000000000000000 $d
 
 UNDEFINED SYMBOLS
 HAL_Init
@@ -550,8 +456,5 @@ MX_GPIO_Init
 debug_init
 mem_s_init
 debug_print
-mem_write_data
-memset
-mem_read_data
 HAL_GPIO_TogglePin
 HAL_Delay

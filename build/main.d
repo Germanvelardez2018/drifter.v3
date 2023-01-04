@@ -32,7 +32,8 @@ build/main.o: Core/Src/main.c Core/Inc/main.h \
  Core/Modulos/include/debug.h Core/Modulos/include/core.h \
  Core/Modulos/include/debug.h Core/Modulos/include/gpio.h \
  Core/Modulos/include/clock_master.h Core/Modulos/include/sim.h \
- Core/Modulos/include/mpu6050.h Core/Modulos/include/memory.h
+ Core/Modulos/include/mpu6050.h Core/Modulos/include/memory.h \
+ Core/Modulos/include/sim_services.h
 Core/Inc/main.h:
 Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 Core/Inc/stm32f1xx_hal_conf.h:
@@ -74,3 +75,4 @@ Core/Modulos/include/clock_master.h:
 Core/Modulos/include/sim.h:
 Core/Modulos/include/mpu6050.h:
 Core/Modulos/include/memory.h:
+Core/Modulos/include/sim_services.h:

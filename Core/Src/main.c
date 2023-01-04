@@ -25,11 +25,40 @@
 #include "sim.h"
 #include "mpu6050.h"
 #include "memory.h"
+#include "sim_services.h"
 
-extern TIM_HandleTypeDef htim3;
 
+
+#define INIT_MSG              "Init  drifter"
 #define BUFFER_SIZE 250
 uint8_t buffer[BUFFER_SIZE] = {"CONTENIDO INICIAL\r\n"};
+
+
+PRIVATE void app_init(){
+
+  // Inicio todos los servicios necesarios
+  // Core
+  HAL_Init();
+  clock_master_set(CLOCK_8MHZ);
+  MX_GPIO_Init();
+  // Debug
+  debug_init();
+  // Memoria externa
+  mem_s_init();
+
+  
+  // Sensores
+
+  // modulo SIm 
+
+  // Mensaje inicial
+
+  debug_print(INIT_MSG);
+
+
+}
+
+
 
 /**
  * @brief  The application entry point.
@@ -37,44 +66,13 @@ uint8_t buffer[BUFFER_SIZE] = {"CONTENIDO INICIAL\r\n"};
  */
 int main(void)
 {
-
-  HAL_Init();
-  clock_master_set(CLOCK_8MHZ);
-  MX_GPIO_Init();
-
-  debug_init();
-  mem_s_init();
-  debug_print("\r\n\t\t Inicio programa\r\n");
-  debug_print("test memoria externa \r\n");
-
-  // mpu6050_init();
-  debug_print("\r\ncontenido inicial del buffer: ");
-  debug_print(buffer);
-
-  // memset(buffer, 0, BUFFER_SIZE);
-  debug_print(" \r\nEscribir memoria externa:\r\n");
-
-  mem_write_data("!hola mundo, test de escritura \r\n", 0);
-  // debug_print('\r\nLeo buffer');
-  memset(buffer, 0, 250);
-  mem_read_data(buffer, 0);
-  debug_print("buffer:");
-
-  debug_print(buffer);
-
+  app_init();
  
-
-  debug_print("\r\nentrando al while \r\n");
+  
   while (1)
   {
     
-  mem_write_data("!hola mundo, test de escritura \r\n", 0);
-  // debug_print('\r\nLeo buffer');
-  memset(buffer, 0, 250);
-  mem_read_data(buffer, 0);
-  debug_print("buffer:");
 
-  debug_print(buffer);
     HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
     delay(2500);
   }
