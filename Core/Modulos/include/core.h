@@ -70,6 +70,18 @@ extern "C"
         NORMAL_LEVEL = 1
     } battery_state_t;
 
+
+    
+  #define  FSM_CHECK_ONLY      ((uint8_t) 0)
+  #define  FSM_SAVE_DATA       ((uint8_t) 1)
+  #define  FSM_DOWNLOAD      ((uint8_t) 2)
+   
+
+
+
+
+
+
     typedef enum
     {
         SIM_OFF,
@@ -109,6 +121,9 @@ extern "C"
         mqtt_state_t mqtt;
         gps_state_t gps;
     } drifter_t;
+
+
+
 
 #define delay(t) HAL_Delay(t)
 

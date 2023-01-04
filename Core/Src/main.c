@@ -26,12 +26,15 @@
 #include "mpu6050.h"
 #include "memory.h"
 #include "sim_services.h"
+#include "fsm.h"
 
 
 
-#define INIT_MSG              "Init  drifter"
+#define INIT_MSG              "Init  drifter \r\n"
 #define BUFFER_SIZE 250
 uint8_t buffer[BUFFER_SIZE] = {"CONTENIDO INICIAL\r\n"};
+
+
 
 
 PRIVATE void app_init(){
@@ -46,7 +49,7 @@ PRIVATE void app_init(){
   // Memoria externa
   mem_s_init();
 
-  
+  // FSM
   // Sensores
 
   // modulo SIm 
@@ -54,6 +57,8 @@ PRIVATE void app_init(){
   // Mensaje inicial
 
   debug_print(INIT_MSG);
+    fsm_init();
+debug_print("pasamos fsm init\r\n");
 
 
 }
@@ -68,13 +73,33 @@ int main(void)
 {
   app_init();
  
-  
+  //fsm_set_state(FSM_SAVE_DATA);
   while (1)
   {
     
+    switch (fsm_get_state())
+    {
+    case FSM_CHECK_ONLY:
+      HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+      debug_print("FSM:CHECK\r\n ");
+      break;
+    case FSM_SAVE_DATA:
+      debug_print("FSM:SAVE DATA \r\n ");
+      break;
 
-    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-    delay(2500);
+    case FSM_DOWNLOAD:
+      debug_print("FSM: DOWNLOAD \r\n");
+      break;
+
+    default:
+      debug_print("FSM: UNDEFINED \r\n");
+
+      break;
+    }
+
+
+    
+    delay(500);
   }
 
 
