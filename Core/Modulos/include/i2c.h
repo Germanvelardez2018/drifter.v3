@@ -1,10 +1,4 @@
 
-
-
-
-
-
-
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __I2C_H
 #define __I2C_H
@@ -21,7 +15,7 @@ extern "C" {
 
 
 /**
-  * @brief I2C2 Initialization Function
+  * @brief I2C2 Inicializacion de hardware
   * @param None
   * @retval None
   */

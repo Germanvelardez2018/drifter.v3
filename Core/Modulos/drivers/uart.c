@@ -9,11 +9,6 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 
-/**
-  * @brief USART1 Initialization Function
-  * @param None
-  * @retval None
-  */
  void MX_USART1_UART_Init(void)
 {
   huart1.Instance = USART1;
@@ -30,11 +25,6 @@ UART_HandleTypeDef huart2;
   }
 }
 
-/**
-  * @brief USART2 Initialization Function
-  * @param None
-  * @retval None
-  */
  void MX_USART2_UART_Init(void)
 {
   huart2.Instance = USART2;

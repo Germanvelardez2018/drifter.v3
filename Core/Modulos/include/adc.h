@@ -24,7 +24,10 @@ extern "C" {
 #include "core.h"
 
 
-
+/**
+ * @brief Inicia el ADC1
+ * 
+*/
  void MX_ADC1_Init(void);
 
 

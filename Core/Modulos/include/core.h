@@ -80,6 +80,10 @@ extern "C"
 
 
 
+    typedef enum{
+        SIZE_PAGE_256 = 0,
+        SIZE_PAGE_264 = 1
+    } size_page_t;
 
 
     typedef enum

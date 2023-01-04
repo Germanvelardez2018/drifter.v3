@@ -10,7 +10,10 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 
 #include "core.h"
-
+/**
+ * @brief Inicializacion de hardware
+ * 
+*/
  void MX_GPIO_Init(void);
 
 #ifdef __cplusplus

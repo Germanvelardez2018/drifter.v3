@@ -1,30 +1,20 @@
 #include "adc.h"
 
 
-
-ADC_HandleTypeDef hadc1;
+/* Instancia de estructura que configura el hardware de ADC1*/
+ADC_HandleTypeDef hadc1;//! HADC1 
 
 
 /**
-  * @brief ADC1 Initialization Function
+  * @brief Inicializacion del hardware ADC1
   * @param None
   * @retval None
   */
  void MX_ADC1_Init(void)
 {
 
-  /* USER CODE BEGIN ADC1_Init 0 */
-
-  /* USER CODE END ADC1_Init 0 */
-
   ADC_ChannelConfTypeDef sConfig = {0};
-
-  /* USER CODE BEGIN ADC1_Init 1 */
-
-  /* USER CODE END ADC1_Init 1 */
-
-  /** Common config
-  */
+  
   hadc1.Instance = ADC1;
   hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
   hadc1.Init.ContinuousConvMode = DISABLE;
@@ -46,16 +36,13 @@ ADC_HandleTypeDef hadc1;
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN ADC1_Init 2 */
-
-  /* USER CODE END ADC1_Init 2 */
 
 }
 
 
 /**
-* @brief ADC MSP Initialization
-* This function configures the hardware resources used in this example
+* @brief Inicializacion de bajo nivel del hardware ADC.
+ Esta funcion es llamada dentro de  MX_ADC1_Init
 * @param hadc: ADC handle pointer
 * @retval None
 */
@@ -64,9 +51,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   if(hadc->Instance==ADC1)
   {
-  /* USER CODE BEGIN ADC1_MspInit 0 */
-
-  /* USER CODE END ADC1_MspInit 0 */
+  
     /* Peripheral clock enable */
     __HAL_RCC_ADC1_CLK_ENABLE();
 
@@ -78,16 +63,13 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /* USER CODE BEGIN ADC1_MspInit 1 */
-
-  /* USER CODE END ADC1_MspInit 1 */
+  
   }
 
 }
 
 /**
-* @brief ADC MSP De-Initialization
-* This function freeze the hardware resources used in this example
+* @brief Deshabilita hardware de ADC (bajo nivel)
 * @param hadc: ADC handle pointer
 * @retval None
 */
@@ -95,9 +77,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
 {
   if(hadc->Instance==ADC1)
   {
-  /* USER CODE BEGIN ADC1_MspDeInit 0 */
-
-  /* USER CODE END ADC1_MspDeInit 0 */
+ 
     /* Peripheral clock disable */
     __HAL_RCC_ADC1_CLK_DISABLE();
 
@@ -106,15 +86,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     */
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0);
 
-  /* USER CODE BEGIN ADC1_MspDeInit 1 */
-
-  /* USER CODE END ADC1_MspDeInit 1 */
   }
 
 }
 
-
-
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */

@@ -30,16 +30,16 @@ extern "C" {
 
 #include "core.h"
 
+/**
+ * 
+ * @note La memoria AT45DB041E tiene 2048 paginas de 256/264bytes cada una.
+         El buffer 1 se usara en las funciones de escritur  
+         El contador de datos almacenados se guardara en buffer2
+         
+         Guardo los primeros 10 registros para usos en configuraciones en el futuro
+*/
 
-
-// Notas: La memoria AT45DB041E tiene 2048 paginas de 256/264bytes cada una.
-
-
-
-// El buffer 1 se usara en las funciones de escritura
-// El contador de datos almacenados se guardara en buffer2
-
-// Guardo los primeros 10 registros para usos en configuraciones en el futuro
+/
 #define MMAP_OFFSET_CONFIG                                  (uint16_t) 10
 
 // De 0 A 47   // Registros especiales, No Data

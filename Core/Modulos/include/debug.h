@@ -12,20 +12,27 @@ extern "C" {
 #include "core.h"
 
 
-/* Inicializo el periferico que soporta el debug: UART2 por default
+/**
+*@brief Inicializo el periferico que soporta el debug: UART2 por default
 */
- void debug_init();
+void debug_init();
 
 
-/* Desinicializo el periferico que soporta el debug: UART2 por default
+/**
+*@brief Desinicializo el periferico que soporta el debug: UART2 por default
 */
 void  debug_deinit();
 
 
+/**
+ * @brief Imprimo mensaje en formato string por el puerto de debug de la app (UART2 DEFAULT)
+*/
 void debug_print(uint8_t* buffer);
 
 
-
+/**
+ * @brief Imprimo mensaje en formato uint8_t por el puerto de debug de la app (UART2 DEFAULT)
+*/
 void debug_print_raw(uint8_t* buffer,size_t len);
 
 
