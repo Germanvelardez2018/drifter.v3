@@ -36,6 +36,13 @@ void mem_s_deinit();
 
 
 
+
+
+
+void mem_s_get_cmax_interval(uint8_t* cmax_interval);
+void mem_s_set_cmax_interval(uint8_t* cmax_interval);
+
+
 void mem_s_get_fsm_state(uint8_t* fsm_state);
 void mem_s_set_fsm_state(uint8_t* fsm_state);
 

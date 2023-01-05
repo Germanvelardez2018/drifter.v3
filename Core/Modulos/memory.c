@@ -10,7 +10,7 @@
 #include "at45db.h"
 
 
-
+#define ANYOFFSET            2
 
 
 
@@ -54,6 +54,17 @@ PRIVATE void mem_write_buffer(uint8_t* data, uint8_t len,uint8_t pos){
      at45db_write_buffer2(data,len,pos);
 }
 
+
+
+
+PRIVATE void mem_get_counter(uint8_t* counter){
+    mem_read_buffer(counter, 1,ANYOFFSET);
+}
+
+
+PRIVATE void  mem_set_counter(uint8_t* counter){
+    mem_write_buffer(counter, 1,ANYOFFSET);
+}
 
 
 
@@ -247,3 +258,30 @@ void   mem_read_data(uint8_t* buffer, uint32_t page){
 
 
 
+
+
+
+
+void mem_s_get_cmax_interval(uint8_t* cmax_interval){
+    mem_resume();
+    mem_read_page(cmax_interval,1,MMAP_MAX_COUNTER_INTERVAL,0);
+    mem_sleep();
+}
+
+
+void mem_s_set_cmax_interval(uint8_t* cmax_interval){
+ 
+    mem_resume();
+    mem_write_page(cmax_interval,1,MMAP_MAX_COUNTER_INTERVAL,0);    
+    mem_sleep();
+}
+
+
+
+
+/**
+ * 
+ * @note Para gestionar los contadores se utilizo buffer de la memoria flash y 
+ *       de esta manera se maximizo la vida util de la memoria flash. 
+ *       Por defecto se uso buffer2
+*/

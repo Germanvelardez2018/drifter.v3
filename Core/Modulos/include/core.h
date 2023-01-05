@@ -74,7 +74,7 @@ extern "C"
     
   #define  FSM_CHECK_ONLY      ((uint8_t) 0)
   #define  FSM_SAVE_DATA       ((uint8_t) 1)
-  #define  FSM_DOWNLOAD      ((uint8_t) 2)
+  #define  FSM_UPLOAD          ((uint8_t) 2)
    
 
 
@@ -130,6 +130,10 @@ extern "C"
 
 
 #define delay(t) HAL_Delay(t)
+
+
+
+
 
     /*-----------------------------------------------------------------------------*/
 

@@ -27,18 +27,28 @@
 #include "memory.h"
 #include "sim_services.h"
 #include "fsm.h"
+#include "rtc.h"
+#include "pwrm.h"
+
 
 
 
 #define INIT_MSG              "Init  drifter \r\n"
 #define BUFFER_SIZE 250
+
+
+
+
+PRIVATE uint8_t counter = 0;          // ! Contador de muestras almacenadas
+PRIVATE uint8_t cmax = 0;             //! Maximo valor del contador de muestras almacenadas
+PRIVATE uint8_t counter_interval = 0;
+PRIVATE uint8_t cmax_interval = 0;   //! Contador maximo de intervalos
 uint8_t buffer[BUFFER_SIZE] = {"CONTENIDO INICIAL\r\n"};
 
 
 
 
 PRIVATE void app_init(){
-
   // Inicio todos los servicios necesarios
   // Core
   HAL_Init();
@@ -49,6 +59,7 @@ PRIVATE void app_init(){
   // Memoria externa
   mem_s_init();
 
+  pwrm_init();
   // FSM
   // Sensores
 
@@ -57,11 +68,32 @@ PRIVATE void app_init(){
   // Mensaje inicial
 
   debug_print(INIT_MSG);
-    fsm_init();
-debug_print("pasamos fsm init\r\n");
+  fsm_init();
+  debug_print("pasamos fsm init\r\n");
 
+  //Cargo parametros desde Flash externa
+  //mem_s_get_counter(&counter);
+ // mem_s_get_max_amount_data(&cmax);
+ // mem_s_get_cmax_interval(&cmax_interval);
+  counter = 0;
+  cmax = 5;
+  counter_interval = 0;
+  cmax_interval = 5;
+}
+
+
+PRIVATE void check_routine(){
 
 }
+
+PRIVATE void upload_routine(){
+
+}
+
+PRIVATE void save_data_routine(){
+
+}
+
 
 
 
@@ -73,37 +105,55 @@ int main(void)
 {
   app_init();
  
-  //fsm_set_state(FSM_SAVE_DATA);
+  fsm_set_state(FSM_CHECK_ONLY);
   while (1)
   {
     
     switch (fsm_get_state())
     {
-    case FSM_CHECK_ONLY:
-      HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-      debug_print("FSM:CHECK\r\n ");
-      break;
-    case FSM_SAVE_DATA:
-      debug_print("FSM:SAVE DATA \r\n ");
-      break;
-
-    case FSM_DOWNLOAD:
-      debug_print("FSM: DOWNLOAD \r\n");
+      case FSM_CHECK_ONLY:
+        debug_print("FSM:CHECK\r\n ");
+        check_routine();
+        counter_interval =counter_interval+ 1;
+        if(counter_interval == cmax_interval)fsm_set_state(FSM_SAVE_DATA);
       break;
 
-    default:
-      debug_print("FSM: UNDEFINED \r\n");
+      case FSM_SAVE_DATA:
+        
+        debug_print("FSM:SAVE DATA \r\n ");
+        save_data_routine();
+        counter =counter + 1;
+        mem_s_set_counter(&counter);
+        if( counter == cmax){
+          fsm_set_state(FSM_UPLOAD);
+          
+        }else{
+          fsm_set_state(FSM_CHECK_ONLY);
+          counter_interval = 0;
+        } 
+      break;
 
+      case FSM_UPLOAD:
+        debug_print("FSM: UPLOAD \r\n");
+        upload_routine();
+        counter = 0;
+        mem_s_get_counter(&counter);
+        fsm_set_state(FSM_CHECK_ONLY);
+      break;
+
+      default:
+        debug_print("FSM: UNDEFINED \r\n");
       break;
     }
+  sleep_interval();
+  //delay(5000);
+  // Cambio de estado 
 
-
-    
-    delay(500);
   }
 
 
 }
+
 
 /**
  * @brief  This function is executed in case of error occurrence.
@@ -119,20 +169,3 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
-#ifdef USE_FULL_ASSERT
-/**
- * @brief  Reports the name of the source file and the source line number
- *         where the assert_param error has occurred.
- * @param  file: pointer to the source file name
- * @param  line: assert_param error line source number
- * @retval None
- */
-void assert_failed(uint8_t *file, uint32_t line)
-{
-  /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
-}
-#endif /* USE_FULL_ASSERT */

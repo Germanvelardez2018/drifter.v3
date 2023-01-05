@@ -39,7 +39,7 @@ extern "C" {
          Guardo los primeros 10 registros para usos en configuraciones en el futuro
 */
 
-/
+
 #define MMAP_OFFSET_CONFIG                                  (uint16_t) 10
 
 // De 0 A 47   // Registros especiales, No Data
@@ -52,19 +52,15 @@ extern "C" {
 #define MMAP_F_CONNECTION                                   (MMAP_OFFSET_CONFIG + 3)
 // Flag de estado de bateria: 3 Normal, 2 medio, 1 baja
 #define MMAP_F_BATTERY_STATE                                (MMAP_OFFSET_CONFIG + 4)
-
 #define MMAP_FSM_STATE                                      (MMAP_OFFSET_CONFIG + 5)
 
 // Almacena los 6 bytes del ofsset  del acelerometro. Eje X, eje y, eje z 
 #define MMAP_OFFSET_ACELEROMETER                              (MMAP_OFFSET_CONFIG + 10)
-
 #define MMAP_OFFSET_ACELEROMETER_X                            (MMAP_OFFSET_ACELEROMETER + 1)
-
 #define MMAP_OFFSET_ACELEROMETER_Y                            (MMAP_OFFSET_ACELEROMETER + 2)
-
 #define MMAP_OFFSET_ACELEROMETER_Z                            (MMAP_OFFSET_ACELEROMETER + 3)
 
-
+#define MMAP_MAX_COUNTER_INTERVAL                             (MMAP_OFFSET_ACELEROMETER_Z + 1)                                                            
 
 
 // Formato para almacenar en paginar

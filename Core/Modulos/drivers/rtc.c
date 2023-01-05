@@ -1,14 +1,4 @@
-
-
-
-
-
-
-
 #include "rtc.h"
-
-
-
 
 RTC_HandleTypeDef hrtc;
 
@@ -16,19 +6,51 @@ RTC_HandleTypeDef hrtc;
 
 
 
-/**
-  * @brief This function handles RTC global interrupt.
-  */
-void RTC_IRQHandler(void)
-{
-  /* USER CODE BEGIN RTC_IRQn 0 */
-
-  /* USER CODE END RTC_IRQn 0 */
-  HAL_RTCEx_RTCIRQHandler(&hrtc);
-  /* USER CODE BEGIN RTC_IRQn 1 */
-
-  /* USER CODE END RTC_IRQn 1 */
+void rtc_set_time(uint8_t hours, uint8_t minutes, uint8_t seconds){  
+    
+    RTC_TimeTypeDef sTime = {0};
+    sTime.Hours   = hours;
+    sTime.Minutes = minutes;
+    sTime.Seconds = seconds;
+    HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
 }
+
+
+void rtc_get_time(uint8_t* hours, uint8_t* minutes, uint8_t* seconds){  
+    
+    RTC_TimeTypeDef sTime = {0};
+    if (HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN) == HAL_OK){
+        (*hours) =sTime.Hours ;
+        (* minutes) =sTime.Minutes ;
+        (*seconds) = sTime.Seconds ;
+    } 
+}
+
+
+void rtc_set_alarm(uint8_t hours, uint8_t minutes, uint8_t seconds){  
+    
+    RTC_AlarmTypeDef sAlarm ={0};
+    sAlarm.AlarmTime.Hours = hours;
+    sAlarm.AlarmTime.Minutes = minutes;
+    sAlarm.AlarmTime.Seconds = seconds;
+    sAlarm.Alarm = 1;
+    HAL_RTC_SetAlarm_IT(&hrtc, &sAlarm, RTC_FORMAT_BIN);
+    
+}
+
+
+
+
+
+
+/**
+  * @brief This function handles RTC alarm interrupt through EXTI line 17.
+  */
+void RTC_Alarm_IRQHandler(void)
+{
+ HAL_RTC_AlarmIRQHandler(&hrtc);  
+}
+
 
 
 
@@ -50,10 +72,7 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc)
     __HAL_RCC_BKP_CLK_ENABLE();
     /* Peripheral clock enable */
     __HAL_RCC_RTC_ENABLE();
-    /* RTC interrupt Init */
-    HAL_NVIC_SetPriority(RTC_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(RTC_IRQn);
-  /* USER CODE BEGIN RTC_MspInit 1 */
+   
 
   /* USER CODE END RTC_MspInit 1 */
   }
@@ -83,11 +102,6 @@ void HAL_RTC_MspDeInit(RTC_HandleTypeDef* hrtc)
 
 
 
-/**
-  * @brief RTC Initialization Function
-  * @param None
-  * @retval None
-  */
  void MX_RTC_Init(void)
 {
 
@@ -98,5 +112,15 @@ void HAL_RTC_MspDeInit(RTC_HandleTypeDef* hrtc)
   {
     Error_Handler();
   }
-  
+  HAL_NVIC_SetPriority(RTC_Alarm_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(RTC_Alarm_IRQn);
+
 }
+
+
+void rtc_init(void){
+  MX_RTC_Init();
+  rtc_set_time(0,0,0);
+
+}
+
