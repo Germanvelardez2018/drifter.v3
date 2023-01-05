@@ -14,8 +14,19 @@
 
 
 #define INTERVAL_TIME_H        (0)
-#define INTERVAL_TIME_M        (0)
-#define INTERVAL_TIME_S        (20)
+#define INTERVAL_TIME_M        (5)
+#define INTERVAL_TIME_S        (0)
+#define WAIT_FOR_GPS_TIME_S    (40)
+
+PRIVATE void __wait_for_gps(){
+   uint8_t h,m,s ;
+  // Obtengo time actual
+  rtc_get_time(&h,&m,&s);
+  // Aumento el intervalo
+  s = s + WAIT_FOR_GPS_TIME_S;
+  rtc_set_alarm(h,m,s);
+
+}
 
 
 PRIVATE void __update_interval(){
@@ -45,7 +56,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc){
-  HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);  
+ 
   //RESUME_FROM_SLEEP();  
   HAL_ResumeTick();
 }
@@ -65,6 +76,10 @@ void sleep_interval(){
   __update_interval();
   // sleep
   SLEEP_INTERVAL();
+}
 
+void wait_for_gps(){
+  __wait_for_gps();
 
+  SLEEP_INTERVAL();
 }

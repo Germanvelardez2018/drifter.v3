@@ -21,3 +21,9 @@ void pwrm_init();
  * @brief Manda el microcontrolador a dormir
 */
 void sleep_interval();
+
+
+/**
+ * @brief Espero por intervalo
+*/
+void wait_for_gps();

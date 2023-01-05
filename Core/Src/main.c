@@ -34,9 +34,12 @@
 
 
 #define INIT_MSG              "Init  drifter \r\n"
+#define CHECK_MSG             "CHECK_DEVICE"
+#define CHECK_MSG_LEN         (strlen(CHECK_MSG))
+#define CHECK_TOPIC           "CHECK"
 #define BUFFER_SIZE 250
 
-
+#define BLINK_DEBUG                         (1)
 
 
 PRIVATE uint8_t counter = 0;          // ! Contador de muestras almacenadas
@@ -63,8 +66,6 @@ PRIVATE void app_init(){
   // FSM
   // Sensores
 
-  // modulo SIm 
-
   // Mensaje inicial
 
   debug_print(INIT_MSG);
@@ -84,13 +85,36 @@ PRIVATE void app_init(){
 
 PRIVATE void check_routine(){
 
+  // Encender el modulo
+  sim_init();
+  // Conectarse a servidor
+  sim_4g_connect();
+  sim_mqtt_connect();
+  // Enviar mensaje de check
+  sim7000g_mqtt_publish(CHECK_TOPIC,CHECK_MSG,CHECK_MSG_LEN);
+
+  sim_deinit();
+
 }
 
 PRIVATE void upload_routine(){
 
+  sim_init();
+  sim_4g_connect();
+  sim_mqtt_connect();
+  // transmito los datos
+
+  sim_deinit();
+
 }
 
 PRIVATE void save_data_routine(){
+  sim_init();
+  sim_gps_on();
+  wait_for_gps();
+  // Obtengo gps
+  sim_gps_off();
+  sim_deinit();
 
 }
 
@@ -116,17 +140,20 @@ int main(void)
         check_routine();
         counter_interval =counter_interval+ 1;
         if(counter_interval == cmax_interval)fsm_set_state(FSM_SAVE_DATA);
+        #if (BLINK_DEBUG == 1)
+         HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);  
+         delay(50);
+         HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+        #endif  
       break;
 
       case FSM_SAVE_DATA:
-        
         debug_print("FSM:SAVE DATA \r\n ");
         save_data_routine();
         counter =counter + 1;
         mem_s_set_counter(&counter);
         if( counter == cmax){
           fsm_set_state(FSM_UPLOAD);
-          
         }else{
           fsm_set_state(FSM_CHECK_ONLY);
           counter_interval = 0;
@@ -146,8 +173,7 @@ int main(void)
       break;
     }
   sleep_interval();
-  //delay(5000);
-  // Cambio de estado 
+  
 
   }
 

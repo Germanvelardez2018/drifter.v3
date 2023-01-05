@@ -52,11 +52,17 @@ void sim_4g_connect();
  void sim_gps_get_info(uint8_t* gps_buffer,size_t len);
 
 
- void debug_print(uint8_t* buffer);
-
 
  uint8_t*   sim_get_gps_data();
 
+
+void sim7000g_mqtt_publish(uint8_t* topic, uint8_t* payload, uint8_t len_payload);
+
+void sim7000g_mqtt_subscription(uint8_t* topic);
+
+
+void sim7000g_mqtt_unsubscription(uint8_t* topic);
+    
 
 #ifdef __cplusplus
 }

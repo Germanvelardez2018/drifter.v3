@@ -33,7 +33,9 @@
 #define CMD_ALL_CONFIG                                "AT+SMCONF=\"URL\",\"broker.hivemq.com\";SMCONF=\"QOS\",2 \r\n"
 #define CMD_ALL_CONFI2                                "AT+SMCONF=\"URL\",\"broker.hivemq.com\";SMCONF=\"QOS\",2;SMCONN \r\n"
 
-
+#define CMD_MQTT_PUBLISH                            "AT+SMPUB=\"%s\",\"%d\",2,1 \r\n" 
+#define CMD_MQTT_SUBSCRIBE                           "AT+SMSUB=\"%s\",%d \r\n"   // topic , QoS
+#define CMD_MQTT_UMSUBSCRIBE                         "AT+SMUMSUB=\"%s\"\r\n"   // topic , QoS
 
 
 #define CMD_LOW_PWR_ON                              "AT+CPSMS=1,\"01000010\",\"00001010\"\r\n"
@@ -105,6 +107,7 @@ void sim_init(){
     HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,1);
     HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,1);
     MX_USART1_UART_Init();
+    sim_echo_off();
 }
 
 
@@ -224,4 +227,35 @@ inline void sim_gps_get_info(uint8_t* gps_buffer,size_t len){
 
 uint8_t*   sim_get_gps_data(){
     return SIM_BUFFER;
+}
+
+
+
+void sim7000g_mqtt_publish(uint8_t* topic, uint8_t* payload, uint8_t len_payload){
+    
+    uint8_t  buffer[100]={0};
+    if( (topic != NULL) || (payload != NULL)){
+        sprintf(buffer,CMD_MQTT_PUBLISH,topic,len_payload);    
+        send_command(buffer,CMD_OK,650,1);
+        send_command(payload,CMD_OK,650,1);
+    }
+    
+}
+
+
+void sim7000g_mqtt_subscription(uint8_t* topic){
+    
+    uint8_t  buffer[100]={0};
+        sprintf(buffer,CMD_MQTT_SUBSCRIBE,topic,2);    
+        send_command(buffer,CMD_OK,500,1);
+    
+}
+
+
+void sim7000g_mqtt_unsubscription(uint8_t* topic){
+    
+    uint8_t  buffer[100]={0};
+        sprintf(buffer,CMD_MQTT_UMSUBSCRIBE,topic);    
+        SEND_COMMAND(buffer,CMD_OK,500);
+    
 }

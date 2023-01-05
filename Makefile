@@ -53,7 +53,6 @@ Core/Modulos/debug.c \
 Core/Modulos/rtc.c \
 Core/Modulos/pwrm.c \
 Core/Modulos/sim_services.c \
-Core/Modulos/drifter_state.c \
 Core/Src/main.c \
 Core/Src/stm32f1xx_it.c \
 Core/Src/stm32f1xx_hal_msp.c \
