@@ -24,6 +24,12 @@ void sleep_interval();
 
 
 /**
- * @brief Espero por intervalo
+ * @brief Espero por el GPS
 */
 void wait_for_gps();
+
+
+/***
+ * @brief Espero que el modulo encienda
+*/
+void wait_for_sim();

@@ -100,6 +100,7 @@ PRIVATE void check_routine(){
 PRIVATE void upload_routine(){
 
   sim_init();
+  wait_for_sim();
   sim_4g_connect();
   sim_mqtt_connect();
   // transmito los datos

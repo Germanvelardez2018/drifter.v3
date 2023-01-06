@@ -64,6 +64,8 @@ void sim7000g_mqtt_subscription(uint8_t* topic);
 void sim7000g_mqtt_unsubscription(uint8_t* topic);
     
 
+void wait_for_sim();
+
 #ifdef __cplusplus
 }
 #endif
