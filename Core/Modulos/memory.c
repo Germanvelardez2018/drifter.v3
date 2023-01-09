@@ -10,11 +10,17 @@
 #include "at45db.h"
 
 
-#define ANYOFFSET            2
+#define ANYOFFSET                   (2)
+
+#define ALL_DATA_COUNTER            (2)
+#define LEN_DATA_BUFFER             (200)
+#define SIZE_BUFFER_ALL_DATA        (ALL_DATA_COUNTER * LEN_DATA_BUFFER )
+#define FORMAT_ALL_DATA             ("%s ")
+#define GET_DATA(index,counter)           ((index < counter)?get_data_from_pos(counter):"{}")
 
 
 
-
+PRIVATE uint8_t __ALL_DATA__[SIZE_BUFFER_ALL_DATA]={"buffer empty\r\n"};
 
 PRIVATE  inline void mem_resume(){
     at45db_resumen();
@@ -66,13 +72,24 @@ PRIVATE void  mem_set_counter(uint8_t* counter){
     mem_write_buffer(counter, 1,ANYOFFSET);
 }
 
+uint8_t* mem_s_get_all_data(uint32_t counter){
+    uint8_t buffer[LEN_DATA_BUFFER];
+    uint32_t pos = 0;
+    if( counter > ALL_DATA_COUNTER ) counter = ALL_DATA_COUNTER;
+   
 
-
-
-
-
-
-
+    for(uint32_t index= 0; index < counter; index ++){
+    
+    mem_read_data(buffer,index);
+    sprintf(&(__ALL_DATA__[pos]),FORMAT_ALL_DATA,buffer);
+    
+    pos = strlen(__ALL_DATA__) ;
+    debug_print("all data");
+    debug_print(__ALL_DATA__);
+    }
+   
+    return __ALL_DATA__;
+}
 
 void mem_s_init(){
     mem_init();
@@ -95,15 +112,13 @@ void  mem_s_get_fsm_state(uint8_t* fsm_state){
     mem_sleep();
 }
 
-// 10 es una posicion randow dentro de la pagina (el ultimo param de mem_write_page)
 
+// 10 es una posicion randow dentro de la pagina (el ultimo param de mem_write_page)
 void  mem_s_set_fsm_state(uint8_t* fsm_state){
     mem_resume();
     mem_write_page(fsm_state,1,MMAP_FSM_STATE,10);
     mem_sleep();
 }
-
-
 
 
 void  mem_s_set_counter(uint8_t* counter){

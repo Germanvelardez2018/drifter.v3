@@ -14,7 +14,6 @@ void fsm_init(){
     // Estado inicial
    
     mem_s_get_fsm_state(&FSM_DEVICE);
-    debug_print("get state\r\n");
 
 }
 

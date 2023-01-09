@@ -5,7 +5,7 @@
 #include "uart.h"
 
 
-#define TEST_WITHOUT_INTERNET                             (1)
+#define TEST_WITHOUT_INTERNET                             (0)
 
 #define EXAMPLO_GPS_FORMAT                              ("1,1,20221216181549.000,-34.576180,-58.516807,16.000,0.00,0.0,1,,2.8,3.0,0.9,,10,4,,,40,,␍␊")
 
@@ -157,6 +157,7 @@ void sim_init(){
     HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,1);
     MX_USART1_UART_Init();
     sim_echo_off();
+    sim_version();
 }
 
 
@@ -164,7 +165,7 @@ void sim_init(){
 void sim_deinit(){
    // HAL_UART_DeInit(SIM_UART);
     sim_turn_off();
-    delay(500);
+    delay(2000);
     HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,0);
     HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,0);
     
@@ -248,17 +249,14 @@ uint8_t*   sim_get_gps_data(){
 }
 
 
-
+// maximo content len es 512
 void sim7000g_mqtt_publish(uint8_t* topic, uint8_t* payload, uint8_t len_payload){
-    
-   
-
 #if (TEST_WITHOUT_INTERNET == 0)
     uint8_t  buffer[100]={0};
     if( (topic != NULL) || (payload != NULL)){
         sprintf(buffer,CMD_MQTT_PUBLISH,topic,len_payload);    
         send_command(buffer,CMD_OK,650,1);
-        send_command(payload,CMD_OK,650,1);
+        send_command(payload,CMD_OK,550,1);
     }
    
     #else

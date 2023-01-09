@@ -13,11 +13,11 @@
 
 
 
-#define INTERVAL_TIME_H        (0)
-#define INTERVAL_TIME_M        (5)
-#define INTERVAL_TIME_S        (0)
-#define WAIT_FOR_GPS_TIME_S    (40)
-#define WAIT_FOR_SIMCOM         (30)
+#define INTERVAL_TIME_H         (0)
+#define INTERVAL_TIME_M         (0)
+#define INTERVAL_TIME_S         (30)
+#define WAIT_FOR_GPS_TIME_S     (50)
+#define WAIT_FOR_SIMCOM         (50)
 
 
 

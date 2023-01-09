@@ -125,9 +125,15 @@ void mem_write_data(uint8_t* buffer, uint32_t page);
 
 void mem_read_data(uint8_t* buffer, uint32_t page);
 
+/***
+ * 
+ * 
+*/
+uint8_t* mem_s_get_all_data(uint32_t counter);
 
 
 
+void mem_test();
 
 void mem_full_clear();
 
