@@ -234,10 +234,10 @@ void mpu6050_init(){
     uint8_t config = 0;
     i2c_write_mem(PWR_MGMT_1,&config,1);
     while((ret  = mpu6050_rdy()) == 0){
-        debug_print("mpu605 is not ready \r\n");
+        debug_print("mpu6050 is not ready \r\n");
         delay(500);
     }
-    debug_print("mpu605 is ready \r\n");
+    debug_print("mpu6050 is ready \r\n");
 
     
 
