@@ -12,12 +12,23 @@ extern "C" {
 #include "core.h"
 
 
-/* Inicializo la maquina de estados asociada a la aplicacion
+/***
+ * Inicializo la maquina de estados asociada a la aplicacion
+ * 
 */
 void fsm_init();
 
+/**
+ * Obtengo el estado del dispositivo. Se obtiene de flash( 1 sola vez) y se respalda 
+ * y lee desde ram
+ * 
+*/
 uint8_t fsm_get_state();
 
+
+/***
+ * Cambia el valor del estado del dispositivo en flash, sincroniza con variable en ram.
+*/
 void fsm_set_state(uint8_t state);
 
 

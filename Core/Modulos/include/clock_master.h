@@ -13,6 +13,14 @@ extern "C" {
 #include "core.h"
 
 
+
+/**
+ *  Configura el clock principal del dispositivo
+ *  @note Opcion 8, 4 2 y 1 Mhz. Se debe reinicializar perifericos (ejemplo uart,spi, etc) 
+ *          cada vez que cambia el clock
+ * @param clock_param_t clock a utilizar.
+*/
+
 void clock_master_set(clock_param_t clock_param_t);
 #ifdef __cplusplus
 }

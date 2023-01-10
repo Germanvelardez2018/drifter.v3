@@ -9,8 +9,6 @@
 
 #define EXAMPLO_GPS_FORMAT                              ("1,1,20221216181549.000,-34.576180,-58.516807,16.000,0.00,0.0,1,,2.8,3.0,0.9,,10,4,,,40,,␍␊")
 
-
-
 #define CMD_OPEN_APN_TUENTI                          "AT+CNACT=1,\"internet.movil\"\r\n"
 #define CMD_OPEN_APN_PERSONAL                        "AT+CNACT=1,\"datos.personal.com\"\r\n"
 #define CMD_GET_APN                                  "AT+CNACT?\r\n"       
@@ -28,14 +26,14 @@
 #define  CMD_GETOPERATOR                               "AT+COPS?\r\n"
 
 
-#define CMD_MQTT_COMMIT                                 "AT+SMCONN \r\n "
+#define CMD_MQTT_COMMIT                             "AT+SMCONN \r\n "
 #define CMD_MQTT_SET_URL                            "AT+SMCONF=\"URL\",\"broker.hivemq.com\"\r\n"
-#define CMD_ALL_CONFIG                                "AT+SMCONF=\"URL\",\"broker.hivemq.com\";SMCONF=\"QOS\",2 \r\n"
-#define CMD_ALL_CONFI2                                "AT+SMCONF=\"URL\",\"broker.hivemq.com\";SMCONF=\"QOS\",2;SMCONN \r\n"
+#define CMD_ALL_CONFIG                              "AT+SMCONF=\"URL\",\"broker.hivemq.com\";SMCONF=\"QOS\",2 \r\n"
+#define CMD_ALL_CONFI2                              "AT+SMCONF=\"URL\",\"broker.hivemq.com\";SMCONF=\"QOS\",2;SMCONN \r\n"
 
 #define CMD_MQTT_PUBLISH                            "AT+SMPUB=\"%s\",\"%d\",2,1 \r\n" 
 #define CMD_MQTT_SUBSCRIBE                           "AT+SMSUB=\"%s\",%d \r\n"   // topic , QoS
-#define CMD_MQTT_UMSUBSCRIBE                         "AT+SMUMSUB=\"%s\"\r\n"   // topic , QoS
+#define CMD_MQTT_UMSUBSCRIBE                         "AT+SMUNSUB=\"%s\"\r\n"   // topic , QoS
 
 
 #define CMD_LOW_PWR_ON                              "AT+CPSMS=1,\"01000010\",\"00001010\"\r\n"
@@ -81,19 +79,18 @@ PRIVATE uint8_t _SIM_BUFFER_[SIM_BUFFER_SIZE]={0};
 
 
       //+CGNSINF: eliminado de la string
+#define TITLE_OFFSET                                    "+CGNSINF:"
+#define OFFSET_GPS                                      (strlen(TITLE_OFFSET)+1)     //(strlen("+CGNSINF:"))
+#define OFFSET_GPS_END                                   19
 
-#define OFFSET_GPS                                      12      //(strlen("+CGNSINF:"))
-#define OFFSET_GPS_END                                   8
 
 
-#define  GPS_PARSE_SIMPLE(buffer,len)                   {\
-                                                    strncpy(buffer,(SIM_BUFFER),strlen(SIM_BUFFER));\
-                                                    buffer[len-1]=0;}\
 
 
 #define GPS_PARSE(buffer,len)                          {\
-                                                   strncpy(buffer,(SIM_BUFFER+OFFSET_GPS),strlen((SIM_BUFFER+OFFSET_GPS)-OFFSET_GPS_END)); \
-                                                    buffer[len-1]=0;}\                                                      
+                                                    uint8_t l = strlen(SIM_BUFFER)+1;\
+                                                    strcpy(buffer,SIM_BUFFER+OFFSET_GPS);\
+                                                    buffer[l-OFFSET_GPS_END] = '\0'; }\                                                      
 
 
 
@@ -108,7 +105,6 @@ PRIVATE uint8_t _SIM_BUFFER_[SIM_BUFFER_SIZE]={0};
 
 
 PRIVATE uint8_t check_response(char* response){
-   
      if(response == NULL ) return 0;
      uint32_t len_reponse = strlen(response);
      uint32_t len_buffer = strlen(SIM_BUFFER);
@@ -255,8 +251,8 @@ void sim7000g_mqtt_publish(uint8_t* topic, uint8_t* payload, uint8_t len_payload
     uint8_t  buffer[100]={0};
     if( (topic != NULL) || (payload != NULL)){
         sprintf(buffer,CMD_MQTT_PUBLISH,topic,len_payload);    
-        send_command(buffer,CMD_OK,650,1);
-        send_command(payload,CMD_OK,550,1);
+        send_command(buffer,CMD_OK,800,1);
+        send_command(payload,CMD_OK,800,1);
     }
    
     #else
@@ -296,19 +292,11 @@ void sim7000g_mqtt_subscription(uint8_t* topic){
 
 void sim7000g_mqtt_unsubscription(uint8_t* topic){
     
-      
-
-#if (TEST_WITHOUT_INTERNET == 0)
-   uint8_t  buffer[100]={0};
-        sprintf(buffer,CMD_MQTT_UMSUBSCRIBE,topic);    
-        SEND_COMMAND(buffer,CMD_OK,500);
+      uint8_t  buffer[100]={0};
+      sprintf(buffer,CMD_MQTT_UMSUBSCRIBE,topic);    
+      send_command(buffer,CMD_OK,500,1);
    
-    #else
-    debug_print("mqtt unsubcription:");
-    debug_print(topic);
-    debug_print("\r\n");
-    #endif
-
+   
 
     
 }

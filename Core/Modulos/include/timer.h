@@ -23,13 +23,13 @@ extern "C" {
 
 
 /**
-  * @brief TIM1 Initialization Function
+  * @brief Inicializo el hardware del timer 1
   * @param None
   * @retval None
   */
  void MX_TIM1_Init(void);
 /**
-  * @brief TIM3 Initialization Function
+  * @brief Inicializo el hardware del timer 2
   * @param None
   * @retval None
   */

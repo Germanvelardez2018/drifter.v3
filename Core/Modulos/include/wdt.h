@@ -13,6 +13,10 @@ extern "C" {
 
 #include "core.h"
 
+/**
+ *  Configuracion del WDT
+*/
+ void MX_IWDG_Init(void);
 
 
 #ifdef __cplusplus

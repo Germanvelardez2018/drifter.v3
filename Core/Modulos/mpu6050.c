@@ -42,7 +42,7 @@ extern I2C_HandleTypeDef hi2c2;
 #define I2C_CLOCK                                   (50000) 
 
 
-#define SENSOR_FORMAT                       ("t:%.2fx:%.2f,y:%.2f,z:%.2f\n")
+#define SENSOR_FORMAT                       ("t:%.2fx:%.2f,y:%.2f,z:%.2f")
 
 
 //Nota, al iniciar el dispositivo se calibra suponiendo posicion x=0G, y=0G ,z1G.
@@ -163,8 +163,6 @@ PRIVATE void mpu6050_get_offset(){
 
 
 // Calibramos en posicion estandar
-
-
 PRIVATE void mpu6050_calibration_routine(){
     mpu6050_calibration(0, 0, (SCALA_DIV / 2.0));   // ESPERAMOS X=0G , Y=0G y Z=1G
 }
@@ -198,7 +196,7 @@ void  mpu6050_sleep(){
 
 
 
-void mpu6050_get_measure(uint8_t* buffer, size_t len){
+void mpu6050_get_measure(uint8_t* buffer){
     mpu6050_resume();
     int16_t temp =0;
     mpu6050_get_temperature(  &temp);

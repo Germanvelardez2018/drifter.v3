@@ -49,15 +49,18 @@ void mpu6050_deinit();
 
 
 /**
- * @brief Calibro el sistema (opcional) y ob
- * 
+ * @brief Calibracion del sensor. Los offset se guardan en memoria flash
  * 
 */
 void mpu6050_calibrate_and_save_offset();
 
 
 
-void mpu6050_get_measure(uint8_t* buffer, size_t len);
+/***
+ * Obtengo la medicion en formato predefinido string
+ * @param buffer: Donde se almacena datos
+*/
+void mpu6050_get_measure(uint8_t* buffer);
 
 
 /**

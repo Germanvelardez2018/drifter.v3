@@ -16,8 +16,8 @@
 #define INTERVAL_TIME_H         (0)
 #define INTERVAL_TIME_M         (0)
 #define INTERVAL_TIME_S         (30)
-#define WAIT_FOR_GPS_TIME_S     (50)
-#define WAIT_FOR_SIMCOM         (50)
+#define WAIT_FOR_GPS_TIME_S     (45)
+#define WAIT_FOR_SIMCOM         (30)
 
 
 
@@ -40,12 +40,10 @@ PRIVATE void __wait_for_gps(){
   // Aumento el intervalo
   s = s + WAIT_FOR_GPS_TIME_S;
   rtc_set_alarm(h,m,s);
-
 }
 
 
 PRIVATE void __update_interval(){
-
   uint8_t h,m,s ;
   // Obtengo time actual
   rtc_get_time(&h,&m,&s);
@@ -54,7 +52,6 @@ PRIVATE void __update_interval(){
   m = m + INTERVAL_TIME_M;
   s = s + INTERVAL_TIME_S;
   rtc_set_alarm(h,m,s);
-
 }
 
 
@@ -64,26 +61,18 @@ PRIVATE void __update_interval(){
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-   RESUME_FROM_SLEEP(); 
-         
+   RESUME_FROM_SLEEP();       
 }
 
 
 
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc){
- 
-  //RESUME_FROM_SLEEP();  
-  HAL_ResumeTick();
+   RESUME_FROM_SLEEP();
 }
 
 
-
-
-
 void pwrm_init(){
-
   rtc_init();
- 
 }
 
 
@@ -93,18 +82,15 @@ void sleep_interval(){
   SLEEP_INTERVAL();
 }
 
+
 void wait_for_gps(){
   __wait_for_gps();
-
   SLEEP_INTERVAL();
 }
 
 
-
-
 void wait_for_sim(){
   __wait_for_sim();
-
   SLEEP_INTERVAL();
 }
 

@@ -30,19 +30,15 @@
 #include "pwrm.h"
 
 
-
 #define SENSOR_FORMAT "( %s,: %s)"
-#define INIT_MSG              "Init  drifter \r\n"
-#define CHECK_MSG             "Check"
-#define CHECK_MSG_LEN         (strlen(CHECK_MSG))
-#define CHECK_TOPIC           "CHECK"
-#define BUFFER_SIZE           220
-#define MQTT_SEND_CHECK()      sim7000g_mqtt_publish("CHECK", get_state_device(), strlen(get_state_device()))
-#define MQTT_SEND_DATA(msg)     sim7000g_mqtt_publish("DATA", msg, strlen(msg))
+#define INIT_MSG                        "Init  drifter \r\n"
+#define CHECK_MSG_LEN                   (strlen(CHECK_MSG))
+#define CHECK_TOPIC                     "CHECK"
+#define BUFFER_SIZE                     150
+#define MQTT_SEND_CHECK()               sim7000g_mqtt_publish("STATE", get_state_device(), strlen(get_state_device()))
+#define MQTT_SEND_DATA(msg)             sim7000g_mqtt_publish("GPS", msg, strlen(msg))
 
 
-
-PRIVATE uint8_t buffer[BUFFER_SIZE] = {"CONTENIDO INICIAL\r\n"};
 PRIVATE uint8_t buffer_upload[200];
 
 
@@ -93,10 +89,10 @@ PRIVATE void app_init(){
   //Solo para pruebas de configuracion
  // counter = 8;
  // cmax = 10;
- // cmax_interval = 3;
+  cmax_interval = 2;
   //mem_s_set_counter(&counter);
   //mem_s_set_max_amount_data(&cmax);
-  //mem_s_set_cmax_interval(&cmax_interval);
+  mem_s_set_cmax_interval(&cmax_interval);
   //Cargo parametros desde Flash externa
  
   debug_print(get_state_device());
@@ -114,7 +110,19 @@ PRIVATE void check_routine(){
   sim_4g_connect();
   sim_mqtt_connect();
   // Enviar mensaje de check
-  MQTT_SEND_CHECK();
+  //MQTT_SEND_CHECK();
+  sim7000g_mqtt_publish("STATE","CHECK",strlen("CHECK"));
+  delay(2500);
+
+  // Sub mqtt topic
+ // sim7000g_mqtt_subscription("CMD");
+ // debug_print("sub a topic CMD \r\n");
+ // delay(5000);
+  // Unsub mqtt topic
+ // sim7000g_mqtt_unsubscription("CMD");
+ // debug_print("finalizo la sub a topic CMD \r\n");
+
+
   sim_deinit();
 
 }
@@ -139,10 +147,9 @@ PRIVATE void upload_routine(){
   debug_print("extrayendo:");
 
 
-  uint8_t data[200];
-if( counter > cmax ) counter = cmax;
+    uint8_t data[200];
+    if( counter > cmax ) counter = cmax;
    
-
     for(uint32_t index= 0; index < counter; index ++){
     
     mem_read_data(data,index);
@@ -156,13 +163,15 @@ if( counter > cmax ) counter = cmax;
 
 }
 
+
 PRIVATE void save_data_routine(){
   sim_init();
   sim_gps_on();
   mem_s_get_counter(&counter);
-  uint8_t sensor[70];
+  uint8_t buffer[BUFFER_SIZE] = {"CONTENIDO INICIAL\r\n"};
+  uint8_t sensor[50];
   uint8_t gps[100];
-  mpu6050_get_measure(sensor,70);
+  mpu6050_get_measure(sensor);
   
   wait_for_gps();
   // Obtengo gps
@@ -170,8 +179,6 @@ PRIVATE void save_data_routine(){
   sprintf(buffer, SENSOR_FORMAT, gps, sensor);
   debug_print(buffer);
   mem_write_data(buffer, counter);
-  counter = counter + 1;
-  mem_s_set_counter(&counter);
   sim_gps_off();
   sim_deinit();
 
@@ -187,7 +194,13 @@ PRIVATE void save_data_routine(){
 int main(void)
 {
   app_init();
- //fsm_set_state(FSM_UPLOAD);
+
+
+
+
+
+
+// fsm_set_state(FSM_UPLOAD);
   if(counter > cmax)fsm_set_state(FSM_UPLOAD);
   while (1)
   {

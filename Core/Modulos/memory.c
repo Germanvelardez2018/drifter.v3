@@ -10,13 +10,11 @@
 #include "at45db.h"
 
 
-#define ANYOFFSET                   (2)
-
-#define ALL_DATA_COUNTER            (2)
-#define LEN_DATA_BUFFER             (200)
-#define SIZE_BUFFER_ALL_DATA        (ALL_DATA_COUNTER * LEN_DATA_BUFFER )
-#define FORMAT_ALL_DATA             ("%s ")
-#define GET_DATA(index,counter)           ((index < counter)?get_data_from_pos(counter):"{}")
+#define ANYOFFSET                           (2)
+#define ALL_DATA_COUNTER                    (2)
+#define LEN_DATA_BUFFER                     (200)
+#define SIZE_BUFFER_ALL_DATA                (ALL_DATA_COUNTER * LEN_DATA_BUFFER )
+#define FORMAT_ALL_DATA                     ("%s ")
 
 
 
