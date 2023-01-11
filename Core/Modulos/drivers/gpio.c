@@ -6,7 +6,6 @@
 
 
 
-
 /**
   * @brief GPIO Initialization Function
   * @param None
@@ -51,13 +50,23 @@
 
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /* EXTI interrupt init*/
+ 
+
+}
+
+
+void gpio_irq_on(){
+   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }
 
+void gpio_irq_off(){
+   /* EXTI interrupt init*/
+  HAL_NVIC_DisableIRQ(EXTI15_10_IRQn);
 
+}
 
 
 

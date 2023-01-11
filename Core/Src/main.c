@@ -69,6 +69,16 @@ PRIVATE uint8_t* get_state_device(){
 }
 
 
+
+
+uint8_t irq = 0;
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+
+  irq=1;
+}
+
+
+
 PRIVATE void app_init(){
   // Inicio todos los servicios necesarios
   // Core
@@ -101,6 +111,7 @@ PRIVATE void app_init(){
  
   debug_print(get_state_device());
 
+  gpio_irq_on();
 
 }
 
@@ -114,17 +125,14 @@ PRIVATE void check_routine(){
   sim_4g_connect();
   sim_mqtt_connect();
   // Enviar mensaje de check
-  //MQTT_SEND_CHECK();
   delay(2000);
   MQTT_SEND_CHECK();
   delay(500);
-
-
   // Sub mqtt topic
   debug_print(" sub a topic CMD \r\n");
 
   sim7000g_mqtt_subscription("CMD");
-  delay(5000);
+  delay(10000);
   // Unsub mqtt topic
   sim7000g_mqtt_unsubscription("CMD");
   debug_print("finalizo la sub a topic CMD \r\n");
@@ -209,26 +217,37 @@ PRIVATE void save_data_routine(){
 int main(void)
 {
   app_init();
-
   //test sub
   debug_print("test comando\r\n");
   sim_init();
   wait_for_sim();
   sim_4g_connect();
+  delay(1000);
+  
   sim_mqtt_connect();
+  delay(5000);
+  sim7000g_mqtt_publish("GPS","INICIANDO TEST",14);
+
+  delay(2000);
+  sim7000g_mqtt_subscription("CMD");
+  delay(2000);
+
+
+  sim7000g_set_irt();
   delay(2000);
 
 // Sub mqtt topic
 
 
 while(1){
-  debug_print(" sub a topic CMD \r\n");
-  sim7000g_mqtt_subscription("CMD");
-  delay(5000);
-  // Unsub mqtt topic
-  debug_print(sim_get_gps_data());
-  sim7000g_mqtt_unsubscription("CMD");
-  debug_print("finalizo la sub a topic CMD \r\n");
+  debug_print(".");
+  
+  if(irq ){
+    irq= 0;
+    debug_print("\r\nirq activado\r\n");
+  }
+  delay(2000);
+ 
 
 }
   
