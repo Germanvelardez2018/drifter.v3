@@ -33,9 +33,12 @@
 #define SENSOR_FORMAT "( %s,: %s)"
 #define INIT_MSG                        "Init  drifter \r\n"
 #define CHECK_MSG_LEN                   (strlen(CHECK_MSG))
-#define CHECK_TOPIC                     "CHECK"
+#define CHECK_TOPIC                     "DEVICE"
 #define BUFFER_SIZE                     150
-#define MQTT_SEND_CHECK()               sim7000g_mqtt_publish("STATE", get_state_device(), strlen(get_state_device()))
+
+#define MQTT_SEND_CHECK()               sim7000g_mqtt_publish(CHECK_TOPIC, get_state_device(), strlen(get_state_device()))
+
+//#define MQTT_SEND_CHECK()               sim7000g_mqtt_publish("STATE", get_state_device(), strlen(get_state_device()))
 #define MQTT_SEND_DATA(msg)             sim7000g_mqtt_publish("GPS", msg, strlen(msg))
 
 
@@ -53,6 +56,7 @@ PRIVATE uint8_t cmax_interval = 0;   // Contador maximo de intervalos
 
 PRIVATE uint8_t* get_state_device(){
   //Actualizo las variables counter,cmax y cmax_interval
+  
   mem_s_get_counter(&counter);
   mem_s_get_max_amount_data(&cmax);
   mem_s_get_cmax_interval(&cmax_interval);
@@ -111,16 +115,19 @@ PRIVATE void check_routine(){
   sim_mqtt_connect();
   // Enviar mensaje de check
   //MQTT_SEND_CHECK();
-  sim7000g_mqtt_publish("STATE","CHECK",strlen("CHECK"));
-  delay(2500);
+  delay(2000);
+  MQTT_SEND_CHECK();
+  delay(500);
+
 
   // Sub mqtt topic
- // sim7000g_mqtt_subscription("CMD");
- // debug_print("sub a topic CMD \r\n");
- // delay(5000);
+  debug_print(" sub a topic CMD \r\n");
+
+  sim7000g_mqtt_subscription("CMD");
+  delay(5000);
   // Unsub mqtt topic
- // sim7000g_mqtt_unsubscription("CMD");
- // debug_print("finalizo la sub a topic CMD \r\n");
+  sim7000g_mqtt_unsubscription("CMD");
+  debug_print("finalizo la sub a topic CMD \r\n");
 
 
   sim_deinit();
@@ -143,24 +150,32 @@ PRIVATE void upload_routine(){
   }
   sprintf(buffer_upload, "Extraer :%d datos\n", counter);
   debug_print(buffer_upload);
-  MQTT_SEND_CHECK();
+  delay(1000);
+  MQTT_SEND_DATA(buffer_upload);
   debug_print("extrayendo:");
+  uint8_t data[200];
+  if( counter > cmax ) counter = cmax;
 
-
-    uint8_t data[200];
-    if( counter > cmax ) counter = cmax;
-   
-    for(uint32_t index= 0; index < counter; index ++){
-    
-    mem_read_data(data,index);
+  while(counter != 0){
+    mem_read_data(data,counter);
     debug_print("mqtt send \r \n");
     debug_print(data);
     MQTT_SEND_DATA(data);
-    delay(500);
-    }
-   debug_print("Finalizo deployd \r\n");
-  sim_deinit();
+    delay(750);
+    counter = counter - 1;
+    mem_s_set_counter(&counter);
 
+  }
+    //El ultimo elemento a enviar
+  mem_read_data(data,0);
+  debug_print("mqtt send \r \n");
+  debug_print(data);
+  MQTT_SEND_DATA(data);
+  delay(700);
+  debug_print("Finalizo deployd \r\n");
+  MQTT_SEND_DATA("Fin de transmicion");
+  sim_deinit();     
+  delay(700);
 }
 
 
@@ -195,12 +210,34 @@ int main(void)
 {
   app_init();
 
+  //test sub
+  debug_print("test comando\r\n");
+  sim_init();
+  wait_for_sim();
+  sim_4g_connect();
+  sim_mqtt_connect();
+  delay(2000);
+
+// Sub mqtt topic
+
+
+while(1){
+  debug_print(" sub a topic CMD \r\n");
+  sim7000g_mqtt_subscription("CMD");
+  delay(5000);
+  // Unsub mqtt topic
+  debug_print(sim_get_gps_data());
+  sim7000g_mqtt_unsubscription("CMD");
+  debug_print("finalizo la sub a topic CMD \r\n");
+
+}
+  
 
 
 
 
 
-// fsm_set_state(FSM_UPLOAD);
+  //fsm_set_state(FSM_UPLOAD);
   if(counter > cmax)fsm_set_state(FSM_UPLOAD);
   while (1)
   {

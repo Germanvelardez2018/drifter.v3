@@ -270,14 +270,11 @@ void sim7000g_mqtt_publish(uint8_t* topic, uint8_t* payload, uint8_t len_payload
 
 
 void sim7000g_mqtt_subscription(uint8_t* topic){
-    
-    
-    
-
 #if (TEST_WITHOUT_INTERNET == 0)
     uint8_t  buffer[100]={0};
-    sprintf(buffer,CMD_MQTT_SUBSCRIBE,topic,2);    
-    send_command(buffer,CMD_OK,500,1);
+    sprintf(buffer,CMD_MQTT_SUBSCRIBE,topic,1);    
+    send_command(buffer,CMD_OK,5000,1);
+   
    
     #else
     debug_print("mqtt subcription:");
@@ -291,10 +288,9 @@ void sim7000g_mqtt_subscription(uint8_t* topic){
 
 
 void sim7000g_mqtt_unsubscription(uint8_t* topic){
-    
       uint8_t  buffer[100]={0};
       sprintf(buffer,CMD_MQTT_UMSUBSCRIBE,topic);    
-      send_command(buffer,CMD_OK,500,1);
+      send_command(buffer,CMD_OK,1500,1);
    
    
 
