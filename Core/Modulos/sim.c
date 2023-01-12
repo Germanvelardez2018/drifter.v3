@@ -49,22 +49,20 @@ extern UART_HandleTypeDef   huart1;
 #define SIM_DEFAULT_TIMEOUT                         1000
 
 
+#define FLAG_PRINT_CHECK                              (0)
+#define COMMAND_SIZE                                   30
 
-PRIVATE uint8_t _SIM_BUFFER_[SIM_BUFFER_SIZE]={0};
+PRIVATE uint8_t SIM_BUFFER[SIM_BUFFER_SIZE]={0};
+PRIVATE uint8_t buffer_cmd[COMMAND_SIZE]={0};
 
-
-#define SIM_BUFFER                                      _SIM_BUFFER_
-
+#define SIM_BUFFER                                      SIM_BUFFER
 
 #define UART_WRITE(buffer,len,timeout)               {\
                                                         HAL_UART_Transmit(SIM_UART,buffer,len,timeout); }\
 
-
 #define UART_READ(buffer,len,timeout)                {\
                                                         memset(buffer,0,SIM_BUFFER_SIZE);\
                                                         (HAL_UART_Receive(SIM_UART,buffer,len,timeout)); } \
-
-
 
 #define SEND_CMD(function,t)                          {\
                                                         uint8_t ret = 0; \
@@ -94,13 +92,34 @@ PRIVATE uint8_t _SIM_BUFFER_[SIM_BUFFER_SIZE]={0};
 
 
 
-#define FLAG_PRINT_CHECK                        (0)
 
 
 
 
 
 
+
+
+
+ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+    HAL_ResumeTick();
+    HAL_GPIO_TogglePin(LED_GPIO_Port, GPIO_PIN_2);
+    buffer_cmd[18]=0; // quiero evitar la ultima (comilla)"
+}
+
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+
+  memset(buffer_cmd, 0, COMMAND_SIZE);
+  HAL_UART_Receive_IT(SIM_UART, buffer_cmd, 19);
+
+}
+
+
+
+uint8_t* sim_get_cmd(){
+    return buffer_cmd;
+}
 
 
 
@@ -130,7 +149,7 @@ PRIVATE uint8_t check_response(char* response){
     //Envio comando
    if(print_flag)  debug_print("=>");
    if(print_flag)  debug_print(string_cmd);
-   UART_WRITE(string_cmd,strlen(string_cmd),timeout);     
+   UART_WRITE( string_cmd,strlen(string_cmd),timeout);     
    //if(print_flag)  debug_print("\n");
     // leo respuesta y almaceno en buffer SIM7000G
    UART_READ(SIM_BUFFER,SIM_BUFFER_SIZE,timeout);
@@ -151,9 +170,22 @@ send_command(CMD_TURN_OFF,CMD_OK,SIM_DEFAULT_TIMEOUT,1);
 void sim_init(){
     HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,1);
     HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,1);
+
     MX_USART1_UART_Init();
+
+    //wait_for_sim();
+    delay(20000);
+    
+    while(1){
+        sim_4g_connect();
+        delay(4000);
+        sim_mqtt_connect();
+        delay(4000);
+    }
+
     sim_echo_off();
     sim_version();
+    
 }
 
 
@@ -170,12 +202,14 @@ void sim_deinit(){
 
 
 inline void sim_version(){
-SEND_CMD(send_command(CMD_VERSION,CMD_OK,SIM_DEFAULT_TIMEOUT,0),2500);
+    send_command(CMD_VERSION,CMD_OK,SIM_DEFAULT_TIMEOUT,1);
+    //SEND_CMD(send_command(CMD_VERSION,CMD_OK,SIM_DEFAULT_TIMEOUT,1),1000);
 }
 
 
 inline void sim_echo_off(){
-SEND_CMD(send_command(CMD_ECHO_OFF,CMD_OK,SIM_DEFAULT_TIMEOUT,0),2500);
+    //send_command(CMD_ECHO_OFF,CMD_OK,SIM_DEFAULT_TIMEOUT,1);
+    SEND_CMD(send_command(CMD_ECHO_OFF,CMD_OK,SIM_DEFAULT_TIMEOUT,1),1000);
 }
 
 
@@ -193,14 +227,8 @@ inline void sim_mqtt_connect(){
 
 
 inline void sim_4g_connect(){
- #if (TEST_WITHOUT_INTERNET == 0)
-
     send_command(CMD_OPEN_APN_PERSONAL,"+APP PDP: ACTIVE\r\n",SIM_DEFAULT_TIMEOUT,1);
 
-    #else
-    debug_print("4g connect:");
-    debug_print("\r\n");
-    #endif
 }
 
 
@@ -247,25 +275,13 @@ uint8_t*   sim_get_gps_data(){
 
 // maximo content len es 512
 void sim7000g_mqtt_publish(uint8_t* topic, uint8_t* payload, uint8_t len_payload){
-#if (TEST_WITHOUT_INTERNET == 0)
     uint8_t  buffer[100]={0};
     if( (topic != NULL) || (payload != NULL)){
         sprintf(buffer,CMD_MQTT_PUBLISH,topic,len_payload);    
         send_command(buffer,CMD_OK,800,1);
         send_command(payload,CMD_OK,800,1);
     }
-   
-    #else
-    debug_print("mqtt publish:");
-    debug_print(topic);
-    debug_print("msg:");
-    debug_print(payload);
-    debug_print("\r\n");
-    #endif
-
-
-    
-    
+ 
 }
 
 
@@ -288,7 +304,9 @@ void sim7000g_mqtt_unsubscription(uint8_t* topic){
 
 
 void sim7000g_set_irt(){
+
       send_command("AT+CFGRI=1\r\n",CMD_OK,1500,1);
+
 }
 
 

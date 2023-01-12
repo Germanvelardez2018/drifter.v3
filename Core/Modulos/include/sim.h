@@ -138,6 +138,9 @@ void sim7000g_mqtt_unsubscription(uint8_t* topic);
 void sim7000g_set_irt();
 
 
+uint8_t* sim_get_cmd();
+
+
 
 
 #ifdef __cplusplus

@@ -9,6 +9,19 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 
+
+void uart2_set_irq(){
+    /* USER CODE BEGIN USART1_MspInit 1 */
+    HAL_NVIC_SetPriority(USART2_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(USART2_IRQn); 
+}
+
+void uart2_clear_irq(){
+  HAL_NVIC_DisableIRQ(USART2_IRQn);
+}
+
+
+
  void MX_USART1_UART_Init(void)
 {
   huart1.Instance = USART1;
@@ -76,7 +89,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /* USER CODE BEGIN USART1_MspInit 1 */
+
 
   /* USER CODE END USART1_MspInit 1 */
   }
@@ -104,7 +117,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN USART2_MspInit 1 */
-
+   uart2_set_irq();
   /* USER CODE END USART2_MspInit 1 */
   }
 

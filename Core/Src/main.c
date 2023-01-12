@@ -72,10 +72,7 @@ PRIVATE uint8_t* get_state_device(){
 
 
 uint8_t irq = 0;
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 
-  irq=1;
-}
 
 
 
@@ -87,6 +84,7 @@ PRIVATE void app_init(){
   MX_GPIO_Init();
   // Debug
   debug_init();
+  debug_print(INIT_MSG);
   // Memoria externa
   mem_s_init();
   // sensor
@@ -97,7 +95,7 @@ PRIVATE void app_init(){
   fsm_init();
   // Mensaje inicial
 
-  debug_print(INIT_MSG);
+ 
 
 
   //Solo para pruebas de configuracion
@@ -121,8 +119,8 @@ PRIVATE void check_routine(){
   // Encender el modulo
   sim_init();
   // Conectarse a servidor
-  wait_for_sim();
   sim_4g_connect();
+  delay(1000);
   sim_mqtt_connect();
   // Enviar mensaje de check
   delay(2000);
@@ -136,8 +134,6 @@ PRIVATE void check_routine(){
   // Unsub mqtt topic
   sim7000g_mqtt_unsubscription("CMD");
   debug_print("finalizo la sub a topic CMD \r\n");
-
-
   sim_deinit();
 
 }
@@ -147,8 +143,8 @@ PRIVATE void check_routine(){
 PRIVATE void upload_routine(){
 
   sim_init();
-  wait_for_sim();
   sim_4g_connect();
+  delay(800);
   sim_mqtt_connect();
   // transmito los datos
    if (cmax < counter)
@@ -216,41 +212,43 @@ PRIVATE void save_data_routine(){
  */
 int main(void)
 {
+
+  
   app_init();
   //test sub
-  debug_print("test comando\r\n");
+  debug_print("Init de program \r\n");
   sim_init();
-  wait_for_sim();
-  sim_4g_connect();
+
+  while(1);
+  
+  #if(0)
+  sim_init();
+  delay(1000);
+  sim_echo_off();
+  delay(1000);
+  sim_version();
   delay(1000);
   
-  sim_mqtt_connect();
-  delay(5000);
-  sim7000g_mqtt_publish("GPS","INICIANDO TEST",14);
 
+  sim_4g_connect();
+  delay(1000);
+
+  sim_mqtt_connect();
+  delay(2000);
+  sim7000g_mqtt_publish("GPS","INICIANDO TEST",14);
   delay(2000);
   sim7000g_mqtt_subscription("CMD");
   delay(2000);
-
-
   sim7000g_set_irt();
   delay(2000);
-
 // Sub mqtt topic
-
-
+  debug_print("into the while0");
 while(1){
   debug_print(".");
-  
-  if(irq ){
-    irq= 0;
-    debug_print("\r\nirq activado\r\n");
-  }
+  debug_print(sim_get_cmd());
   delay(2000);
- 
-
 }
-  
+#endif
 
 
 
