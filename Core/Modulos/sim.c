@@ -56,13 +56,13 @@ PRIVATE uint8_t SIM_BUFFER[SIM_BUFFER_SIZE]={0};
 PRIVATE uint8_t buffer_cmd[COMMAND_SIZE]={0};
 
 #define SIM_BUFFER                                      SIM_BUFFER
-
-#define UART_WRITE(buffer,len,timeout)               {\
+#define IRQ_ON                                          (HAL_UART_Abort_IT(SIM_UART);)
+#define UART_WRITE(buffer,len,timeout)                 {HAL_UART_Abort_IT(SIM_UART);  \
                                                         HAL_UART_Transmit(SIM_UART,buffer,len,timeout); }\
 
-#define UART_READ(buffer,len,timeout)                {\
+#define UART_READ(buffer,len,timeout)                  {HAL_UART_Abort_IT(SIM_UART);  \
                                                         memset(buffer,0,SIM_BUFFER_SIZE);\
-                                                        (HAL_UART_Receive(SIM_UART,buffer,len,timeout)); } \
+                                                        HAL_UART_Receive(SIM_UART,buffer,len,timeout); } \
 
 #define SEND_CMD(function,t)                          {\
                                                         uint8_t ret = 0; \
@@ -102,16 +102,17 @@ PRIVATE uint8_t buffer_cmd[COMMAND_SIZE]={0};
 
 
  HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-    HAL_ResumeTick();
-    HAL_GPIO_TogglePin(LED_GPIO_Port, GPIO_PIN_2);
-    buffer_cmd[18]=0; // quiero evitar la ultima (comilla)"
+    buffer_cmd[9]=0; // quiero evitar la ultima (comilla)"
+//HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+
 }
 
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-
-  memset(buffer_cmd, 0, COMMAND_SIZE);
-  HAL_UART_Receive_IT(SIM_UART, buffer_cmd, 19);
+    HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+   // memset(buffer_cmd, 0, COMMAND_SIZE);
+   // HAL_UART_Receive_IT(SIM_UART, buffer_cmd, 10); //19
+   // HAL_UART_Receive(SIM_UART,buffer_cmd,9,100);
 
 }
 
@@ -124,25 +125,15 @@ uint8_t* sim_get_cmd(){
 
 
 PRIVATE uint8_t check_response(char* response){
-     if(response == NULL ) return 0;
+    
      uint32_t len_reponse = strlen(response);
      uint32_t len_buffer = strlen(SIM_BUFFER);
      uint32_t index = len_buffer - len_reponse ;  
      uint8_t ret = (strncmp(&(SIM_BUFFER[index]),response,len_reponse) == IS_EQUAL)?1:0;
      uint8_t buff[200]={0};
-
-     #if (FLAG_PRINT_CHECK)
-        sprintf(buff,"check (%s == %s)=>%d \r\n",response,SIM_BUFFER,ret);
-        debug_print(buff);
-     #endif
      return ret;
    
 }
-
-
-
-
-
 
 
  uint8_t send_command(uint8_t* string_cmd,uint8_t* response_expected,size_t timeout, uint8_t print_flag){
@@ -167,24 +158,19 @@ PRIVATE void sim_turn_off(){
 send_command(CMD_TURN_OFF,CMD_OK,SIM_DEFAULT_TIMEOUT,1);
 }
 
+
+
 void sim_init(){
+    debug_print("init sim \r\n");
     HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,1);
     HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,1);
 
     MX_USART1_UART_Init();
-
-    //wait_for_sim();
-    delay(20000);
-    
-    while(1){
-        sim_4g_connect();
-        delay(4000);
-        sim_mqtt_connect();
-        delay(4000);
-    }
-
+    wait_for_sim();
     sim_echo_off();
-    sim_version();
+    
+    
+   
     
 }
 
@@ -214,15 +200,8 @@ inline void sim_echo_off(){
 
 
 inline void sim_mqtt_connect(){
-
-    #if (TEST_WITHOUT_INTERNET == 0)
-
     send_command(CMD_MQTT_SET_URL,CMD_OK,SIM_DEFAULT_TIMEOUT,1) ;
     send_command(CMD_MQTT_COMMIT,CMD_OK,SIM_DEFAULT_TIMEOUT,1) ;
-    #else
-    debug_print("mqtt connect:");
-    debug_print("\r\n");
-    #endif
 }
 
 
@@ -230,7 +209,10 @@ inline void sim_4g_connect(){
     send_command(CMD_OPEN_APN_PERSONAL,"+APP PDP: ACTIVE\r\n",SIM_DEFAULT_TIMEOUT,1);
 
 }
+inline void sim_at(){
+        send_command("ATER\r\n","+APP PDP: ACTIVE\r\n",SIM_DEFAULT_TIMEOUT,1);
 
+}
 
 
 

@@ -104,7 +104,7 @@ PRIVATE void app_init(){
   cmax_interval = 2;
   //mem_s_set_counter(&counter);
   //mem_s_set_max_amount_data(&cmax);
-  mem_s_set_cmax_interval(&cmax_interval);
+  //mem_s_set_cmax_interval(&cmax_interval);
   //Cargo parametros desde Flash externa
  
   debug_print(get_state_device());
@@ -118,6 +118,7 @@ PRIVATE void check_routine(){
 
   // Encender el modulo
   sim_init();
+
   // Conectarse a servidor
   sim_4g_connect();
   delay(1000);
@@ -129,11 +130,11 @@ PRIVATE void check_routine(){
   // Sub mqtt topic
   debug_print(" sub a topic CMD \r\n");
 
-  sim7000g_mqtt_subscription("CMD");
-  delay(10000);
+ // sim7000g_mqtt_subscription("CMD");
+ // delay(10000);
   // Unsub mqtt topic
-  sim7000g_mqtt_unsubscription("CMD");
-  debug_print("finalizo la sub a topic CMD \r\n");
+ // sim7000g_mqtt_unsubscription("CMD");
+ // debug_print("finalizo la sub a topic CMD \r\n");
   sim_deinit();
 
 }
@@ -191,7 +192,6 @@ PRIVATE void save_data_routine(){
   uint8_t sensor[50];
   uint8_t gps[100];
   mpu6050_get_measure(sensor);
-  
   wait_for_gps();
   // Obtengo gps
   sim_gps_get_info(gps,100);
@@ -216,38 +216,34 @@ int main(void)
   
   app_init();
   //test sub
-  debug_print("Init de program \r\n");
-  sim_init();
+ 
 
-  while(1);
+  
   
   #if(0)
-  sim_init();
-  delay(1000);
-  sim_echo_off();
-  delay(1000);
-  sim_version();
-  delay(1000);
-  
-
-  sim_4g_connect();
-  delay(1000);
-
-  sim_mqtt_connect();
-  delay(2000);
-  sim7000g_mqtt_publish("GPS","INICIANDO TEST",14);
-  delay(2000);
-  sim7000g_mqtt_subscription("CMD");
-  delay(2000);
-  sim7000g_set_irt();
-  delay(2000);
-// Sub mqtt topic
-  debug_print("into the while0");
-while(1){
-  debug_print(".");
-  debug_print(sim_get_cmd());
-  delay(2000);
-}
+    sim_init();
+    delay(1000);
+    sim_echo_off();
+    delay(1000);
+    sim_version();
+    delay(1000);
+    sim_4g_connect();
+    delay(1000);
+    sim_mqtt_connect();
+    delay(2000);
+    sim7000g_mqtt_publish("GPS","INICIANDO TEST",14);
+    delay(2000);
+    sim7000g_mqtt_subscription("CMD");
+    delay(2000);
+    sim7000g_set_irt();
+    delay(2000);
+  // Sub mqtt topic
+    debug_print("into the while");
+  while(1){
+    debug_print(".");
+    debug_print(sim_get_cmd());
+    delay(2000);
+  }
 #endif
 
 
@@ -293,7 +289,8 @@ while(1){
         debug_print("FSM: UNDEFINED \r\n");
       break;
     }
-  sleep_interval();
+    delay(30000);
+  //sleep_interval();
   
 
   }

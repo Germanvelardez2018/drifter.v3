@@ -36,6 +36,8 @@ uint8_t sim_send_command(uint8_t* string_cmd,uint8_t* response_expected,uint32_t
 
 
 
+void sim_at();
+
  /**
   * Obtengo la version del firmware del Sim
   * 
