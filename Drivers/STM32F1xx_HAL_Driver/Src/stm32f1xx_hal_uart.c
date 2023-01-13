@@ -1372,11 +1372,13 @@ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData,
 
     /* Set Reception type to Standard reception */
     huart->ReceptionType = HAL_UART_RECEPTION_STANDARD;
+    //debug_print("uart rx it: hall start\r\n");
 
     return(UART_Start_Receive_IT(huart, pData, Size));
   }
   else
   {
+
     return HAL_BUSY;
   }
 }
@@ -2355,6 +2357,10 @@ HAL_StatusTypeDef HAL_UART_AbortReceive_IT(UART_HandleTypeDef *huart)
   */
 void HAL_UART_IRQHandler(UART_HandleTypeDef *huart)
 {
+
+
+ 
+
   uint32_t isrflags   = READ_REG(huart->Instance->SR);
   uint32_t cr1its     = READ_REG(huart->Instance->CR1);
   uint32_t cr3its     = READ_REG(huart->Instance->CR3);
@@ -2373,9 +2379,11 @@ void HAL_UART_IRQHandler(UART_HandleTypeDef *huart)
     }
   }
 
+
   /* If some errors occur */
   if ((errorflags != RESET) && (((cr3its & USART_CR3_EIE) != RESET) || ((cr1its & (USART_CR1_RXNEIE | USART_CR1_PEIE)) != RESET)))
   {
+
     /* UART parity error interrupt occurred ----------------------------------*/
     if (((isrflags & USART_SR_PE) != RESET) && ((cr1its & USART_CR1_PEIE) != RESET))
     {

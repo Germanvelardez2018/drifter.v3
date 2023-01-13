@@ -56,11 +56,11 @@ PRIVATE uint8_t SIM_BUFFER[SIM_BUFFER_SIZE]={0};
 PRIVATE uint8_t buffer_cmd[COMMAND_SIZE]={0};
 
 #define SIM_BUFFER                                      SIM_BUFFER
-#define IRQ_ON                                          (HAL_UART_Abort_IT(SIM_UART);)
-#define UART_WRITE(buffer,len,timeout)                 {HAL_UART_Abort_IT(SIM_UART);  \
+#define IRQ_ON                                          {HAL_UART_Abort_IT(SIM_UART);}
+#define UART_WRITE(buffer,len,timeout)                 {IRQ_ON  \
                                                         HAL_UART_Transmit(SIM_UART,buffer,len,timeout); }\
 
-#define UART_READ(buffer,len,timeout)                  {HAL_UART_Abort_IT(SIM_UART);  \
+#define UART_READ(buffer,len,timeout)                  {IRQ_ON  \
                                                         memset(buffer,0,SIM_BUFFER_SIZE);\
                                                         HAL_UART_Receive(SIM_UART,buffer,len,timeout); } \
 
@@ -96,24 +96,45 @@ PRIVATE uint8_t buffer_cmd[COMMAND_SIZE]={0};
 
 
 
+// SI error retorna 0
+static uint8_t get_parse(char* string){
+    uint8_t ret = 0;
+   // uint8_t buff[50]={0};
 
-
-
-
-
- HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-    buffer_cmd[9]=0; // quiero evitar la ultima (comilla)"
-//HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
-
+ //   sprintf(buffer,"token: %s \r\n",&(string[17]));
+ //   modulo_debug_print(buffer);
+    ret = (uint8_t) atoi(&(string[17]));
+    return ret;
 }
 
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-    HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
-   // memset(buffer_cmd, 0, COMMAND_SIZE);
-   // HAL_UART_Receive_IT(SIM_UART, buffer_cmd, 10); //19
-   // HAL_UART_Receive(SIM_UART,buffer_cmd,9,100);
 
+uint8_t sim7000g_get_parse(char* string){
+    uint8_t ret = get_parse(string);
+    return ret;
+}
+
+
+
+void get_copy_cmd_buffer(uint8_t* buffer){
+      strcpy(buffer,buffer_cmd);
+        memset(buffer_cmd,0,20);
+    }
+
+
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+}
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *UartHandle){
+    HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+    buffer_cmd[18]=0;
+   // HAL_UART_Receive(SIM_UART, buffer_cmd, 19,100); //19
+    HAL_UART_Receive_IT(SIM_UART, buffer_cmd, 19); //19
 }
 
 
@@ -125,7 +146,6 @@ uint8_t* sim_get_cmd(){
 
 
 PRIVATE uint8_t check_response(char* response){
-    
      uint32_t len_reponse = strlen(response);
      uint32_t len_buffer = strlen(SIM_BUFFER);
      uint32_t index = len_buffer - len_reponse ;  
@@ -164,14 +184,9 @@ void sim_init(){
     debug_print("init sim \r\n");
     HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,1);
     HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,1);
-
     MX_USART1_UART_Init();
     wait_for_sim();
     sim_echo_off();
-    
-    
-   
-    
 }
 
 
@@ -179,39 +194,39 @@ void sim_init(){
 void sim_deinit(){
    // HAL_UART_DeInit(SIM_UART);
     sim_turn_off();
-    delay(2000);
+    delay(2500);
     HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,0);
     HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port,SIM7000G_PWRKEY_Pin,0);
-    
 }
 
 
 
 inline void sim_version(){
-    send_command(CMD_VERSION,CMD_OK,SIM_DEFAULT_TIMEOUT,1);
-    //SEND_CMD(send_command(CMD_VERSION,CMD_OK,SIM_DEFAULT_TIMEOUT,1),1000);
+    SEND_CMD(send_command(CMD_VERSION,CMD_OK,SIM_DEFAULT_TIMEOUT,0),1000);
 }
 
 
 inline void sim_echo_off(){
     //send_command(CMD_ECHO_OFF,CMD_OK,SIM_DEFAULT_TIMEOUT,1);
-    SEND_CMD(send_command(CMD_ECHO_OFF,CMD_OK,SIM_DEFAULT_TIMEOUT,1),1000);
+    SEND_CMD(send_command(CMD_ECHO_OFF,CMD_OK,SIM_DEFAULT_TIMEOUT,0),1000);
 }
 
 
 inline void sim_mqtt_connect(){
     send_command(CMD_MQTT_SET_URL,CMD_OK,SIM_DEFAULT_TIMEOUT,1) ;
+    delay(1500);
+        send_command("AT+SMCONF=\"QOS\",2\r\n",CMD_OK,SIM_DEFAULT_TIMEOUT,1) ;
+
     send_command(CMD_MQTT_COMMIT,CMD_OK,SIM_DEFAULT_TIMEOUT,1) ;
+   
 }
 
 
 inline void sim_4g_connect(){
     send_command(CMD_OPEN_APN_PERSONAL,"+APP PDP: ACTIVE\r\n",SIM_DEFAULT_TIMEOUT,1);
-
 }
 inline void sim_at(){
-        send_command("ATER\r\n","+APP PDP: ACTIVE\r\n",SIM_DEFAULT_TIMEOUT,1);
-
+        send_command("AT\r\n",CMD_OK,SIM_DEFAULT_TIMEOUT,1);
 }
 
 
@@ -263,24 +278,31 @@ void sim7000g_mqtt_publish(uint8_t* topic, uint8_t* payload, uint8_t len_payload
         send_command(buffer,CMD_OK,800,1);
         send_command(payload,CMD_OK,800,1);
     }
+
  
 }
 
 
 void sim7000g_mqtt_subscription(uint8_t* topic){
+
+   
     uint8_t  buffer[150]={0};
     sprintf(buffer,CMD_MQTT_SUBSCRIBE,topic,2);    
-    send_command(buffer,CMD_OK,1500,1);
-   
+    send_command(buffer,CMD_OK,1000,1);
+    
 
     
 }
 
 
 void sim7000g_mqtt_unsubscription(uint8_t* topic){
+
+    // irq gpio desactivado
+      //gpio_irq_off();
+
       uint8_t  buffer[100]={0};
       sprintf(buffer,CMD_MQTT_UMSUBSCRIBE,topic);    
-      send_command(buffer,CMD_OK,1500,1);
+      send_command(buffer,CMD_OK,1000,1);
        
 }
 

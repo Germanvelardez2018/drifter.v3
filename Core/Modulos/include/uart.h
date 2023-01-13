@@ -27,9 +27,9 @@ extern "C" {
 
 
 
-void uart2_set_irq();
+void uart1_set_irq();
 
-void uart2_clear_irq();
+void uart1_clear_irq();
 
 void MX_USART1_UART_Init(void);
 

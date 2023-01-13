@@ -35,6 +35,10 @@ uint8_t sim_send_command(uint8_t* string_cmd,uint8_t* response_expected,uint32_t
 
 
 
+uint8_t sim7000g_get_parse(char* string);
+
+
+void get_copy_cmd_buffer(uint8_t* buffer);
 
 void sim_at();
 
