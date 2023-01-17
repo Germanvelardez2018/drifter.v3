@@ -31,6 +31,13 @@ extern "C" {
  void MX_ADC1_Init(void);
 
 
+/**
+ * @brief Obtener el valor del Adc 
+*/
+uint32_t get_adc(void);
+
+
+
 #ifdef __cplusplus
 }
 #endif

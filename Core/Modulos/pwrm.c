@@ -1,7 +1,7 @@
 #include "pwrm.h"
 #include "rtc.h"
-
-
+#include "wdt.h"
+#include "timer.h"
 
 #define SLEEP_INTERVAL()          {\
                                 HAL_SuspendTick();\
@@ -14,12 +14,17 @@
 
 
 #define INTERVAL_TIME_H         (0)
-#define INTERVAL_TIME_M         (0)
-#define INTERVAL_TIME_S         (30)
-#define WAIT_FOR_GPS_TIME_S     (50)
-#define WAIT_FOR_SIMCOM         (30)
+#define INTERVAL_TIME_M         (5)
+#define INTERVAL_TIME_S         (0)
+#define WAIT_FOR_GPS_TIME_M     (1)
+#define WAIT_FOR_SIMCOM         (25)
 
 
+// Se utiliza para reiniciar wdt
+extern TIM_HandleTypeDef htim3;
+
+
+PRIVATE uint8_t __SLEEP__ = 0; 
 
 
 PRIVATE void __wait_for_sim(){
@@ -29,7 +34,6 @@ PRIVATE void __wait_for_sim(){
   // Aumento el intervalo
   s = s + WAIT_FOR_SIMCOM;
   rtc_set_alarm(h,m,s);
-
 }
 
 
@@ -38,9 +42,20 @@ PRIVATE void __wait_for_gps(){
   // Obtengo time actual
   rtc_get_time(&h,&m,&s);
   // Aumento el intervalo
-  s = s + WAIT_FOR_GPS_TIME_S;
+  m = m+ WAIT_FOR_GPS_TIME_M;
   rtc_set_alarm(h,m,s);
 }
+
+
+
+PRIVATE void timer_init(){
+  //MX_IWDG_Init();
+  MX_TIM3_Init();
+  HAL_TIM_Base_Start_IT(&htim3);
+  wdt_refresh();
+
+}
+
 
 
 PRIVATE void __update_interval(){
@@ -56,42 +71,58 @@ PRIVATE void __update_interval(){
 
 
 // Interrupciones que despiertan el micro. Disponibles : Timer y RTC 
-
-
-
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-   RESUME_FROM_SLEEP();       
+  // Despertar
+   RESUME_FROM_SLEEP();
+   //Reset  
+   wdt_refresh();
+   HAL_GPIO_TogglePin(LED_GPIO_Port, GPIO_PIN_2);
+   //Si estaba durmiendo, volver a dormir
+   if(__SLEEP__)    SLEEP_INTERVAL() ;
 }
 
 
 
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc){
-   RESUME_FROM_SLEEP();
+    RESUME_FROM_SLEEP();
+   // wdt_refresh();
+
+    // Despierta
+    __SLEEP__ = 0;
+
 }
 
 
 void pwrm_init(){
   rtc_init();
+  //timer_init();
 }
 
 
 void sleep_interval(){
   __update_interval();
   // sleep
+  __SLEEP__ = 1;
   SLEEP_INTERVAL();
 }
 
 
 void wait_for_gps(){
+
   __wait_for_gps();
+  __SLEEP__ = 1;
   SLEEP_INTERVAL();
 }
 
 
 void wait_for_sim(){
+  
   __wait_for_sim();
+  __SLEEP__ = 1; 
   SLEEP_INTERVAL();
+    
+
 }
 
 

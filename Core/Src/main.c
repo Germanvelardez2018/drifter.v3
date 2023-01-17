@@ -28,7 +28,7 @@
 #include "fsm.h"
 #include "rtc.h"
 #include "pwrm.h"
-
+#include "adc.h"
 
 extern UART_HandleTypeDef huart1;
 #define UPLOAD_CHECK                    "CMD:Forzar upload\r\n"
@@ -42,13 +42,13 @@ extern UART_HandleTypeDef huart1;
 #define MQTT_SEND_CHECK()               sim7000g_mqtt_publish(CHECK_TOPIC, get_state_device(), strlen(get_state_device()))
 
 //#define MQTT_SEND_CHECK()               sim7000g_mqtt_publish("STATE", get_state_device(), strlen(get_state_device()))
-#define MQTT_SEND_DATA(msg)             sim7000g_mqtt_publish("GPS", msg, strlen(msg))
+#define MQTT_SEND_DATA(msg)             sim7000g_mqtt_publish("DEVICE", msg, strlen(msg))
 
 
 PRIVATE uint8_t buffer_upload[200];
 
 
-#define ID_FORMAT                         ("(Device)Contador:%d / MAX:%d , Intervalo:%d m \r\n ")
+#define ID_FORMAT                         ("(Device)Contador: %d/MAX:%d , Intervalo:%d m, bat:%d \r\n ")
 #define ID_FORMAT_DEBUG                   ("(Device)Counter:%d, Cmax:%d, Cinterval:%d, Cimax:%d \r\n")
 #define STATE_DEVICE_LEN            (100)
 PRIVATE uint8_t state_device[STATE_DEVICE_LEN];
@@ -56,52 +56,25 @@ PRIVATE uint8_t counter = 0;          //  Contador de muestras almacenadas
 PRIVATE uint8_t cmax = 0;             // Maximo valor del contador de muestras almacenadas
 PRIVATE uint8_t counter_interval = 0;
 PRIVATE uint8_t cmax_interval = 0;   // Contador maximo de intervalos
-
+PRIVATE uint8_t last_comand = 0;
 PRIVATE uint8_t* get_state_device(){
   //Actualizo las variables counter,cmax y cmax_interval
-  
+  uint32_t bat =  get_adc();
   mem_s_get_counter(&counter);
   mem_s_get_max_amount_data(&cmax);
   mem_s_get_cmax_interval(&cmax_interval);
   sprintf(state_device,ID_FORMAT,
                           counter,
                           cmax,
-                          cmax_interval*5);
+                          cmax_interval*5,bat);
   return state_device;
 
 }
 
 
 
-
-
-PRIVATE void app_init(){
-  // Inicio todos los servicios necesarios
-  // Core
-  HAL_Init();
-  clock_master_set(CLOCK_4MHZ);
-  MX_GPIO_Init();
-  // Debug
-  debug_init();
-  debug_print(INIT_MSG);
-  // Memoria externa
-  mem_s_init();
-  // sensor
-  mpu6050_init();
-
-  pwrm_init();
-  // FSM
-  fsm_init();
-  // Mensaje inicial
-//  cmax_interval = 2;
-  debug_print(get_state_device());
-
- 
-
-}
-
-#define delay_time          (800)
-#define delay_tiny          (500)
+#define delay_time          (750)
+#define delay_tiny          (450)
 PRIVATE void check_routine(){
 
   // Encender el modulo
@@ -127,7 +100,6 @@ PRIVATE void check_routine(){
   gpio_irq_on();
   delay(delay_tiny);
   sim7000g_mqtt_subscription("CMD");
-# if(1)
   while(opt ==0 && out == 0 ){
     get_copy_cmd_buffer(p_cmd_buffer);
     opt =  sim7000g_get_parse(p_cmd_buffer);
@@ -136,15 +108,18 @@ PRIVATE void check_routine(){
     delay(delay_tiny);
   }
 
-  uint8_t min =0;
   if(opt > 0){
-    switch (opt)
+    uint8_t min = 0;
+    uint8_t cmd_valid = 1;
+    
+    if (last_comand != opt){
+      switch (opt)
     {
       // intervalo 15m
     case 1:
+    
         min = 15;
         sprintf(p_cmd_buffer,CMD_CHECK,min);
-        
         cmax_interval = 3; 
         mem_s_set_cmax_interval(&cmax_interval);
     break;
@@ -176,35 +151,38 @@ PRIVATE void check_routine(){
     break;
     //Forzar extraccion
     case 6:
-        debug_print(UPLOAD_CHECK);
+        sprintf(p_cmd_buffer,UPLOAD_CHECK);
         fsm_set_state(FSM_UPLOAD);
         counter_interval = 0; // evita que mande save data en vez de upload
+        break;
     default:
+      cmd_valid = 0;
       break;
-    
-    
     }
-    debug_print(p_cmd_buffer);
-    sim7000g_mqtt_publish("DEVICE",p_cmd_buffer,strlen(p_cmd_buffer));
-    delay(delay_time);
-    MQTT_SEND_CHECK();
-
+    
+    if(cmd_valid){
+      debug_print(p_cmd_buffer);
+      sim7000g_mqtt_publish("DEVICE",p_cmd_buffer,strlen(p_cmd_buffer));
+      delay(delay_time);
+      MQTT_SEND_CHECK();
+      last_comand = opt;
+    }
+    }
   }
-  #endif
  
   // Unsub mqtt topic
   sim7000g_mqtt_unsubscription("CMD");
   gpio_irq_off();
   debug_print("finalizo la sub a topic CMD \r\n");
-  sim_deinit();
+  // apago el sim afuera de esta rutina
 
 }
 
 
 
 PRIVATE void upload_routine(){
-
-  sim_init();
+  //EL modulo se mantiene prendido de la rutina anterior
+  //sim_init();
   sim_4g_connect();
   delay(delay_tiny);
   sim_mqtt_connect();
@@ -239,12 +217,12 @@ PRIVATE void upload_routine(){
   delay(delay_tiny);
   debug_print("Finalizo deployd \r\n");
   MQTT_SEND_DATA("Fin de transmicion");
-  sim_deinit();     
 }
 
 
 PRIVATE void save_data_routine(){
-  sim_init();
+  // El modulo se mantiene prendido de la rutina check anterior
+  //sim_init();
   sim_gps_on();
   mem_s_get_counter(&counter);
   uint8_t buffer[BUFFER_SIZE] = {"CONTENIDO INICIAL\r\n"};
@@ -258,9 +236,36 @@ PRIVATE void save_data_routine(){
   debug_print(buffer);
   mem_write_data(buffer, counter);
   sim_gps_off();
-  sim_deinit();
 }
 
+
+
+
+PRIVATE void app_init(){
+  // Inicio todos los servicios necesarios
+  // Core
+  HAL_Init();
+  clock_master_set(CLOCK_4MHZ);
+  MX_GPIO_Init();
+  // Debug
+  debug_init();
+  debug_print(INIT_MSG);
+  // ADC
+  MX_ADC1_Init();
+  // Memoria externa
+  mem_s_init();
+  // sensor
+  mpu6050_init();
+  pwrm_init();
+  // FSM
+  fsm_init();
+  // Mensaje inicial
+//  cmax_interval = 2;
+debug_print(get_state_device());
+
+ 
+
+}
 
 
 
@@ -274,16 +279,24 @@ int main(void)
   //test sub  
   //fsm_set_state(FSM_UPLOAD);
   if(counter > cmax)fsm_set_state(FSM_UPLOAD);
+  
   while (1)
   {
-
     switch (fsm_get_state())
     {
       case FSM_CHECK_ONLY:
         debug_print("FSM:CHECK\r\n ");
         check_routine();
         counter_interval =counter_interval+ 1;
-        if(counter_interval == cmax_interval)fsm_set_state(FSM_SAVE_DATA);
+        if(counter_interval == cmax_interval){
+          fsm_set_state(FSM_SAVE_DATA);
+          // NO apago sim
+        }
+        else{
+          uint8_t state =  fsm_get_state();
+          if(state == FSM_CHECK_ONLY)sim_deinit();
+        }
+
       break;
 
       case FSM_SAVE_DATA:
@@ -296,12 +309,15 @@ int main(void)
         }else{
           fsm_set_state(FSM_CHECK_ONLY);
           counter_interval = 0;
+          sim_deinit();
         } 
       break;
 
       case FSM_UPLOAD:
         debug_print("FSM: UPLOAD \r\n");
         upload_routine();
+        sim_deinit();     
+
         counter = 0;
         mem_s_set_counter(&counter);
         fsm_set_state(FSM_CHECK_ONLY);
@@ -311,9 +327,13 @@ int main(void)
         debug_print("FSM: UNDEFINED \r\n");
       break;
     }
-  
-  sleep_interval();
-  
+
+
+
+  uint8_t ret= fsm_get_state();
+
+  if(ret == FSM_CHECK_ONLY)sleep_interval();
+
 
   }
 

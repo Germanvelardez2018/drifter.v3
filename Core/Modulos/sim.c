@@ -275,8 +275,8 @@ void sim7000g_mqtt_publish(uint8_t* topic, uint8_t* payload, uint8_t len_payload
     uint8_t  buffer[100]={0};
     if( (topic != NULL) || (payload != NULL)){
         sprintf(buffer,CMD_MQTT_PUBLISH,topic,len_payload);    
-        send_command(buffer,CMD_OK,800,1);
-        send_command(payload,CMD_OK,800,1);
+        send_command(buffer,CMD_OK,600,1);
+        send_command(payload,CMD_OK,600,1);
     }
 
  
@@ -288,7 +288,7 @@ void sim7000g_mqtt_subscription(uint8_t* topic){
    
     uint8_t  buffer[150]={0};
     sprintf(buffer,CMD_MQTT_SUBSCRIBE,topic,2);    
-    send_command(buffer,CMD_OK,1000,1);
+    send_command(buffer,CMD_OK,600,1);
     
 
     
@@ -302,14 +302,14 @@ void sim7000g_mqtt_unsubscription(uint8_t* topic){
 
       uint8_t  buffer[100]={0};
       sprintf(buffer,CMD_MQTT_UMSUBSCRIBE,topic);    
-      send_command(buffer,CMD_OK,1000,1);
+      send_command(buffer,CMD_OK,600,1);
        
 }
 
 
 void sim7000g_set_irt(){
 
-      send_command("AT+CFGRI=1\r\n",CMD_OK,1500,1);
+      send_command("AT+CFGRI=1\r\n",CMD_OK,1000,1);
 
 }
 

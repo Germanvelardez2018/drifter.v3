@@ -37,9 +37,19 @@ uint8_t sim_send_command(uint8_t* string_cmd,uint8_t* response_expected,uint32_t
 
 uint8_t sim7000g_get_parse(char* string);
 
-
+/**
+ * Obtengo el buffer de comandos. 
+ * Este se carga al recibir un comandos desde el topic CMD
+ * La rutina de subcribirse al topic CMD se realiza 
+ * siempre despues de cada CHECK ruoutine
+ *@param buffer array donde se almacena una copia del buffer de comandos (20 bytes)
+*/
 void get_copy_cmd_buffer(uint8_t* buffer);
 
+
+/**
+ * Comando AT basico
+*/
 void sim_at();
 
  /**

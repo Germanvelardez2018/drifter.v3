@@ -19,6 +19,13 @@ extern "C" {
  void MX_IWDG_Init(void);
 
 
+
+/***
+ * @brief Reinicia el WDT 
+*/
+ void wdt_refresh();
+
+
 #ifdef __cplusplus
 }
 #endif

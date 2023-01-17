@@ -5,6 +5,16 @@
 ADC_HandleTypeDef hadc1;//! HADC1 
 
 
+
+ uint32_t get_adc(){
+  uint32_t adc_value = 0;
+  HAL_ADC_Start(&hadc1);
+  HAL_Delay(50);
+  adc_value = HAL_ADC_GetValue(&hadc1);
+  return adc_value;
+}
+
+
 /**
   * @brief Inicializacion del hardware ADC1
   * @param None
