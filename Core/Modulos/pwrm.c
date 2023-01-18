@@ -16,7 +16,7 @@
 #define INTERVAL_TIME_H         (0)
 #define INTERVAL_TIME_M         (5)
 #define INTERVAL_TIME_S         (0)
-#define WAIT_FOR_GPS_TIME_M     (1)
+#define WAIT_FOR_GPS_TIME_M     (0)
 #define WAIT_FOR_SIMCOM         (25)
 
 

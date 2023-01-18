@@ -229,7 +229,7 @@ PRIVATE void save_data_routine(){
   uint8_t sensor[50];
   uint8_t gps[100];
   mpu6050_get_measure(sensor);
-  wait_for_gps();
+  //wait_for_gps();
   // Obtengo gps
   sim_gps_get_info(gps,100);
   sprintf(buffer, SENSOR_FORMAT, gps, sensor);
@@ -278,8 +278,10 @@ int main(void)
   app_init();
   //test sub  
   //fsm_set_state(FSM_UPLOAD);
-  if(counter > cmax)fsm_set_state(FSM_UPLOAD);
-  
+  if(counter > cmax){
+    sim_init();
+    fsm_set_state(FSM_UPLOAD);
+  }
   while (1)
   {
     switch (fsm_get_state())
