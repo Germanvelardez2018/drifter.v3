@@ -229,7 +229,7 @@ PRIVATE void save_data_routine(){
   uint8_t sensor[50];
   uint8_t gps[100];
   mpu6050_get_measure(sensor);
-  //wait_for_gps();
+  wait_for_gps();
   // Obtengo gps
   sim_gps_get_info(gps,100);
   sprintf(buffer, SENSOR_FORMAT, gps, sensor);
@@ -290,7 +290,7 @@ int main(void)
         debug_print("FSM:CHECK\r\n ");
         check_routine();
         counter_interval =counter_interval+ 1;
-        if(counter_interval == cmax_interval){
+        if(counter_interval >= cmax_interval){
           fsm_set_state(FSM_SAVE_DATA);
           // NO apago sim
         }
@@ -306,13 +306,14 @@ int main(void)
         save_data_routine();
         counter =counter + 1;
         mem_s_set_counter(&counter);
-        if( counter == cmax){
+        if( counter >= cmax){
           fsm_set_state(FSM_UPLOAD);
         }else{
           fsm_set_state(FSM_CHECK_ONLY);
-          counter_interval = 0;
           sim_deinit();
         } 
+        counter_interval = 0;
+                                                                  
       break;
 
       case FSM_UPLOAD:

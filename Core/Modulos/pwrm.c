@@ -16,7 +16,7 @@
 #define INTERVAL_TIME_H         (0)
 #define INTERVAL_TIME_M         (5)
 #define INTERVAL_TIME_S         (0)
-#define WAIT_FOR_GPS_TIME_M     (0)
+#define WAIT_FOR_GPS_TIME_S     (40)
 #define WAIT_FOR_SIMCOM         (25)
 
 
@@ -34,6 +34,7 @@ PRIVATE void __wait_for_sim(){
   // Aumento el intervalo
   s = s + WAIT_FOR_SIMCOM;
   rtc_set_alarm(h,m,s);
+  SLEEP_INTERVAL() ;
 }
 
 
@@ -42,8 +43,9 @@ PRIVATE void __wait_for_gps(){
   // Obtengo time actual
   rtc_get_time(&h,&m,&s);
   // Aumento el intervalo
-  m = m+ WAIT_FOR_GPS_TIME_M;
+  s = s+ WAIT_FOR_GPS_TIME_S;
   rtc_set_alarm(h,m,s);
+  SLEEP_INTERVAL() ;
 }
 
 
