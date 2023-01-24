@@ -8,14 +8,13 @@ extern UART_HandleTypeDef   huart2;
 
 #define DEBUG_UART          &huart2
 #define DEBUG_TIMEOUT       (500)
-#define DEBUG_ON            0
+#define DEBUG_ON            1
 
 
 inline void debug_init(){
     #if (DEBUG_ON == 1)
     MX_USART2_UART_Init();
-    #endif
-    
+    #endif   
 }
 
 

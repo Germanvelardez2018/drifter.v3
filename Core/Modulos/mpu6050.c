@@ -235,7 +235,7 @@ void mpu6050_init(){
     i2c_write_mem(PWR_MGMT_1,&config,1);
     while(ret  == 0 && counter < TIMEOUT_MPU6050){
         debug_print("mpu6050 is not ready \r\n");
-        delay(1000);
+        delay(500);
         ret= mpu6050_rdy();
         counter ++;
     }

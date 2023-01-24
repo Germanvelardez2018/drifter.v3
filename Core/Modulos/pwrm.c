@@ -3,6 +3,11 @@
 #include "wdt.h"
 #include "timer.h"
 
+
+
+
+
+
 #define SLEEP_INTERVAL()          {\
                                 HAL_SuspendTick();\
                                 HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);\
@@ -14,10 +19,17 @@
 
 
 #define INTERVAL_TIME_H         (0)
-#define INTERVAL_TIME_M         (5)
+#define INTERVAL_TIME_M         (1)
 #define INTERVAL_TIME_S         (0)
-#define WAIT_FOR_GPS_TIME_S     (40)
-#define WAIT_FOR_SIMCOM         (25)
+#define WAIT_FOR_GPS_TIME_S     (20)
+#define WAIT_FOR_SIMCOM         (20)
+
+
+
+#define PWRM_CMAX_INTERVAL_15M         (INTERVAL_TIME_M/15)
+#define PWRM_CMAX_INTERVAL_30M         (INTERVAL_TIME_M/30)
+#define PWRM_CMAX_INTERVAL_60M         (INTERVAL_TIME_M/60)
+
 
 
 // Se utiliza para reiniciar wdt
@@ -106,7 +118,8 @@ void sleep_interval(){
   __update_interval();
   // sleep
   __SLEEP__ = 1;
-  SLEEP_INTERVAL();
+  SLEEP_INTERVAL(); 
+
 }
 
 
@@ -114,7 +127,9 @@ void wait_for_gps(){
 
   __wait_for_gps();
   __SLEEP__ = 1;
-  SLEEP_INTERVAL();
+  //SLEEP_INTERVAL();
+  //RESUME_FROM_SLEEP();
+
 }
 
 
@@ -122,7 +137,9 @@ void wait_for_sim(){
   
   __wait_for_sim();
   __SLEEP__ = 1; 
-  SLEEP_INTERVAL();
+  //SLEEP_INTERVAL();
+  //RESUME_FROM_SLEEP();
+
     
 
 }

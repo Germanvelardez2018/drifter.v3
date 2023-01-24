@@ -1,20 +1,16 @@
 /* USER CODE BEGIN Header */
+// Optimizacion de la aplicacion
 /**
- ******************************************************************************
- * @file           : main.c
- * @brief          : Main program body
- ******************************************************************************
- * @attention
- *
- * Copyright (c) 2022 STMicroelectronics.
- * All rights reserved.
- *
- * This software is licensed under terms that can be found in the LICENSE file
- * in the root directory of this software component.
- * If no LICENSE file comes with this software, it is provided AS-IS.
- *
- ******************************************************************************
- */
+ * 1) Intervalos mas largo:
+ *  checkout minimo 15 minutos (5 anterior version)
+ * 2) Envios de texto mas compactos
+ * 3) Deep sleep ajustado
+ * 
+ * 
+ * 
+ * 
+ * 
+*/
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -31,25 +27,24 @@
 #include "adc.h"
 
 extern UART_HandleTypeDef huart1;
-#define UPLOAD_CHECK                    "CMD:Forzar upload\r\n"
-#define CMD_CHECK                       "CMD Nuevo intervalo:%d \r\n"
+#define UPLOAD_CHECK                    "\r\nCMD:Forzar upload\r\n"
+#define CMD_CHECK                       "\r\nCMD Nuevo intervalo:%d \r\n"
 #define SENSOR_FORMAT                   "( %s,: %s)"
 #define INIT_MSG                        "Init  drifter \r\n"
 #define CHECK_MSG_LEN                   (strlen(CHECK_MSG))
-#define CHECK_TOPIC                     "DEVICE"
+#define CHECK_TOPIC                     "D" // topic devices
 #define BUFFER_SIZE                     150
 
 #define MQTT_SEND_CHECK()               sim7000g_mqtt_publish(CHECK_TOPIC, get_state_device(), strlen(get_state_device()))
 
 //#define MQTT_SEND_CHECK()               sim7000g_mqtt_publish("STATE", get_state_device(), strlen(get_state_device()))
-#define MQTT_SEND_DATA(msg)             sim7000g_mqtt_publish("DEVICE", msg, strlen(msg))
+#define MQTT_SEND_DATA(msg)             sim7000g_mqtt_publish("D", msg, strlen(msg))
 
 
 PRIVATE uint8_t buffer_upload[200];
 
 
-#define ID_FORMAT                         ("(Device)Contador: %d/MAX:%d , Intervalo:%d m, bat:%d \r\n ")
-#define ID_FORMAT_DEBUG                   ("(Device)Counter:%d, Cmax:%d, Cinterval:%d, Cimax:%d \r\n")
+#define ID_FORMAT                         ("C:%d/%d,I:%d,B:%.2fV ,LCMD:%d")
 #define STATE_DEVICE_LEN            (100)
 PRIVATE uint8_t state_device[STATE_DEVICE_LEN];
 PRIVATE uint8_t counter = 0;          //  Contador de muestras almacenadas
@@ -60,52 +55,58 @@ PRIVATE uint8_t last_comand = 0;
 PRIVATE uint8_t* get_state_device(){
   //Actualizo las variables counter,cmax y cmax_interval
   uint32_t bat =  get_adc();
+  float vbat = (bat*3.3) /4096;
   mem_s_get_counter(&counter);
   mem_s_get_max_amount_data(&cmax);
   mem_s_get_cmax_interval(&cmax_interval);
   sprintf(state_device,ID_FORMAT,
                           counter,
                           cmax,
-                          cmax_interval*5,bat);
+                          cmax_interval*10,vbat,last_comand);
   return state_device;
 
 }
 
 
 
-#define delay_time          (750)
-#define delay_tiny          (450)
-PRIVATE void check_routine(){
+#define delay_time          (250)
+#define delay_tiny          (400)
+#define min_delay           (100)
 
-  // Encender el modulo
-  sim_init();
-  delay(delay_time);
-  // Conectarse a servidor
-  sim_4g_connect();
-  delay(delay_time);
-  sim_mqtt_connect();
-  // Enviar mensaje de check
-  delay(delay_time);
-  sim7000g_set_irt();
-  delay(delay_time);
-  MQTT_SEND_CHECK();
-  delay(delay_time);
-  uint8_t p_cmd_buffer[30] = {"sin datos "};
+PRIVATE void check_routine(){
+  uint8_t p_cmd_buffer[25] = {0};
   uint8_t timeout = 0; 
   uint8_t opt = 0;
   uint8_t out = 0;
+  // Encender el modulo
+  sim_init();
+  //enciendo gps
+  sim_gps_on();
+  // Conectarse a servidor
+  sim_4g_connect();
+  delay(min_delay);
+  
+  sim_mqtt_connect();
+  // Enviar mensaje de check
+  gpio_irq_on();
+  delay(1000);
+  sim7000g_mqtt_publish(CHECK_TOPIC, "check", strlen("check"));
+  delay(1500);
+  sim7000g_set_irt();
+  delay(1500);
+
+ 
   // Sub mqtt topic
   debug_print(" sub a topic CMD \r\n");
-  delay(delay_time);
-  gpio_irq_on();
-  delay(delay_tiny);
+
   sim7000g_mqtt_subscription("CMD");
   while(opt ==0 && out == 0 ){
+    //memset(p_cmd_buffer,0,20);
     get_copy_cmd_buffer(p_cmd_buffer);
     opt =  sim7000g_get_parse(p_cmd_buffer);
-    if(timeout == 20)break;
+    if(timeout == 2)break;
     timeout++;
-    delay(delay_tiny);
+    delay(1000);
   }
 
   if(opt > 0){
@@ -115,38 +116,37 @@ PRIVATE void check_routine(){
     if (last_comand != opt){
       switch (opt)
     {
-      // intervalo 15m
+      // intervalo 20m
     case 1:
-    
-        min = 15;
+        min = 20;
         sprintf(p_cmd_buffer,CMD_CHECK,min);
-        cmax_interval = 3; 
+        cmax_interval = 2; 
         mem_s_set_cmax_interval(&cmax_interval);
     break;
-    // intervalo 30m
+    // intervalo 40m
     case 2:
-        min = 30;
+        min = 40;
         sprintf(p_cmd_buffer,CMD_CHECK,min);
-        cmax_interval = 6; 
+        cmax_interval = 4; 
         mem_s_set_cmax_interval(&cmax_interval);
     break;
     // intervalo 60m
     case 3:
         min = 60;
         sprintf(p_cmd_buffer,CMD_CHECK,min);
-        cmax_interval = 12; 
+        cmax_interval = 6; 
         mem_s_set_cmax_interval(&cmax_interval);
     break;
     // max data 10
     case 4:
-          sprintf(p_cmd_buffer,"CMD:data 10\r\n");
-            cmax = 10;
+          sprintf(p_cmd_buffer,"CMD:data 20\r\n");
+          cmax = 20;
           mem_s_set_max_amount_data(&cmax);
     break;
     //max data 20
     case 5:
-          sprintf(p_cmd_buffer,"CMD:20 data\r\n");
-          cmax = 20;
+          sprintf(p_cmd_buffer,"CMD:50 data\r\n");
+          cmax = 50;
           mem_s_set_max_amount_data(&cmax);
     break;
     //Forzar extraccion
@@ -162,19 +162,19 @@ PRIVATE void check_routine(){
     
     if(cmd_valid){
       debug_print(p_cmd_buffer);
-      sim7000g_mqtt_publish("DEVICE",p_cmd_buffer,strlen(p_cmd_buffer));
-      delay(delay_time);
-      MQTT_SEND_CHECK();
+      sim7000g_mqtt_publish(CHECK_TOPIC,p_cmd_buffer,strlen(p_cmd_buffer));
       last_comand = opt;
+      delay(450);
     }
     }
   }
- 
+   MQTT_SEND_CHECK();
   // Unsub mqtt topic
-  sim7000g_mqtt_unsubscription("CMD");
+  //sim7000g_mqtt_unsubscription("CMD");
   gpio_irq_off();
   debug_print("finalizo la sub a topic CMD \r\n");
   // apago el sim afuera de esta rutina
+ // delay(min_delay);
 
 }
 
@@ -183,7 +183,7 @@ PRIVATE void check_routine(){
 PRIVATE void upload_routine(){
   //EL modulo se mantiene prendido de la rutina anterior
   //sim_init();
-  sim_4g_connect();
+ // sim_4g_connect();
   delay(delay_tiny);
   sim_mqtt_connect();
   // transmito los datos
@@ -192,20 +192,26 @@ PRIVATE void upload_routine(){
     counter = cmax;
     mem_s_set_counter(&counter);
   }
-  sprintf(buffer_upload, "Extraer :%d datos\n", counter);
-  debug_print(buffer_upload);
-  delay(delay_time);
-  MQTT_SEND_DATA(buffer_upload);
-  debug_print("extrayendo:");
-  uint8_t data[200];
-  if( counter > cmax ) counter = cmax;
 
-  while(counter != 0){
+  if(counter == 0){
+    debug_print("Sin datos para extraer\r\n");
+    MQTT_SEND_DATA("Sin datos para extraer");
+  }
+  else{
+    sprintf(buffer_upload, "Extraer :%d datos\n", counter);
+    debug_print(buffer_upload);
+    MQTT_SEND_DATA(buffer_upload);
+    delay(400);
+    debug_print("extrayendo:");
+    uint8_t data[200];
+    if( counter > cmax ) counter = cmax;
+    counter = counter - 1;
+    while(counter != 0){
     mem_read_data(data,counter);
     debug_print("mqtt send \r \n");
     debug_print(data);
     MQTT_SEND_DATA(data);
-    delay(delay_time);
+    delay(400);
     counter = counter - 1;
     mem_s_set_counter(&counter);
   }
@@ -214,16 +220,18 @@ PRIVATE void upload_routine(){
   debug_print("mqtt send \r \n");
   debug_print(data);
   MQTT_SEND_DATA(data);
-  delay(delay_tiny);
   debug_print("Finalizo deployd \r\n");
-  MQTT_SEND_DATA("Fin de transmicion");
+  }
+  delay(400);
+  
 }
 
 
 PRIVATE void save_data_routine(){
   // El modulo se mantiene prendido de la rutina check anterior
   //sim_init();
-  sim_gps_on();
+  //Enciendo el GPS en la rutina check cuando corresponde
+  //sim_gps_on();
   mem_s_get_counter(&counter);
   uint8_t buffer[BUFFER_SIZE] = {"CONTENIDO INICIAL\r\n"};
   uint8_t sensor[50];
@@ -245,7 +253,7 @@ PRIVATE void app_init(){
   // Inicio todos los servicios necesarios
   // Core
   HAL_Init();
-  clock_master_set(CLOCK_4MHZ);
+  clock_master_set(CLOCK_2MHZ);
   MX_GPIO_Init();
   // Debug
   debug_init();
@@ -260,8 +268,9 @@ PRIVATE void app_init(){
   // FSM
   fsm_init();
   // Mensaje inicial
-//  cmax_interval = 2;
-debug_print(get_state_device());
+ // cmax_interval = 2;
+ // mem_s_set_cmax_interval(&cmax_interval);
+  debug_print(get_state_device());
 
  
 
@@ -276,23 +285,35 @@ debug_print(get_state_device());
 int main(void)
 { 
   app_init();
-  //test sub  
-  //fsm_set_state(FSM_UPLOAD);
+   
+  uint8_t state = fsm_get_state();
+
+  
   if(counter > cmax){
     sim_init();
     fsm_set_state(FSM_UPLOAD);
+    }
+  if(state == FSM_SAVE_DATA || state == FSM_UPLOAD){
+    sim_init();
+    delay(200);
+    sim_gps_on();
+    delay(200);
+    sim_4g_connect();
+  
   }
   while (1)
   {
     switch (fsm_get_state())
     {
       case FSM_CHECK_ONLY:
-        debug_print("FSM:CHECK\r\n ");
+        debug_print("\r\nFSM:CHECK\r\n ");
         check_routine();
         counter_interval =counter_interval+ 1;
         if(counter_interval >= cmax_interval){
           fsm_set_state(FSM_SAVE_DATA);
-          // NO apago sim
+          // NO apago sim. Enciendo GPS
+        //  sim_gps_on();
+        // cambio, ahora enciendo siempre gps
         }
         else{
           uint8_t state =  fsm_get_state();
@@ -302,7 +323,7 @@ int main(void)
       break;
 
       case FSM_SAVE_DATA:
-        debug_print("FSM:SAVE DATA \r\n ");
+        debug_print("\r\nFSM:SAVE DATA \r\n ");
         save_data_routine();
         counter =counter + 1;
         mem_s_set_counter(&counter);
@@ -317,24 +338,20 @@ int main(void)
       break;
 
       case FSM_UPLOAD:
-        debug_print("FSM: UPLOAD \r\n");
+        debug_print("\r\nFSM: UPLOAD \r\n");
         upload_routine();
         sim_deinit();     
-
         counter = 0;
         mem_s_set_counter(&counter);
         fsm_set_state(FSM_CHECK_ONLY);
       break;
 
       default:
-        debug_print("FSM: UNDEFINED \r\n");
+        debug_print("\r\nFSM: UNDEFINED \r\n");
       break;
     }
 
-
-
   uint8_t ret= fsm_get_state();
-
   if(ret == FSM_CHECK_ONLY)sleep_interval();
 
 
