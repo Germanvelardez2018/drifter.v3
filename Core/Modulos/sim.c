@@ -44,9 +44,11 @@ extern UART_HandleTypeDef   huart1;
 
 #define IS_EQUAL                                     (0)
 #define SIM_UART                                    &huart1
-#define SIM_TIMEOUT                                 250
-#define SIM_BUFFER_SIZE                             140
-#define SIM_DEFAULT_TIMEOUT                         250
+#define SIM_TIMEOUT                                 500
+#define SIM_BUFFER_SIZE                             200
+#define SIM_DEFAULT_TIMEOUT                         500
+#define SIM_TIMEOUT_RX                              1000
+#define SIM_TIMEOUT_TX                              500
 
 
 #define FLAG_PRINT_CHECK                              (0)
@@ -188,7 +190,6 @@ void sim_init(){
 
 
 void sim_deinit(){
-   // HAL_UART_DeInit(SIM_UART);
     sim_turn_off();
     delay(1500);
     HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port,SIM7000G_BAT_ENA_Pin,0);
@@ -221,6 +222,12 @@ inline void sim_mqtt_connect(){
     send_command(CMD_MQTT_COMMIT,CMD_OK,SIM_DEFAULT_TIMEOUT,1) ;
     delay(1200);
 
+}
+
+
+#define CMD_ADC_READ                ("AT+CADC?\r\n")
+inline void sim_adc_read(){
+    send_command(CMD_ADC_READ,"OK\r\n",SIM_DEFAULT_TIMEOUT,1);
 }
 
 
@@ -279,42 +286,28 @@ void sim7000g_mqtt_publish(uint8_t* topic, uint8_t* payload, uint8_t len_payload
     uint8_t  buffer[100]={0};
     if( (topic != NULL) || (payload != NULL)){
         sprintf(buffer,CMD_MQTT_PUBLISH,topic,len_payload);    
-        send_command(buffer,CMD_OK,250,1);
-        send_command(payload,CMD_OK,250,1);
+        send_command(buffer,CMD_OK,400,1);
+        send_command(payload,CMD_OK,400,1);
     }
 
  
 }
 
 
-void sim7000g_mqtt_subscription(uint8_t* topic){
-
-   
-    uint8_t  buffer[150]={0};
-    sprintf(buffer,CMD_MQTT_SUBSCRIBE,topic,2);    
-    send_command(buffer,CMD_OK,200,1);
-    
-
-    
+void sim7000g_mqtt_subscription(){
+    #define MQTT_SUB            "AT+SMSUB=\"CMD\",2\r\n"
+    send_command(MQTT_SUB,CMD_OK,400,1);
 }
 
 
-void sim7000g_mqtt_unsubscription(uint8_t* topic){
-
-    // irq gpio desactivado
-      //gpio_irq_off();
-
-      uint8_t  buffer[100]={0};
-      sprintf(buffer,CMD_MQTT_UMSUBSCRIBE,topic);    
-      send_command(buffer,CMD_OK,200,1);
-       
+void sim7000g_mqtt_unsubscription(){
+   #define MQTT_UNSUB           "AT+SMUNSUB=\"CMD\"\r\n"
+   send_command(MQTT_UNSUB,CMD_OK,200,1);   
 }
 
 
 void sim7000g_set_irt(){
-
-      send_command("AT+CFGRI=1\r\n",CMD_OK,250,1);
-
+    send_command("AT+CFGRI=1\r\n",CMD_OK,400,1);
 }
 
 

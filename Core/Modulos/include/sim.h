@@ -35,6 +35,14 @@ uint8_t sim_send_command(uint8_t* string_cmd,uint8_t* response_expected,uint32_t
 
 
 
+
+/***
+ *  Leo la entrada adc del modulo sim
+ * @param none
+*/
+ void sim_adc_read();
+
+
 uint8_t sim7000g_get_parse(char* string);
 
 /**
@@ -136,17 +144,17 @@ void sim7000g_mqtt_publish(uint8_t* topic, uint8_t* payload, uint8_t len_payload
 
 /**
  *  Subcripcion a un topico MQTT
- * @param topic: Topico
+ * 
 */
-void sim7000g_mqtt_subscription(uint8_t* topic);
+void sim7000g_mqtt_subscription();
 
 
 
 /**
  *  Dessubcripcion a un topico MQTT
- * @param topic: Topico
+ * 
 */
-void sim7000g_mqtt_unsubscription(uint8_t* topic);
+void sim7000g_mqtt_unsubscription();
 
 
 
