@@ -87,6 +87,9 @@ PRIVATE void check_routine()
 
   sim_mqtt_connect();
   // Enviar mensaje de check
+  delay(250);
+  sim_sleep();
+  delay(250);
   gpio_irq_on();
   delay(700);      //con 1000 funcionar 
   sim7000g_mqtt_publish(CHECK_TOPIC, "ok", strlen("ok"));
@@ -167,7 +170,7 @@ PRIVATE void check_routine()
   }
   // Unsub mqtt topic
   sim7000g_mqtt_unsubscription();
-  delay(400);
+  delay(500);
   gpio_irq_off();
   debug_print("finalizo la sub a topic CMD \r\n");
 }
@@ -182,7 +185,7 @@ PRIVATE void upload_routine()
   if (counter == 0){
     debug_print("Sin datos para extraer\r\n");
     MQTT_SEND_DATA("Sin datos para extraer");
-    delay(400);
+    delay(1000);
   }
   else
   {
@@ -192,17 +195,17 @@ PRIVATE void upload_routine()
     uint8_t data[200];
     if (counter > cmax)counter = cmax;
     //counter = counter - 1; // porque el indice de la memoria empieza en 0
-    
+    //delay(500);
     for (counter = counter -1; counter > 0; counter--)
     {
       mem_read_data(data, counter);
       MQTT_SEND_DATA(data);
       mem_s_set_counter(&counter);
-      delay(500);
+      delay(1200);
     }
     mem_read_data(data, counter);
     MQTT_SEND_DATA(data);
-    delay(500);
+    delay(1000);
     debug_print("Finalizo deployd \r\n");
   }
  
@@ -259,6 +262,8 @@ int main(void)
 {
   app_init();
 
+
+
   uint8_t state = fsm_get_state();
 
   if (counter > cmax)
@@ -275,6 +280,11 @@ int main(void)
     sim_4g_connect();
     delay(250);
     sim_mqtt_connect();
+    delay(250);
+    sim_sleep();
+    delay(250);
+
+
   }
   while (1)
   {
@@ -283,8 +293,9 @@ int main(void)
     case FSM_CHECK_ONLY:
       debug_print("\r\nFSM:CHECK\r\n ");
       check_routine();
-      delay(500);
       MQTT_SEND_CHECK();
+      delay(500);
+
       counter_interval = counter_interval + 1;
       if (counter_interval >= cmax_interval)fsm_set_state(FSM_SAVE_DATA);
       else{

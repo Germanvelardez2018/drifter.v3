@@ -35,8 +35,8 @@
 #define CMD_MQTT_SUBSCRIBE                           "AT+SMSUB=\"%s\",%d \r\n"   // topic , QoS
 #define CMD_MQTT_UMSUBSCRIBE                         "AT+SMUNSUB=\"%s\"\r\n"   // topic , QoS
 
-
-#define CMD_LOW_PWR_ON                              "AT+CPSMS=1,\"01000010\",\"00001010\"\r\n"
+#define CMD_LOW_PWR_STATUS                           "AT+CPSMSTATUS=1\r\n"
+#define CMD_LOW_PWR_ON                              "AT+CPSMS=1,\"01011111\",\"00000001\"\r\n"
 #define CMD_LOW_PWR_OFF                             "AT+CPSMS=0 \r\n"
 
 extern UART_HandleTypeDef   huart1;
@@ -245,7 +245,18 @@ inline void sim_at(){
 
 
 inline void sim_sleep(){
+
+
+    send_command("AT+CEREG=4\r\n",CMD_OK,SIM_DEFAULT_TIMEOUT,1);
+
+    //send_command(CMD_LOW_PWR_STATUS,CMD_OK,SIM_DEFAULT_TIMEOUT,1);
+    delay(450);
+
     send_command(CMD_LOW_PWR_ON,CMD_OK,SIM_DEFAULT_TIMEOUT,1);
+    delay(450);
+    send_command("AT+CEREG=0\r\n",CMD_OK,SIM_DEFAULT_TIMEOUT,1);
+
+
 }
 
 
