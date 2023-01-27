@@ -12,6 +12,15 @@ extern "C" {
 #include "core.h"
 
 
+
+/***
+ * 
+ * BUffer conjunto
+*/
+uint8_t sim_buffer_512b(uint8_t*buffer,uint32_t len,uint32_t c);
+
+
+
 /***
  *  Inicia el modulo sim. Hardware UART y pines para conmutar la alimentacion.
 */
@@ -139,7 +148,7 @@ void sim_at();
  * @param payload:Buffer de datos para publicar 
  * @param len_payload: tamanio del buffer da datos enviado
 */
-void sim7000g_mqtt_publish(uint8_t* topic, uint8_t* payload, uint8_t len_payload);
+void sim7000g_mqtt_publish(uint8_t* topic, uint8_t* payload, uint32_t len_payload);
 
 
 /**

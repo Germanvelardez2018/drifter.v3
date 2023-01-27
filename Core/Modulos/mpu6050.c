@@ -41,8 +41,8 @@ extern I2C_HandleTypeDef hi2c2;
 // Esta definido en el archivo i2c.c (en el metodo de inicializacion)
 #define I2C_CLOCK                                   (50000) 
 
-
-#define SENSOR_FORMAT                       ("t:%.2fx:%.2f,y:%.2f,z:%.2f")
+                                                //t,x,y,z
+#define SENSOR_FORMAT                       (":%.2f,%.2f,%.2f,%.2f")
 
 
 //Nota, al iniciar el dispositivo se calibra suponiendo posicion x=0G, y=0G ,z1G.
@@ -207,9 +207,6 @@ void mpu6050_get_measure(uint8_t* buffer){
     float fy = (float) (y/(SCALA_DIV/2.0)); // 
     float fz = (float) (z/(SCALA_DIV/2.0)); // 
     sprintf(buffer,SENSOR_FORMAT,ft,fx,fy,fz);
-    #if     1// PRINT_FLAG_MPU6050
-   // modulo_debug_print(buffer);
-    #endif
     mpu6050_sleep();
 }
 
@@ -235,19 +232,14 @@ void mpu6050_init(){
     i2c_write_mem(PWR_MGMT_1,&config,1);
     while(ret  == 0 && counter < TIMEOUT_MPU6050){
         debug_print("mpu6050 is not ready \r\n");
-        delay(500);
+        delay(250);
         ret= mpu6050_rdy();
         counter ++;
     }
-
     debug_print("mpu6050 is ready \r\n");
-
-    
-
     mpu6050_resume();
     mpu6050_set_scala();
     // Calibramos
-
     mpu6050_calibrate_and_save_offset();
     mpu6050_get_offset();
     mpu6050_sleep();
@@ -272,15 +264,7 @@ void mpu6050_init(){
  * 
 */
 void mpu6050_calibrate_and_save_offset(){
-
-
-    // Extraigo los offset y los guardo en memoria flash
-    mpu6050_calibration_routine(); // Esta funcion guarda offset en static x, offset_x offset_y, offset_z
-    // UTILIZAR CUANDO ESTE LISTO EL MODULO MEMORIA
-
-    //mem_s_set_x_offset( offset_x); // guardo en memoria flash
-    //mem_s_set_y_offset( offset_y); // guardo en memoria flash
-    //mem_s_set_z_offset( offset_z); // guardo en memoria flash
-
+    // Esta funcion guarda offset en static x, offset_x offset_y, offset_z
+    mpu6050_calibration_routine(); 
 }
 
