@@ -80,7 +80,7 @@ PRIVATE uint8_t buffer_cmd[COMMAND_SIZE] = {0};
 //+CGNSINF: eliminado de la string
 #define TITLE_OFFSET "+CGNSINF:"
 #define OFFSET_GPS (strlen(TITLE_OFFSET) + 3) //(strlen("+CGNSINF:"))
-#define OFFSET_GPS_END 19
+#define OFFSET_GPS_END 21
 
 #define GPS_PARSE(buffer, len)                   \
     {                                            \

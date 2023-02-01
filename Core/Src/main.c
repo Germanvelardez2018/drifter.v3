@@ -55,7 +55,7 @@ PRIVATE uint8_t *get_state_device()
   // Actualizo las variables counter,cmax y cmax_interval
   uint32_t bat = get_adc();
   // 3.66/2.45
-#define VBAT (3.3) // Se obtiene con medicion real
+#define VBAT (13.93) // Se obtiene con medicion real
   float vbat = (bat * VBAT) / 4096;
   mem_s_get_counter(&counter);
   mem_s_get_max_amount_data(&cmax);
@@ -249,6 +249,8 @@ PRIVATE void app_init()
 int main(void)
 {
   app_init();
+
+
 
   uint8_t state = fsm_get_state();
 
