@@ -61,7 +61,7 @@ extern "C" {
 #define MMAP_OFFSET_ACELEROMETER_Z                            (MMAP_OFFSET_ACELEROMETER + 3)
 
 #define MMAP_MAX_COUNTER_INTERVAL                             (MMAP_OFFSET_ACELEROMETER_Z + 1)                                                            
-
+#define MMAP_INTERVAL_TIME                                   (MMAP_MAX_COUNTER_INTERVAL + 2)  
 
 // Formato para almacenar en paginar
 #define FORMAT_MSG                                          ("\nx:%.2f, y:%.2f , z:%.2f , t:%.2f\n,\nGPS:%s\n")

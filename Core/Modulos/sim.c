@@ -35,6 +35,9 @@
 #define CMD_LOW_PWR_STATUS "AT+CPSMSTATUS=1\r\n"
 #define CMD_LOW_PWR_ON "AT+CPSMS=1,\"01011111\",\"00000001\"\r\n"
 #define CMD_LOW_PWR_OFF "AT+CPSMS=0 \r\n"
+#define MQTT_SUB "AT+SMSUB=\"CMD\",2\r\n"
+#define MQTT_UNSUB "AT+SMUNSUB=\"CMD\"\r\n"
+
 
 extern UART_HandleTypeDef huart1;
 
@@ -42,7 +45,7 @@ extern UART_HandleTypeDef huart1;
 #define SIM_UART &huart1
 #define SIM_TIMEOUT 500
 #define SIM_BUFFER_SIZE 150
-#define SIM_DEFAULT_TIMEOUT 500
+#define SIM_DEFAULT_TIMEOUT 400
 #define SIM_TIMEOUT_RX 800
 #define SIM_TIMEOUT_TX 500
 
@@ -53,19 +56,19 @@ PRIVATE uint8_t SIM_BUFFER[SIM_BUFFER_SIZE] = {0};
 PRIVATE uint8_t buffer_cmd[COMMAND_SIZE] = {0};
 
 #define SIM_BUFFER SIM_BUFFER
-#define IRQ_ON                       \
+#define IRQ_ABORT                       \
     {                                \
         HAL_UART_Abort_IT(SIM_UART); \
     }
 #define UART_WRITE(buffer, len, timeout)                   \
     {                                                      \
-        IRQ_ON                                             \
+        IRQ_ABORT                                             \
         HAL_UART_Transmit(SIM_UART, buffer, len, timeout); \
     }
 
 #define UART_READ(buffer, len, timeout)                   \
     {                                                     \
-        IRQ_ON                                            \
+        IRQ_ABORT                                            \
         memset(buffer, 0, SIM_BUFFER_SIZE);               \
         HAL_UART_Receive(SIM_UART, buffer, len, timeout); \
     }
@@ -90,49 +93,38 @@ PRIVATE uint8_t buffer_cmd[COMMAND_SIZE] = {0};
     }                                            \
     \                                                      
 
-
-
-
 #define RETEIN                          (0)
 
 // SI error retorna 0
-static uint8_t get_parse(char *string)
-{
+static uint8_t get_parse(char *string){
     uint8_t ret = 0;
     ret = (uint8_t)atoi(&(string[17]));
     return ret;
 }
 
-uint8_t sim7000g_get_parse(char *string)
-{
+uint8_t sim7000g_get_parse(char *string){
     uint8_t ret = get_parse(string);
     return ret;
 }
 
-void get_copy_cmd_buffer(uint8_t *buffer)
-{
+void get_copy_cmd_buffer(uint8_t *buffer){
     strcpy(buffer, buffer_cmd);
     memset(buffer_cmd, 0, 20);
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{   
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){   
     buffer_cmd[18] = 0;
 }
 
-void HAL_UART_ErrorCallback(UART_HandleTypeDef *UartHandle)
-{
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *UartHandle){
     HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 }
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-    
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){ 
     HAL_UART_Receive_IT(SIM_UART, buffer_cmd, 19); // 19
 }
 
-uint8_t *sim_get_cmd()
-{
+uint8_t *sim_get_cmd(){
     return buffer_cmd;
 }
 
@@ -147,33 +139,22 @@ PRIVATE uint8_t check_response(char *response)
 
 uint8_t send_command(uint8_t *string_cmd, uint8_t *response_expected, size_t timeout, uint8_t print_flag)
 {
-    // Envio comando
-    if (print_flag)
-        debug_print("=>");
-    if (print_flag)
-        debug_print(string_cmd);
+    if (print_flag)debug_print("=>");
+    if (print_flag)debug_print(string_cmd);
     UART_WRITE(string_cmd, strlen(string_cmd), timeout);
-    // if(print_flag)  debug_print("\n");
-    //  leo respuesta y almaceno en buffer SIM7000G
     UART_READ(SIM_BUFFER, SIM_BUFFER_SIZE, timeout);
-    // if(print_flag)  debug_print("\n");
-    if (print_flag)
-        debug_print(SIM_BUFFER);
-    if (print_flag)
-        debug_print("<=\n");
-    // checkeo buffer rx con respuesta esperada
+    if (print_flag)debug_print(SIM_BUFFER);
+    if (print_flag)debug_print("<=\n");
     uint8_t ret = check_response(response_expected);
 
     return ret;
 }
 
-PRIVATE void sim_turn_off()
-{
+PRIVATE void sim_turn_off(){
     send_command(CMD_TURN_OFF, CMD_OK, SIM_DEFAULT_TIMEOUT, 1);
 }
 
-void sim_init()
-{
+void sim_init(){
     debug_print("init sim \r\n");
     HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port, SIM7000G_BAT_ENA_Pin, 1);
     HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port, SIM7000G_PWRKEY_Pin, 1);
@@ -182,26 +163,22 @@ void sim_init()
     sim_echo_off();
 }
 
-void sim_deinit()
-{
+void sim_deinit(){
     sim_turn_off();
     delay(800);
     HAL_GPIO_WritePin(SIM7000G_BAT_ENA_GPIO_Port, SIM7000G_BAT_ENA_Pin, 0);
     HAL_GPIO_WritePin(SIM7000G_PWRKEY_GPIO_Port, SIM7000G_PWRKEY_Pin, 0);
 }
 
-inline void sim_version()
-{
-    SEND_CMD(send_command(CMD_VERSION, CMD_OK, SIM_DEFAULT_TIMEOUT, 0), 1000);
+inline void sim_version(){
+    SEND_CMD(send_command(CMD_VERSION, CMD_OK, SIM_DEFAULT_TIMEOUT, 0), 250);
 }
 
-inline void sim_echo_off()
-{
+inline void sim_echo_off(){
     SEND_CMD(send_command(CMD_ECHO_OFF, CMD_OK, SIM_DEFAULT_TIMEOUT, 0), 250);
 }
 
-inline void sim_mqtt_connect()
-{
+inline void sim_mqtt_connect(){
     send_command(CMD_MQTT_SET_URL, CMD_OK, SIM_DEFAULT_TIMEOUT, 1);
     delay(200);
 #if (RETAIN == 1) // SE eliminan para ahorrar tiempo
@@ -210,30 +187,24 @@ inline void sim_mqtt_connect()
     send_command("AT+SMCONF=\"RETAIN\",1\r\n", CMD_OK, SIM_DEFAULT_TIMEOUT, 1);
     delay(250);
 #endif
-
     send_command(CMD_MQTT_COMMIT, CMD_OK, SIM_DEFAULT_TIMEOUT, 1);
-    delay(800);
+    delay(600);
 }
 
 #define CMD_ADC_READ ("AT+CADC?\r\n")
-inline void sim_adc_read()
-{
+inline void sim_adc_read(){
     send_command(CMD_ADC_READ, "OK\r\n", SIM_DEFAULT_TIMEOUT, 1);
 }
 
-inline void sim_4g_connect()
-{
+inline void sim_4g_connect(){
     send_command(CMD_OPEN_APN_PERSONAL, "+APP PDP: ACTIVE\r\n", SIM_DEFAULT_TIMEOUT, 1);
 }
 
-inline void sim_at()
-{
+inline void sim_at(){
     send_command("AT\r\n", CMD_OK, SIM_DEFAULT_TIMEOUT, 1);
 }
 
-inline void sim_sleep()
-{
-
+inline void sim_sleep(){
     send_command("AT+CEREG=4\r\n", CMD_OK, SIM_DEFAULT_TIMEOUT, 1);
     delay(200);
     send_command(CMD_LOW_PWR_ON, CMD_OK, SIM_DEFAULT_TIMEOUT, 1);
@@ -241,8 +212,7 @@ inline void sim_sleep()
     send_command("AT+CEREG=0\r\n", CMD_OK, SIM_DEFAULT_TIMEOUT, 1);
 }
 
-inline void sim_resumen()
-{
+inline void sim_resumen(){
     send_command(CMD_LOW_PWR_OFF, CMD_OK, SIM_DEFAULT_TIMEOUT, 1);
 }
 
@@ -274,19 +244,17 @@ void sim7000g_mqtt_publish(uint8_t *topic, uint8_t *payload, uint32_t len_payloa
 {
     uint8_t buffer[50] = {0};
     sprintf(buffer, CMD_MQTT_PUBLISH, topic, len_payload);
-    send_command(buffer, CMD_OK, 500, 1);
-    send_command(payload, CMD_OK, 750, 1);
+    send_command(buffer, CMD_OK, 400, 1);
+    send_command(payload, CMD_OK, 600, 1);
 }
 
 void sim7000g_mqtt_subscription()
 {
-#define MQTT_SUB "AT+SMSUB=\"CMD\",2\r\n"
     send_command(MQTT_SUB, CMD_OK, 400, 1);
 }
 
 void sim7000g_mqtt_unsubscription()
 {
-#define MQTT_UNSUB "AT+SMUNSUB=\"CMD\"\r\n"
     send_command(MQTT_UNSUB, CMD_OK, 200, 1);
 }
 
@@ -297,34 +265,28 @@ void sim7000g_set_irt()
 
 
 
-
-
 uint8_t sim_buffer_512b(uint8_t *buffer, uint32_t len,uint32_t c)
 {
    memset(buffer, 0, len);
+   uint32_t counter = c;
    uint32_t pos;
    uint32_t l =0;
-   uint8_t data[250]={0};
-   for( uint8_t run = 1; run == 1;)
-   {
-    mem_read_data(data, c);
-
+   uint8_t data[200]={0};
+   for( uint8_t run = 1; run == 1;){
+    mem_read_data(data, counter);
     l = strlen(data);
-     if((pos + l) < (len-1)){
-    sprintf(&(buffer[pos]),"\n%s",data);
+    if((pos + l) < (len-1)){
+        sprintf(&(buffer[pos]),"\n%s",data);
         pos = (pos +l) +1;
-        if(c != 0 && (c - 1)>= 0){
-            c--;
-        }
-        else{run = 0;}
+        if(counter >= 1)counter--;          // if(counter != 0 && (counter - 1)>= 0)counter--;
+        else run = 0;
     }
     else{
-        c++;
         run = 0;
     }
     buffer[len-1]= 0;
    }
-    return c;
+    return counter;
 }
 
 

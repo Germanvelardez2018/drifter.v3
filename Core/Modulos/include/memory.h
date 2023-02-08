@@ -39,6 +39,11 @@ void mem_s_deinit();
 
 
 
+void mem_s_get_itime(uint8_t* itime);
+void mem_s_set_itime(uint8_t* itime);
+
+
+
 void mem_s_get_cmax_interval(uint8_t* cmax_interval);
 void mem_s_set_cmax_interval(uint8_t* cmax_interval);
 

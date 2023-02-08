@@ -61,6 +61,34 @@ PRIVATE void mem_write_buffer(uint8_t* data, uint8_t len,uint8_t pos){
 
 
 
+
+//BUFFER 1 se utiliza para el contador de checks
+//Necesario en intervalor largos de muchos checks, 
+//si se reinicia y el contador esta en ram
+//Se pierde el conteo
+
+
+PRIVATE void mem_read_otherbuffer(uint8_t* data, uint8_t len,uint8_t pos){
+     at45db_read_buffer1(data,len,pos);
+}
+
+
+PRIVATE void mem_write_otherbuffer(uint8_t* data, uint8_t len,uint8_t pos){
+     at45db_write_buffer1(data,len,pos);
+}
+
+
+
+PRIVATE void mem_get_cchecks(uint8_t* cccheks){
+    mem_read_otherbuffer(cccheks, 1,ANYOFFSET);
+}
+
+
+PRIVATE void  mem_set_cchecks(uint8_t* cccheks){
+    mem_write_otherbuffer(cccheks, 1,ANYOFFSET);
+}
+
+
 PRIVATE void mem_get_counter(uint8_t* counter){
     mem_read_buffer(counter, 1,ANYOFFSET);
 }
@@ -70,29 +98,10 @@ PRIVATE void  mem_set_counter(uint8_t* counter){
     mem_write_buffer(counter, 1,ANYOFFSET);
 }
 
-uint8_t* mem_s_get_all_data(uint32_t counter){
-    uint8_t buffer[LEN_DATA_BUFFER];
-    uint32_t pos = 0;
-    if( counter > ALL_DATA_COUNTER ) counter = ALL_DATA_COUNTER;
-   
-
-    for(uint32_t index= 0; index < counter; index ++){
-    
-    mem_read_data(buffer,index);
-    sprintf(&(__ALL_DATA__[pos]),FORMAT_ALL_DATA,buffer);
-    
-    pos = strlen(__ALL_DATA__) ;
-    debug_print("all data");
-    debug_print(__ALL_DATA__);
-    }
-   
-    return __ALL_DATA__;
-}
 
 void mem_s_init(){
     mem_init();
     mem_resume();
-
 }
 
 
@@ -150,12 +159,27 @@ void mem_s_get_max_amount_data(uint8_t* max_amount_data){
 
 
 void mem_s_set_max_amount_data(uint8_t* max_amount_data){
- 
     mem_resume();
     mem_write_page(max_amount_data,1,MMAP_MAX_AMOUNT_DATA,0);    
     mem_sleep();
 }
 
+
+
+
+
+void mem_s_get_itime(uint8_t* itime){
+    mem_resume();
+    mem_read_page(itime,1,MMAP_INTERVAL,0);
+    mem_sleep();
+}
+
+
+void mem_s_set_itime(uint8_t* itime){
+    mem_resume();
+    mem_write_page(itime,1,MMAP_INTERVAL,0);    
+    mem_sleep();
+}
 
 
 

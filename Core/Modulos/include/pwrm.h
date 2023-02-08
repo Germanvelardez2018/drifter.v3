@@ -9,6 +9,10 @@
 
 
 
+uint8_t pwrm_get_itime();
+
+void prwm_set_itime(uint8_t itime);
+
 
 /***
  * @brief Inicializa el modulo de gestion de consumo
@@ -17,11 +21,9 @@
 void pwrm_init();
 
 
-/**
- * @brief Manda el microcontrolador a dormir
-*/
-void sleep_interval();
 
+
+void sleep_interval();
 
 /**
  * @brief Espero por el GPS

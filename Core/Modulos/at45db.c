@@ -268,7 +268,6 @@ void at45db_read_buffer2(uint8_t* data,uint8_t len, uint8_t pos){
 
 
 void at45db_write_page(uint8_t* data, uint8_t len, uint32_t pag,uint8_t pos){
-       
         uint8_t _len = len ;  // 
         uint32_t address =  (pag << 8) | (uint32_t)pos ;   //          | xxxx xxxx |  xxxx xppp |pppp pppp |oooo oooo |
         uint8_t cmd[4] ={0};
